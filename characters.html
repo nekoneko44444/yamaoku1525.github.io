@@ -119,32 +119,198 @@
   color: var(--green-deep);
   margin-bottom: 4px;
 }
+
+
+/* Header/footer alignment: keep page content styles unchanged. */
+.page { overflow: hidden; }
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,250,240,.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(45,90,61,.14);
+}
+.header-inner {
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--green-deep);
+  text-decoration: none;
+  min-width: max-content;
+}
+.brand img { width: 80px; height: auto; }
+.brand small { display: block; font-size: 11px; line-height: 1; color: var(--gray); }
+.brand strong { display: block; font-size: 21px; line-height: 1.12; letter-spacing: .09em; }
+.brand span { display: block; font-size: 11px; color: var(--wood); letter-spacing: .16em; }
+.site-header .nav {
+  position: static;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px 16px;
+  color: var(--green-deep);
+}
+.site-header .nav a {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  padding: 6px 0;
+  white-space: nowrap;
+  opacity: .86;
+  font-size: 13px;
+  font-weight: 500;
+}
+.site-header .nav a:hover,
+.site-header .nav a.is-active { opacity: 1; }
+.site-header .nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--yuzu);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .24s ease;
+}
+.site-header .nav a:hover::after,
+.site-header .nav a.is-active::after { transform: scaleX(1); }
+.sub-hero {
+  position: relative;
+  min-height: 520px;
+  display: grid;
+  align-items: center;
+  color: #fff;
+  background:
+    linear-gradient(90deg, rgba(31,51,39,.92) 0%, rgba(45,90,61,.72) 46%, rgba(45,90,61,.24) 100%),
+    url("./img/top_yamanoie1.png") center/cover no-repeat;
+}
+.sub-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 150px;
+  background: linear-gradient(180deg, transparent, var(--ivory));
+  pointer-events: none;
+}
+.sub-hero-inner { position: relative; z-index: 1; padding: 96px 0 130px; }
+.sub-hero .breadcrumb {
+  color: rgba(255,255,255,.74);
+  margin-bottom: 16px;
+}
+.sub-hero .breadcrumb span { margin-left: 10px; }
+.hero-label {
+  color: var(--yuzu);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.sub-hero h1 {
+  margin: 0;
+  font-size: clamp(38px, 6vw, 72px);
+  line-height: 1.14;
+  letter-spacing: .08em;
+}
+.sub-hero p { max-width: 680px; margin-top: 22px; color: rgba(255,255,255,.88); }
+.hero-badge {
+  position: absolute;
+  right: max(24px, calc((100vw - 1100px) / 2));
+  bottom: 62px;
+  z-index: 2;
+  width: 148px;
+  height: 148px;
+  border-radius: 999px;
+  border: 1px solid rgba(232,184,58,.56);
+  display: grid;
+  place-items: center;
+  color: var(--yuzu);
+  background: rgba(31,51,39,.44);
+  backdrop-filter: blur(6px);
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.7;
+  font-weight: 700;
+}
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px 18px;
+  max-width: 720px;
+  font-size: 13px;
+}
+.footer-links a { color: rgba(255,255,255,.78); text-decoration: none; }
+.footer-links a:hover { color: var(--yuzu); }
+.copyright { margin: 20px 0 0; color: rgba(255,255,255,.52); font-size: 12px; }
+@media (max-width: 980px) {
+  .header-inner { align-items: flex-start; padding: 16px 0; flex-direction: column; }
+  .site-header .nav { justify-content: flex-start; }
+  .hero-badge { display: none; }
+}
+@media (max-width: 640px) {
+  .sub-hero { min-height: 500px; }
+  .sub-hero-inner { padding: 70px 0 118px; }
+  .footer-inner { display: block; }
+  .footer-links { justify-content: flex-start; margin-top: 18px; }
+}
+
 </style>
+  <script src="common-nav.js" defer></script>
 </head>
 <body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="協同組合阿波山雅 ホーム">
+          <img src="./img/awasanga_logo_w2.png" alt="協同組合阿波山雅ロゴ" />
+          <div>
+            <small>協同組合</small>
+            <strong>阿波山雅</strong>
+            <span>あわさんが</span>
+          </div>
+        </a>
 
-<nav class="nav">
-  <div class="nav-logo"><a href="index.html">協同組合 阿波山雅</a></div>
-  <ul class="nav-links">
-    <li><a href="about.html">阿波山雅について</a></li>
-    <li><a href="facility-okuyarito.html">施設・拠点</a></li>
-    <li><a href="trail-guide.html">山と林道ガイド</a></li>
-    <li><a href="projects.html">活動・プロジェクト</a></li>
-    <li><a href="activity-report.html">活動報告</a></li>
-    <li><a class="active" href="characters.html">仲間たち</a></li>
-    <li><a href="support.html">応援する</a></li>
-  </ul>
-</nav>
+        <nav class="nav" aria-label="メインナビゲーション" data-common-nav data-current="characters"></nav>
+      </div>
+    </header>
 
-<header class="page-header">
-  <div class="page-header-inner">
-    <div class="breadcrumb"><a href="index.html">ホーム</a><span class="breadcrumb-sep">/</span>仲間たち</div>
-    <h1>阿波山雅の仲間たち</h1>
-    <p>奥槍戸山の家を迎える兄妹と、山の記憶・知恵・実践を案内する仲間たち。</p>
-  </div>
-</header>
-
-<main>
+    <main>
+      <section class="sub-hero">
+        <div class="container sub-hero-inner">
+          <div class="breadcrumb">
+            <a href="index.html">ホーム</a>
+            <span>›</span>
+            <span>仲間たち</span>
+          </div>
+          <div class="hero-label">Characters</div>
+          <h1>阿波山雅の<br>仲間たち。</h1>
+          <p>奥槍戸山の家を迎える兄妹と、山の記憶・知恵・実践を案内する仲間たち。</p>
+        </div>
+        <div class="hero-badge" aria-hidden="true"><span>山の物語を<br>伝える<br>仲間たち</span></div>
+      </section>
 
 <section>
   <div class="container">
@@ -177,8 +343,7 @@
 
     <article class="character-card" id="okuyaridon">
       <div class="character-visual">
-        <!-- 画像ファイル名は実際の配置に合わせて変更してください -->
-        <img src="奥槍どん.png" alt="奥槍どん">
+        <img src="./img/奥槍どん.png" alt="奥槍どん">
       </div>
       <div class="character-body">
         <div class="eyebrow">奥槍戸山の家を支える兄</div>
@@ -207,8 +372,7 @@
 
     <article class="character-card" id="nagika">
       <div class="character-visual">
-        <!-- 画像ファイル名は実際の配置に合わせて変更してください -->
-        <img src="なぎかちゃん.png" alt="なぎかちゃん">
+        <img src="./img/なぎかちゃん.png" alt="なぎかちゃん">
       </div>
       <div class="character-body">
         <div class="eyebrow">奥槍どんの妹</div>
@@ -236,7 +400,7 @@
     </article>
 
     <article class="character-card" id="sugijii">
-      <div class="character-visual"><img src="杉じぃ.png" alt="杉じぃ"></div>
+      <div class="character-visual"><img src="./img/杉じぃ.png" alt="杉じぃ"></div>
       <div class="character-body">
         <div class="eyebrow">木頭杉の長老</div>
         <h2>杉じぃ</h2>
@@ -261,7 +425,7 @@
     </article>
 
     <article class="character-card" id="yuzuri">
-      <div class="character-visual"><img src="ユズリ.png" alt="ユズリ"></div>
+      <div class="character-visual"><img src="./img/ユズリ.png" alt="ユズリ"></div>
       <div class="character-body">
         <div class="eyebrow">知恵を次へ繋ぐ案内人</div>
         <h2>ユズリ</h2>
@@ -286,7 +450,7 @@
     </article>
 
     <article class="character-card" id="sugito">
-      <div class="character-visual"><img src="スギト.png" alt="スギト"></div>
+      <div class="character-visual"><img src="./img/スギト.png" alt="スギト"></div>
       <div class="character-body">
         <div class="eyebrow">見習いマイスター</div>
         <h2>スギト</h2>
@@ -320,7 +484,7 @@
       <p>杉じぃ・ユズリ・スギトが、山の課題と活動を案内します。</p>
       <div class="cta-row">
         <a href="projects.html" class="btn btn-ghost">活動・プロジェクトを見る</a>
-        <a href="facility-okuyarito.html" class="btn btn-ghost">奥槍戸山の家へ</a>
+        <a href="facility_guide.html" class="btn btn-ghost">奥槍戸山の家へ</a>
       </div>
     </div>
   </div>
@@ -328,44 +492,25 @@
 
 </main>
 
-<footer class="footer">
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <strong>協同組合 阿波山雅</strong>
-      徳島・剣山系のふもとから、山と地域を次の世代へ。<br>
-      所在地：【要記入】<br>
-      電話：【要記入】<br>
-      メール：【要記入】
-    </div>
-    <div>
-      <h5>サイト</h5>
-      <ul>
-        <li><a href="index.html">ホーム</a></li>
-        <li><a href="about.html">阿波山雅について</a></li>
-        <li><a href="characters.html">仲間たち</a></li>
-        <li><a href="facility-okuyarito.html">施設・拠点</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>関わる</h5>
-      <ul>
-        <li><a href="projects.html">活動・プロジェクト</a></li>
-        <li><a href="activity-report.html">活動報告</a></li>
-        <li><a href="support.html">応援する</a></li>
-        <li><a href="contact.html">お問い合わせ</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>SNS</h5>
-      <ul>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">Facebook</a></li>
-        <li><a href="#">YouTube</a></li>
-      </ul>
-    </div>
+    <footer class="footer" id="contact">
+      <div class="container">
+        <div class="footer-inner">
+          <div class="footer-brand">協同組合 阿波山雅</div>
+          <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="about.html">阿波山雅について</a>
+            <a href="facility_guide.html">施設・山と林道ガイド</a>
+            <a href="projects.html">活動・プロジェクト</a>
+            <a href="activity-report.html">活動報告</a>
+            <a href="news.html">お知らせ</a>
+            <a href="characters.html">仲間たち</a>
+            <a href="support.html">応援・参加する</a>
+            <a href="contact.html">お問い合わせ</a>
+          </div>
+        </div>
+        <p class="copyright">© 協同組合阿波山雅（あわさんが） All Rights Reserved.</p>
+      </div>
+    </footer>
   </div>
-  <div class="footer-bottom">© 2026 協同組合 阿波山雅 All Rights Reserved.</div>
-</footer>
-
 </body>
 </html>
