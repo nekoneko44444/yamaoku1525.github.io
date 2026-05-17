@@ -6,9 +6,20 @@
   <meta http-equiv="refresh" content="0; url=support.html#contact" />
   <title>お問い合わせ｜応援・お問い合わせページへ移動</title>
   <link rel="stylesheet" href="about-styles.css" />
+  <script src="common-nav.js" defer></script>
 </head>
 <body>
-  <main class="page">
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="協同組合阿波山雅 ホーム">
+          <img src="./img/awasanga_logo_w2.png" alt="協同組合阿波山雅ロゴ" />
+          <div><small>協同組合</small><strong>阿波山雅</strong><span>あわさんが</span></div>
+        </a>
+        <nav class="nav" aria-label="メインナビゲーション" data-common-nav data-current="support"></nav>
+      </div>
+    </header>
+    <main>
     <section class="final-cta-section">
       <div class="container">
         <div class="cta-panel cta-panel-wide">
@@ -18,6 +29,7 @@
         </div>
       </div>
     </section>
-  </main>
+    </main>
+  </div>
 </body>
 </html>
