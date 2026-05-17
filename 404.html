@@ -33,25 +33,19 @@
 .error-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .char-img { width: 120px; margin: 0 auto 24px; }
 </style>
+  <script src="common-nav.js" defer></script>
+  <script src="common-footer.js" defer></script>
 </head>
 <body>
 
-<nav class="nav">
+<nav class="nav" aria-label="メインナビゲーション">
   <div class="nav-logo"><a href="index.html">協同組合 阿波山雅</a></div>
-  <ul class="nav-links">
-    <li><a href="about.html">阿波山雅について</a></li>
-    <li><a href="facility-okuyarito.html">施設・拠点</a></li>
-    <li><a href="trail-guide.html">山と林道ガイド</a></li>
-    <li><a href="projects.html">活動・プロジェクト</a></li>
-    <li><a href="activity-report.html">活動報告</a></li>
-    <li><a href="support.html">応援する</a></li>
-    <li><a href="contact.html">お問い合わせ</a></li>
-  </ul>
+  <ul class="nav-links" data-common-nav data-current=""></ul>
 </nav>
 
 <main class="error-wrap">
   <div class="error-card">
-    <div class="char-img"><img src="placeholder_okuyaridon.svg" alt="奥槍どん"></div>
+    <div class="char-img"><img src="./img/奥槍どん.png" alt="奥槍どん"></div>
     <div class="error-num">404</div>
     <div class="error-title">道に迷ったみたいだな。</div>
     <div class="error-text">
@@ -65,7 +59,6 @@
     </div>
   </div>
 </main>
-
 <footer class="footer">
   <div class="footer-grid">
     <div class="footer-brand">
@@ -74,29 +67,7 @@
     </div>
     <div>
       <h5>サイト</h5>
-      <ul>
-        <li><a href="index.html">ホーム</a></li>
-        <li><a href="about.html">阿波山雅について</a></li>
-        <li><a href="facility-okuyarito.html">施設・拠点</a></li>
-        <li><a href="trail-guide.html">山と林道ガイド</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>関わる</h5>
-      <ul>
-        <li><a href="projects.html">活動・プロジェクト</a></li>
-        <li><a href="activity-report.html">活動報告</a></li>
-        <li><a href="support.html">応援・参加する</a></li>
-        <li><a href="contact.html">お問い合わせ</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>SNS</h5>
-      <ul>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">Facebook</a></li>
-        <li><a href="#">YouTube</a></li>
-      </ul>
+      <ul data-common-footer></ul>
     </div>
   </div>
   <div class="footer-bottom">© 2026 協同組合 阿波山雅 All Rights Reserved.</div>
