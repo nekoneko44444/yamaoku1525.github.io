@@ -9,6 +9,8 @@
     { href: 'support.html', label: '応援する', key: 'support' },
   ];
 
+  window.AWASANGA_MENU_ITEMS = menuItems;
+
   function currentKeyFromPath() {
     const fileName = window.location.pathname.split('/').pop() || 'index.html';
     const map = {
