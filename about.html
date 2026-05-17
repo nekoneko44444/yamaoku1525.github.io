@@ -436,6 +436,7 @@
       .cta-actions { display: grid; }
     }
   </style>
+  <script src="common-nav.js" defer></script>
 </head>
 <body>
   <div class="page">
@@ -449,16 +450,7 @@
             <span>あわさんが</span>
           </div>
         </a>
-        <nav class="nav" aria-label="メインナビゲーション">
-          <a href="index.html">ホーム</a>
-          <a class="is-active" href="about.html">阿波山雅について</a>
-          <a href="facility-okuyarito.html">施設・拠点</a>
-          <a href="trail-guide.html">山と林道ガイド</a>
-          <a href="projects.html">活動・プロジェクト</a>
-          <a href="activity-report.html">活動報告</a>
-          <a href="support.html">応援する</a>
-          <a href="contact.html">お問い合わせ</a>
-        </nav>
+        <nav class="nav" aria-label="メインナビゲーション" data-common-nav data-current="about"></nav>
       </div>
     </header>
 
@@ -574,25 +566,25 @@
           </div>
           <div class="cards-grid character-grid">
             <article class="character-card">
-              <div class="character-image"><img src="奥槍どん.png" alt="奥槍どん" /></div>
+              <div class="character-image"><img src="./img/奥槍どん.png" alt="奥槍どん" /></div>
               <h3>奥槍どん</h3>
               <div class="character-role">奥槍戸山の家のあるじ</div>
               <p>優しい口調だが、しっかり者で芯のある好青年。山小屋の空気をやわらかく支える存在。</p>
             </article>
             <article class="character-card">
-              <div class="character-image"><img src="杉じぃ.png" alt="杉じぃ" /></div>
+              <div class="character-image"><img src="./img/杉じぃ.png" alt="杉じぃ" /></div>
               <h3>杉じぃ</h3>
               <div class="character-role">千年の記憶を持つ、木頭杉の長老</div>
               <p>陽気な長老。フォッフォッフォと笑いながら、地域の歴史と山の知恵を語る。</p>
             </article>
             <article class="character-card">
-              <div class="character-image"><img src="ユズリ (2).png" alt="ユズリ" /></div>
+              <div class="character-image"><img src="./img/ユズリ.png" alt="ユズリ" /></div>
               <h3>ユズリ</h3>
               <div class="character-role">知恵を、次へ繋ぐ少女</div>
               <p>郷土資料や地域の知恵を大切にする博識家。冷静な視点でみんなを支える。</p>
             </article>
             <article class="character-card">
-              <div class="character-image"><img src="スギト (2).png" alt="スギト" /></div>
+              <div class="character-image"><img src="./img/スギト.png" alt="スギト" /></div>
               <h3>スギト</h3>
               <div class="character-role">まっすぐな見習いマイスター</div>
               <p>熱血で照れ屋。木頭杉のように、まっすぐ伸びる力を持つ若い仲間。</p>
@@ -608,8 +600,8 @@
             <div class="media-panel">
               <div class="section-kicker">Media Kit</div>
               <h2 class="section-title small">メディア・寄稿用素材</h2>
-              <p>取材・寄稿でご利用いただける素材（ロゴ、キャラクター画像、プレスキット）を、Google Driveに整理してまとめています。</p>
-              <p><a class="btn btn-outline" href="#">プレスキットを開く　→</a></p>
+              <p>取材・寄稿でロゴやキャラクター画像をご利用希望の場合は、利用条件の確認と素材提供についてお問い合わせください。</p>
+              <p><a class="btn btn-outline" href="support.html#media">素材利用について問い合わせる　→</a></p>
               <p style="font-size:13px;">※ ご利用前に、必ず取材・撮影に関するガイドラインをご確認ください。</p>
             </div>
             <div class="cta-panel">
@@ -637,8 +629,7 @@
           <div class="footer-links">
             <a href="index.html">ホーム</a>
             <a href="about.html">阿波山雅について</a>
-            <a href="facility-okuyarito.html">施設・拠点</a>
-            <a href="trail-guide.html">山と林道ガイド</a>
+            <a href="facility_guide.html">施設・山と林道ガイド</a>
             <a href="projects.html">活動・プロジェクト</a>
             <a href="activity-report.html">活動報告</a>
             <a href="news.html">お知らせ</a>
