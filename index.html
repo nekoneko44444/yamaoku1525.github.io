@@ -6,6 +6,8 @@
   <meta name="description" content="協同組合 阿波山雅は徳島・剣山系のふもと、奥槍戸を拠点に山と地域を次の世代へ繋ぐ協同組合です。山の恵みと人のつながりを大切にしながら、持続可能な地域づくりを進めています。" />
   <title>協同組合 阿波山雅（あわさんが） | 徳島・奥槍戸 山と人をつなぐ協同組合</title>
   <link rel="stylesheet" href="awasanga-top_styles.css">
+  <script src="common-nav.js" defer></script>
+  <script src="common-footer.js" defer></script>
 </head>
 <body>
   <div class="page">
@@ -22,16 +24,7 @@
             <span>あわさんが</span>
           </div>
         </a>
-        <nav class="nav" aria-label="メインナビゲーション">
-          <a class="is-active" href="index.html">ホーム</a>
-          <a href="about.html">阿波山雅について</a>
-          <a href="facility-okuyarito.html">施設・拠点</a>
-          <a href="trail-guide.html">山と林道ガイド</a>
-          <a href="projects.html">活動・プロジェクト</a>
-          <a href="activity-report.html">活動報告</a>
-          <a href="support.html">応援する</a>
-          <a href="contact.html">お問い合わせ</a>
-        </nav>
+        <nav class="nav" aria-label="メインナビゲーション" data-common-nav data-current="home"></nav>
       </div>
     </header>
 
@@ -147,7 +140,7 @@
               自然に囲まれた憩いの場で、地元の食や体験を楽しめる奥槍戸山の家。
               登山や散策の拠点として、地域の皆さまや訪れる人々を温かくお迎えします。
             </p>
-            <a class="btn btn-dark" href="facility-okuyarito.html">詳しく見る　→</a>
+            <a class="btn btn-dark" href="facility_guide.html">詳しく見る　→</a>
             <div class="lodge-images">
               <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=85" alt="食堂の内観" />
               <img src="https://images.unsplash.com/photo-1617196034183-421b4917c92d?auto=format&fit=crop&w=500&q=85" alt="食事" />
@@ -173,22 +166,11 @@
         </div>
       </section>
     </main>
-
     <footer class="footer" id="contact">
       <div class="container">
         <div class="footer-inner">
           <div class="footer-brand">協同組合 阿波山雅</div>
-          <div class="footer-links">
-            <a href="index.html">ホーム</a>
-            <a href="about.html">阿波山雅について</a>
-            <a href="facility-okuyarito.html">施設・拠点</a>
-            <a href="trail-guide.html">山と林道ガイド</a>
-            <a href="projects.html">活動・プロジェクト</a>
-            <a href="activity-report.html">活動報告</a>
-            <a href="news.html">お知らせ</a>
-            <a href="support.html">応援・参加する</a>
-            <a href="contact.html">お問い合わせ</a>
-          </div>
+          <nav class="footer-links" aria-label="フッターナビゲーション" data-common-footer></nav>
         </div>
         <p class="copyright">© 協同組合阿波山雅（あわさんが） All Rights Reserved.</p>
       </div>

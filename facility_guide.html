@@ -6,6 +6,8 @@
   <meta name="description" content="奥槍戸山の家・高ノ瀬峡レストハウス平の里・ファガスの森 高城と、剣山スーパー林道・山の注意事項をまとめた施設・山と林道ガイド。" />
   <title>施設・山と林道ガイド｜協同組合 阿波山雅</title>
   <link rel="stylesheet" href="about-styles.css" />
+  <script src="common-nav.js" defer></script>
+  <script src="common-footer.js" defer></script>
 </head>
 <body>
   <div class="page">
@@ -20,15 +22,7 @@
           </div>
         </a>
 
-        <nav class="nav" aria-label="メインナビゲーション">
-          <a href="index.html">ホーム</a>
-          <a href="about.html">阿波山雅について</a>
-          <a class="is-active" href="facility_guide.html">施設・山と林道ガイド</a>
-          <a href="projects.html">活動・プロジェクト</a>
-          <a href="activity-report.html">活動報告</a>
-          <a href="support.html">応援する</a>
-          <a href="contact.html">お問い合わせ</a>
-        </nav>
+        <nav class="nav" aria-label="メインナビゲーション" data-common-nav data-current="facility"></nav>
       </div>
     </header>
 
@@ -52,7 +46,7 @@
           <div class="mission-card">
             <div class="mission-copy">
               <div class="section-kicker">Important Notice</div>
-              <h2 class="section-title">山と林道ガイド</h2>
+              <h2 class="section-title">施設・山と林道ガイド</h2>
               <p>このページは、奥槍戸・木頭・剣山スーパー林道周辺を訪れる方のための入口です。実際の通行可否・規制・道路状況は、天候や災害、落石、倒木、積雪、凍結、工事などにより日々変わります。</p>
               <p>掲載情報だけで判断せず、出発前に必ず外部リンク先で最新情報を確認してください。特に山間部の林道や町道は、地図アプリ上では通行できるように見えても、現地では規制されている場合があります。</p>
               <div class="quote-panel">
@@ -107,7 +101,7 @@
           </div>
 
           <div class="quote-panel quote-with-icon">
-            <div class="quote-icon"><img src="スギト (2).png" alt="スギト" /></div>
+            <div class="quote-icon"><img src="./img/スギト.png" alt="スギト" /></div>
             <div>
               <strong>スギト</strong>
               <p>無理して進むより、引き返す判断のほうが大事なときもある。山では安全第一だぜ。</p>
@@ -175,8 +169,8 @@
                 <div class="member-facts">
                   <span>営業目安：4月5日〜11月末</span>
                   <span>定休日：月曜・火曜</span>
-                  <span>所在地：要記入</span>
-                  <span>電話：要記入</span>
+                  <span>所在地：来訪前にご確認ください</span>
+                  <span>電話：来訪前にご確認ください</span>
                 </div>
                 <p>食事や休憩だけでなく、山や林道の情報が集まり、人が出会い、次の活動が生まれる場所として育てていきます。</p>
                 <div class="quote-panel">
@@ -193,10 +187,10 @@
                 <h3>高ノ瀬峡レストハウス 平の里</h3>
                 <p class="member-lead">那賀町木頭エリアで、自然や地域の暮らしに触れられる連携拠点です。</p>
                 <div class="member-facts">
-                  <span>営業目安：〜3月末</span>
+                  <span>営業目安：来訪前にご確認ください</span>
                   <span>定休日：月曜・火曜</span>
-                  <span>営業時間：要記入</span>
-                  <span>所在地：要記入</span>
+                  <span>営業時間：来訪前にご確認ください</span>
+                  <span>所在地：来訪前にご確認ください</span>
                 </div>
                 <p>奥槍戸山の家とあわせて、季節や行程に応じた立ち寄り先として紹介します。営業状況は来訪前に確認してください。</p>
                 <div class="quote-panel">
@@ -250,21 +244,11 @@
         </div>
       </section>
     </main>
-
     <footer class="footer" id="contact">
       <div class="container">
         <div class="footer-inner">
           <div class="footer-brand">協同組合 阿波山雅</div>
-          <div class="footer-links">
-            <a href="index.html">ホーム</a>
-            <a href="about.html">阿波山雅について</a>
-            <a href="facility_guide.html">施設・山と林道ガイド</a>
-            <a href="projects.html">活動・プロジェクト</a>
-            <a href="activity-report.html">活動報告</a>
-            <a href="news.html">お知らせ</a>
-            <a href="support.html">応援・参加する</a>
-            <a href="contact.html">お問い合わせ</a>
-          </div>
+          <nav class="footer-links" aria-label="フッターナビゲーション" data-common-footer></nav>
         </div>
         <p class="copyright">© 協同組合阿波山雅（あわさんが） All Rights Reserved.</p>
       </div>
