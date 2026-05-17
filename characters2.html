@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="協同組合 阿波山雅の仲間たち。奥槍どん、なぎかちゃん、杉じぃ、ユズリ、スギトを紹介します。">
+<title>仲間たち｜協同組合 阿波山雅</title>
+<link rel="stylesheet" href="awasanga-styles.css">
+<style>
+
+/* Characters page redesign: self-contained styles to avoid unexpected stylesheet bleed. */
+.character-intro {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(232,184,58,.20), transparent 34%),
+    linear-gradient(135deg, #fff 0%, #fffaf0 56%, #f4efe2 100%);
+  border: 1px solid rgba(45,90,61,.16);
+  border-radius: 24px;
+  padding: clamp(24px, 4vw, 42px);
+  line-height: 2;
+  box-shadow: 0 20px 50px rgba(31,51,39,.10);
+}
+.character-intro::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 8px;
+  background: linear-gradient(180deg, var(--green-deep), var(--yuzu));
+}
+.character-intro p {
+  position: relative;
+  margin: 0 0 12px;
+  color: var(--charcoal);
+}
+.character-intro p:last-child { margin-bottom: 0; }
+
+.character-index {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+.character-index a {
+  display: grid;
+  grid-template-rows: 92px auto auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 172px;
+  padding: 16px 12px;
+  color: var(--charcoal);
+  text-align: center;
+  text-decoration: none;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, rgba(45,90,61,.35), rgba(232,184,58,.55)) border-box;
+  border: 1px solid transparent;
+  border-radius: 22px;
+  box-shadow: 0 14px 32px rgba(31,51,39,.08);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.character-index a:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 22px 42px rgba(31,51,39,.14);
+}
+.character-index img {
+  width: 92px;
+  height: 92px;
+  margin: 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 10px rgba(31,51,39,.16));
+}
+.character-index strong {
+  color: var(--green-deep);
+  font-size: 15px;
+  line-height: 1.35;
+}
+.character-index span {
+  color: var(--gray);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.relation-section {
+  background: linear-gradient(180deg, #fff 0%, rgba(244,239,226,.68) 100%);
+}
+.relation-map {
+  background: #fff;
+  border: 1px solid rgba(45,90,61,.14);
+  border-radius: 22px;
+  padding: clamp(20px, 3vw, 32px);
+  box-shadow: 0 18px 42px rgba(31,51,39,.08);
+}
+.relation-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  text-align: center;
+}
+.relation-step {
+  background: linear-gradient(180deg, #fffaf0, #f4efe2);
+  border: 1px solid rgba(45,90,61,.12);
+  border-radius: 16px;
+  padding: 16px 12px;
+  color: var(--charcoal);
+}
+.relation-step strong {
+  display: block;
+  color: var(--green-deep);
+  margin-bottom: 4px;
+}
+.relation-step small { color: var(--gray); }
+
+.character-grid {
+  display: grid;
+  gap: 38px;
+}
+.character-card {
+  --card-accent: var(--green-soft);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 38%) 1fr;
+  overflow: hidden;
+  isolation: isolate;
+  background: #fff;
+  border: 1px solid rgba(45,90,61,.14);
+  border-radius: 30px;
+  color: var(--charcoal);
+  box-shadow: 0 22px 58px rgba(31,51,39,.12);
+}
+.character-card[data-tone="warm"] { --card-accent: #d28b3f; }
+.character-card[data-tone="bright"] { --card-accent: #e8b83a; }
+.character-card[data-tone="forest"] { --card-accent: #2d5a3d; }
+.character-card[data-tone="wise"] { --card-accent: #5f7fa0; }
+.character-card[data-tone="craft"] { --card-accent: #a14b3a; }
+.character-card::before {
+  content: attr(data-role);
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  z-index: 5;
+  padding: 5px 12px;
+  color: var(--green-deep);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  background: rgba(255,255,255,.90);
+  border: 1px solid rgba(45,90,61,.14);
+  border-radius: 999px;
+}
+.character-card::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 4;
+  width: 8px;
+  background: linear-gradient(180deg, var(--card-accent), var(--yuzu));
+}
+.character-card:nth-child(even) { grid-template-columns: 1fr minmax(280px, 38%); }
+.character-card:nth-child(even) .character-visual { order: 2; }
+.character-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 420px;
+  padding: clamp(24px, 4vw, 44px);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,.98) 0 24%, rgba(255,255,255,.52) 25% 38%, transparent 39%),
+    linear-gradient(145deg, rgba(123,166,138,.22), rgba(232,184,58,.20));
+}
+.character-visual::before {
+  content: "";
+  position: absolute;
+  inset: 26px;
+  border: 1px solid rgba(45,90,61,.14);
+  border-radius: 999px;
+}
+.character-visual img {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 330px);
+  max-height: 350px;
+  object-fit: contain;
+  filter: drop-shadow(0 22px 18px rgba(31,51,39,.18));
+}
+.character-body {
+  position: relative;
+  z-index: 2;
+  padding: clamp(28px, 4.6vw, 52px);
+  background: #fff;
+  color: var(--charcoal);
+}
+.character-body .eyebrow {
+  display: inline-flex;
+  margin: 0 0 14px;
+  padding: 5px 12px;
+  color: var(--green-deep);
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(45,90,61,.08);
+  border-radius: 999px;
+}
+.character-body h2 {
+  margin: 0 0 10px;
+  color: var(--green-deep);
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.2;
+  letter-spacing: .08em;
+}
+.character-copy {
+  position: relative;
+  margin: 0 0 18px;
+  padding-left: 16px;
+  color: var(--charcoal);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 700;
+  line-height: 1.65;
+}
+.character-copy::before {
+  content: "";
+  position: absolute;
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="character-index" aria-label="キャラクター早見表">
+      <a href="#okuyaridon"><img src="./img/奥槍どん.png" alt=""><strong>奥槍どん</strong><span>食・拠点・安心</span></a>
+      <a href="#nagika"><img src="./img/なぎかちゃん.png" alt=""><strong>なぎかちゃん</strong><span>元気・案内・イベント</span></a>
+      <a href="#sugijii"><img src="./img/杉じぃ.png" alt=""><strong>杉じぃ</strong><span>記憶・木頭杉・歴史</span></a>
+      <a href="#yuzuri"><img src="./img/ユズリ.png" alt=""><strong>ユズリ</strong><span>知恵・記録・継承</span></a>
+      <a href="#sugito"><img src="./img/スギト.png" alt=""><strong>スギト</strong><span>実践・木工・現場</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="relation-section">
+  <div class="container">
+    <h2 class="section-title">関係性</h2>
+    <p class="section-subtitle">5人の役割を、阿波山雅の活動とつなげて整理します。</p>
+    <div class="relation-map">
+      <div class="relation-steps">
+        <div class="relation-step"><strong>迎える</strong>奥槍どん<br><small>食・拠点・安心</small></div>
+        <div class="relation-step"><strong>元気にする</strong>なぎかちゃん<br><small>来訪者・子ども・イベント</small></div>
+        <div class="relation-step"><strong>記憶を語る</strong>杉じぃ<br><small>木頭杉・山の歴史</small></div>
+        <div class="relation-step"><strong>知恵にする</strong>ユズリ<br><small>記録・発信・継承</small></div>
+        <div class="relation-step"><strong>形にする</strong>スギト<br><small>ものづくり・現場活動</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container character-grid">
+
+    <article class="character-card" id="okuyaridon" data-tone="warm" data-role="FOOD / BASE">
+      <div class="character-visual">
+        <img src="./img/奥槍どん.png" alt="奥槍どん">
+      </div>
+      <div class="character-body">
+        <div class="eyebrow">奥槍戸山の家を支える兄</div>
+        <h2>奥槍どん</h2>
+        <div class="character-copy">奥槍戸山の家を支える、やさしく芯のある若きあるじ。</div>
+        <p>奥槍どんは、奥槍戸山の家を支える好青年です。やさしい口調で、山を訪れる人をあたたかく迎えてくれます。けれど、ただ穏やかなだけではありません。</p>
+        <p>奥槍戸山の家を守ること。山に来てくれた人に、ほっとする時間を届けること。地域の食や人のつながりを、次の世代へつないでいくこと。その一つひとつに、まっすぐな思いを持っています。</p>
+        <p>妹のなぎかちゃんに振り回されることもありますが、いつも少し離れたところから、やさしく見守っています。</p>
+        <dl class="profile-table">
+          <dt>性格</dt><dd>やさしい、落ち着いている、しっかり者、芯がある</dd>
+          <dt>役割</dt><dd>奥槍戸山の家、食、来訪者のおもてなし</dd>
+          <dt>口ぐせ</dt><dd>よう来てくれたね。ゆっくりしていって。</dd>
+          <dt>担当</dt><dd>食、拠点、休憩、安心できる場所づくり</dd>
+        </dl>
+        <div class="phrase-list">
+          <h3>セリフ例</h3>
+          <ul>
+            <li>「よう来てくれたね。ゆっくりしていって。」</li>
+            <li>「山道、疲れたでしょう。まずは少し休んでいってね。」</li>
+            <li>「ここが、山に来る人にとって安心できる場所であってほしいんだ。」</li>
+            <li>「なぎか、そんなに急がなくても大丈夫だよ。」</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="character-card" id="nagika" data-tone="bright" data-role="GUIDE / ENERGY">
+      <div class="character-visual">
+        <img src="./img/なぎかちゃん.png" alt="なぎかちゃん">
+      </div>
+      <div class="character-body">
+        <div class="eyebrow">奥槍どんの妹</div>
+        <h2>なぎかちゃん</h2>
+        <div class="character-copy">山の元気を届ける、奥槍どんの妹。</div>
+        <p>なぎかちゃんは、奥槍どんの妹で、元気いっぱいな女の子です。奥槍戸山の家のメニュー「おんなぎカレー」から生まれたキャラクターで、山に来てくれた人を明るく迎えるのが大好きです。</p>
+        <p>初めて来た人にも、子どもたちにも、すぐに声をかけて、山の楽しさや奥槍戸山の家の魅力を伝えてくれます。</p>
+        <p>少し勢いがありすぎて、兄の奥槍どんに心配されることもありますが、その明るさは、まわりの人を自然と笑顔にしてくれます。</p>
+        <dl class="profile-table">
+          <dt>性格</dt><dd>元気いっぱい、明るい、人なつっこい、前向き</dd>
+          <dt>役割</dt><dd>来訪者案内、子ども向け案内、イベントの盛り上げ役</dd>
+          <dt>口ぐせ</dt><dd>はじめてでも大丈夫！なぎかが案内するよ！</dd>
+          <dt>担当</dt><dd>おんなぎカレー、イベント、初めての人への案内</dd>
+        </dl>
+        <div class="phrase-list">
+          <h3>セリフ例</h3>
+          <ul>
+            <li>「いらっしゃーい！奥槍戸山の家へようこそ！」</li>
+            <li>「お山って、楽しいこといっぱいあるんよ！」</li>
+            <li>「お兄ちゃん、今日もいっぱいお客さん来てくれるかな？」</li>
+            <li>「おんなぎカレー、食べてみて！元気出るよ！」</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="character-card" id="sugijii" data-tone="forest" data-role="FOREST / MEMORY">
+      <div class="character-visual"><img src="./img/杉じぃ.png" alt="杉じぃ"></div>
+      <div class="character-body">
+        <div class="eyebrow">木頭杉の長老</div>
+        <h2>杉じぃ</h2>
+        <div class="character-copy">千年の記憶を持つ、木頭杉の長老。</div>
+        <p>杉じぃは、木頭杉の森に長い長い時間を生きてきた長老です。山のこと、木のこと、昔の暮らしのことをよく知っています。</p>
+        <p>いつもは「フォッフォッフォ」と陽気に笑っていますが、山の話になると少しだけ真剣になります。木をただの材料として見るのではなく、山の時間そのものとして見ることを大切にしています。</p>
+        <dl class="profile-table">
+          <dt>性格</dt><dd>陽気、物知り、少し説教好き、あたたかい</dd>
+          <dt>役割</dt><dd>山の記憶、木頭杉の文化、地域の歴史を伝える</dd>
+          <dt>口ぐせ</dt><dd>フォッフォッフォ。木にはのう、時間が詰まっとるんじゃ。</dd>
+          <dt>担当</dt><dd>木頭杉、山の歴史、木育、自然の循環</dd>
+        </dl>
+        <div class="phrase-list">
+          <h3>セリフ例</h3>
+          <ul>
+            <li>「木は急がん。じゃが、人が忘れるのは早いんじゃ。」</li>
+            <li>「年輪は、山の日記みたいなものじゃよ。」</li>
+            <li>「昔話ではないぞ。これからの話をするために、昔を知るんじゃ。」</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="character-card" id="yuzuri" data-tone="wise" data-role="KNOWLEDGE">
+      <div class="character-visual"><img src="./img/ユズリ.png" alt="ユズリ"></div>
+      <div class="character-body">
+        <div class="eyebrow">知恵を次へ繋ぐ案内人</div>
+        <h2>ユズリ</h2>
+        <div class="character-copy">知恵を、次へ繋ぐ少女。</div>
+        <p>ユズリは、山の資料や地域の記録を読むのが大好きな、冷静で博識な女の子です。地域にある資源をどうすれば未来へ残せるのか、いつも考えています。</p>
+        <p>記録するだけでなく、伝わる形に整えることを大切にしています。阿波山雅の活動では、情報発信、記録、学び、地域資源を未来へ渡すための案内役です。</p>
+        <dl class="profile-table">
+          <dt>性格</dt><dd>冷静、博識、観察力がある、整理上手</dd>
+          <dt>役割</dt><dd>情報発信、記録、学び、次世代継承</dd>
+          <dt>口ぐせ</dt><dd>残すだけでは足りません。伝わる形にしましょう。</dd>
+          <dt>担当</dt><dd>広報、地域資源、郷土資料、学習コンテンツ</dd>
+        </dl>
+        <div class="phrase-list">
+          <h3>セリフ例</h3>
+          <ul>
+            <li>「資源は、見つけ直して、伝わる形にして、初めて未来へ残ります。」</li>
+            <li>「山の魅力は、知っている人だけのものにしておくには惜しいです。」</li>
+            <li>「次の世代に渡すためには、記録と仕組みが必要です。」</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="character-card" id="sugito" data-tone="craft" data-role="CRAFT / ACTION">
+      <div class="character-visual"><img src="./img/スギト.png" alt="スギト"></div>
+      <div class="character-body">
+        <div class="eyebrow">見習いマイスター</div>
+        <h2>スギト</h2>
+        <div class="character-copy">赤身でできた、まっすぐな見習いマイスター。</div>
+        <p>スギトは、木のぬくもりを誰よりも信じている、まっすぐな見習いマイスターです。考えるより先に、まず手を動かすタイプです。</p>
+        <p>木に触れること。道を整えること。小屋を支えること。イベントで人を迎えること。その一つひとつが、山の未来をつくる仕事になると信じています。</p>
+        <dl class="profile-table">
+          <dt>性格</dt><dd>熱血、まっすぐ、行動派、曲がったことが嫌い</dd>
+          <dt>役割</dt><dd>ものづくり、現場活動、イベント、担い手づくり</dd>
+          <dt>口ぐせ</dt><dd>まず、やってみようぜ。</dd>
+          <dt>担当</dt><dd>木工、拠点整備、ボランティア、現場活動</dd>
+        </dl>
+        <div class="phrase-list">
+          <h3>セリフ例</h3>
+          <ul>
+            <li>「山を守るって、手を動かすことから始まるんだ。」</li>
+            <li>「触ればわかる。木にはちゃんと、ぬくもりがある。」</li>
+            <li>「小さな作業でも、続けば山の力になる。」</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="cta-banner">
+      <h3>仲間たちと一緒に、阿波山雅の活動を見てみませんか</h3>
+      <p>杉じぃ・ユズリ・スギトが、山の課題と活動を案内します。</p>
+      <div class="cta-row">
+        <a href="projects.html" class="btn btn-ghost">活動・プロジェクトを見る</a>
+        <a href="facility_guide.html" class="btn btn-ghost">奥槍戸山の家へ</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+    <footer class="footer" id="contact">
+      <div class="container">
+        <div class="footer-inner">
+          <div class="footer-brand">協同組合 阿波山雅</div>
+          <nav class="footer-links" aria-label="フッターナビゲーション" data-common-footer></nav>
+        </div>
+        <p class="copyright">© 協同組合阿波山雅（あわさんが） All Rights Reserved.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
