@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="協同組合 阿波山雅の組合加盟者をご紹介します。奥槍戸山の家・中野柚子園・ねこのモノづくり小屋・WOOD HEAD INC.の4事業者が加盟しています。">
+<title>組合加盟者｜協同組合 阿波山雅</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="awasanga-styles.css">
+<style>
+/* ===== 組合加盟者カード ===== */
+.member-card {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.member-card-header {
+  background: var(--ivory);
+  padding: 28px 36px 20px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.member-logo-wrap {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.member-logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-logo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--gray);
+  text-align: center;
+  padding: 8px;
+}
+
+.member-header-info {
+  flex: 1;
+}
+
+.member-header-info h2 {
+  font-size: 24px;
+  color: var(--green-deep);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.member-header-info .member-role {
+  font-size: 13px;
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+
+.member-sns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.member-sns a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--green-deep);
+  border: 1px solid var(--green-soft);
+  border-radius: 20px;
+  padding: 4px 12px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.member-sns a:hover {
+  background: var(--green-deep);
+  color: white;
+}
+
+.member-body {
+  padding: 28px 36px;
+}
+
+.member-section {
+  margin-bottom: 28px;
+}
+
+.member-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-deep);
+  border-left: 3px solid var(--green-soft);
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.member-section p {
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--charcoal);
+}
+
+.member-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.member-photos img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.member-badge {
+  display: inline-block;
+  background: var(--green-soft);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+.member-count-note {
+  font-size: 13px;
+  color: var(--gray);
+  margin-bottom: 32px;
+}
+
+@media (max-width: 600px) {
+  .member-card-header { padding: 20px; }
+  .member-body { padding: 20px; }
+  .member-header-info h2 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo"><a href="index.html">協同組合 阿波山雅</a></div>
+  <ul class="nav-links">
+    <li><a href="about.html">阿波山雅について</a></li>
+    <li><a href="facility-okuyarito.html">施設・拠点</a></li>
+    <li><a href="trail-guide.html">山と林道ガイド</a></li>
+    <li><a href="projects.html">活動・プロジェクト</a></li>
+    <li><a href="activity-report.html">活動報告</a></li>
+    <li><a href="support.html">応援する</a></li>
+    <li><a href="contact.html">お問い合わせ</a></li>
+  </ul>
+</nav>
+
+<header class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb">
+      <a href="index.html">ホーム</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>組合加盟者</span>
+    </div>
+    <h1>組合加盟者</h1>
+    <p>協同組合 阿波山雅には、那賀町木頭を拠点に活動する4つの事業者が加盟しています。</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+
+    <p class="member-count-note">※ 4事業者（2024/02/01時点）</p>
+
+    <!-- ==============================
+         ① 組合員代表：中野 久
+    =============================== -->
+    <div class="member-card">
+      <div class="member-card-header">
+        <div class="member-logo-wrap">
+          <!-- 奥槍戸山の家の写真に差し替え可 -->
+          <div class="member-logo-placeholder">画像<br>準備中</div>
+        </div>
+        <div class="member-header-info">
+          <h2>組合員代表：中野 久</h2>
+          <p class="member-role">奥槍戸 山の家 管理人 ／ 高の瀬レストハウス</p>
+          <div class="member-sns">
+            <a href="https://www.instagram.com/yamanoie.okuyarido/" target="_blank" rel="noopener">
+              Instagram
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=100015930728117" target="_blank" rel="noopener">
+              Facebook
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="member-body">
+
+        <div class="member-section">
+          <div class="member-section-title">奥槍戸 山の家（2007年〜 営業中）</div>
+          <span class="member-badge">4月〜11月</span>
+          <p>
+            剣山系南側に広がる次郎笈の麓、剣山スーパー林道沿いの奥槍戸 山の家にて営業しています（月火定休日）。<br>
+            また次郎ギュウから山の家への山道整備や剣山スーパー林道への巡回など、訪れる方々が快適に来られるため、また不用意に自然を壊さないための保全活動を行っています。
+          </p>
+        </div>
+
+        <div class="member-section">
+          <div class="member-section-title">高の瀬レストハウス（2022年〜 営業中）</div>
+          <span class="member-badge">冬季のみ</span>
+          <p>
+            スーパー林道終点近くの高の瀬峡にあるレストハウスで冬季限定の営業を行っています。山の家では提供が難しい定食や限定メニューなども提供しています。また木頭図書館前でも定期的に出張開店しています。
+          </p>
+        </div>
+
+        <div class="member-photos">
+          <!-- 現行HPから引き継ぎ。画像は別途ダウンロードして imgs/ フォルダ等に保存 -->
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUCzywmBaId58FCesdyYqSza0PJUiFzlKRpofxvVz2sz6LMrn3Qv0HdrLLlj41D6nxFqDvgzi-I861iQqzspwwkdjFnkUQ0toeF_Wwt3lCDGyZhGfe58__gtam1laoUVBG3RcJ19YMmGF7x1wMRW8JnWMjjGwekT9yJy5_5Kb4sCR8khJ__yI73mQ7WU_t2rAPPqTMMno6oMFGTVSBvn9BJZcdq2Ds5pdA5QFes=w1280" alt="奥槍戸山の家 外観" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUCYD-pTCREJeSt_wXJ5B16nkriNsS91jA6fblM-d-HYEIa7vg8MbrH7LH2RCwVnl9sSf3LkI16-YbwkUVXvwnpHPh44HpEAQMsVUbTjHwITHe_9l5zq-cRLem1oVVfEPdx_MrtLTaVx64rHcsubY__LtonEBKoKObRVMKmsz1dITf5yvA8oOFCzbqGpldhHuGVd4jZJHdM3kOCWRnY0eOGmAmecUCHp7V5M9D8=w1280" alt="奥槍戸山の家 店内" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUAvhfYUf0c9VIfrq4_sjqRJkEOjAs2lCO6zxOnAtD_Aw1g4d-1w-7RN4-AqSIwzzZOFUiM-jFZBk1CiJPQSrYHFNIFn-9Hmzb9jumQ6GdVjjCJeg8tV6RRyyiOpNb2t3OE9bQfT59omJCLEzUZIpw3s6tgcbcFTLes7IyXxSCknizUGQ7NAaxenLnenaCROEQuy_-zrOntQN-dGg0ekOSlfnz870tcc5ybDtHs=w1280" alt="山の家の料理" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUD0lrSGQkuHYWIyGJK7ivokLCba1kpbwBN6xNchOKm1RYlCl-rLpk1ZGBNqN2QdbjASY_TR3444aN5S3AgCYxeav5bpMPomvpEKFywxfPTi4simlQ1vFU_B_AMFPPQIbYgdfcrQSEnR2xHaLs0IMgd-5On7BtPPDJvc_0qzSyHlal5ugcwB4panHCzK3fOtuZdyBBDVA11SEXHtib0kLLmjVUBY9BIt8c=w1280" alt="スーパー林道" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==============================
+         ② 中野柚子園
+    =============================== -->
+    <div class="member-card">
+      <div class="member-card-header">
+        <div class="member-logo-wrap">
+          <div class="member-logo-placeholder">画像<br>準備中</div>
+        </div>
+        <div class="member-header-info">
+          <h2>中野柚子園</h2>
+          <p class="member-role">那賀町木頭 ／ ゆず農家</p>
+        </div>
+      </div>
+      <div class="member-body">
+
+        <div class="member-section">
+          <p>
+            那賀町木頭の山間部で、ゆず農家を営んでいます。奥深い山の清らかな空気と豊かな土壌が、風味豊かなゆずを育んでいます。日々、ゆずの成長を見守りながら、丹精込めて手入れを行います。良質なゆずをお届けできるよう頑張ります！
+          </p>
+        </div>
+
+        <div class="member-photos">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUDJ7InQHHlCHCmxOXwBu0BTamejLsBPxgwfgjV-nGHwzLs9coi7AK4SerxlwZgLBCDz7nYb_HF9mcLAy1-tWzP08AJgmFFBsWeAnU6xjyVVCskpFHVfucSS0KAUouhhkDliKtMieNwN_NWvcrdngk_EE0mXhl5X4Foipgnt4KHl2Xn-AcN2XDGCHF8gbMbMCkeptyDvq3XEWWRZWcAfagHNZ6OphTCfFrKdna54=w1280" alt="柚子の実" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUA4mdZztPQ8ziWYoTIILQo2EGXSZH1e29wfCkrvp4YQhpHvLvXmhbSRx7h6bOOHEa4BGixVobzX4fFHLRihDnvRe2Y-XI_c_-cUND6yFTT4AWjBEMYo_jQO9cho5sJqbe_DTOAnEf2ytdN-MCpxMSRLW-w3nVYtLFgt-PUyBveeUYR0nUdrAoua5dtnmKF_pstnetSWJiDbN8dStI11ReBUTPJ29eOaoIhA=w1280" alt="柚子農園" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUBlnFOFgYYatqpn1kEhhLSO7jMPl2MPzVK4JZKqL8fdc8i-kTrVOdAdzZhUKvHyOMXJ3bxPn6YFNUU4rJZH-hPO_G-qmG-6cNSN9OLK76vL8qW_ssu6KJ_TXD9135fIad4hpyByNXfmHU291DUzRqXn15IRM7-pyL9SOZM_Fd98O6pP7CtNRWiv4A8W7uPkGKcIUjX43munzTzzdlCbVba4yKH-UeOdvc62rXY=w1280" alt="柚子収穫" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUD1jTB9Du3n_WcHOqaVO4dwmZFMtYR-sfRPVF3OLQnT9MgOnaHqL5Og8L18iomxEecTg9zqPWjypns3hk0_mSg6UXe2tz0UNMk7Z0geX-R3fYcCGpgkWSZ28aUYJ821NsL1vUUAslUjiH3WhqubPA5f3rPjFdZr0YlElZNccXtC8l0Ts32aqDEu1q89n90OXioEOkqbPrsuXNhjpD1cunAsgzW8gX3R8UnOGvo=w1280" alt="木頭の山間" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==============================
+         ③ ねこのモノづくり小屋
+    =============================== -->
+    <div class="member-card">
+      <div class="member-card-header">
+        <div class="member-logo-wrap">
+          <div class="member-logo-placeholder">画像<br>準備中</div>
+        </div>
+        <div class="member-header-info">
+          <h2>ねこのモノづくり小屋</h2>
+          <p class="member-role">グッズ制作 ／ イベント企画・運用支援（2022年開業）</p>
+          <div class="member-sns">
+            <a href="https://www.instagram.com/hiro.my/" target="_blank" rel="noopener">
+              Instagram
+            </a>
+            <a href="https://yamap.com/users/1470710" target="_blank" rel="noopener">
+              YAMAP
+            </a>
+            <a href="https://www.youtube.com/channel/UCiNdPqkS416QPpi5k0MbsJg" target="_blank" rel="noopener">
+              YouTube
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="member-body">
+
+        <div class="member-section">
+          <p>
+            主に山の家をテーマにした様々なグッズの制作やイベント企画・運用支援を行っています。<br>
+            山の自然や登山文化を愛する方々に喜んでいただけるようなアイテムやサービスを提供し、山の家の魅力をより多くの人々に伝えるお手伝いをしています。
+          </p>
+        </div>
+
+        <div class="member-photos">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUC2Fpr--N-EL3u1k6S7sHmrU7VuLZ1GDlCsYyi6t2z4gWPcu7aAInLTep4zPutvohn20k3GmAFSqgHRbE4nEK1GypvzJqaS10q-f_su3aYEhoraPtO4Avr4o7NVr3jvPxh80hf96iR5pKLG9-goEk5snOnOyP7Pa2tx6ZjFOQMbFGxC1IBGfImz3uBPlbHgwkJ7lOzHbH9ypmb2sKaPlhA6ZDVkeu3hgQjI=w1280" alt="ねこのモノづくり小屋 作品" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUBuxjbqy7R0JWVslhWx-XbQ8Y0GoU96pmuH9QDoslnYD77UkEfRrgxmehYAWo2E2hBEUyICh-TDGtfM-ZSeKs1gF4RkUUeoNo-stwo7zvvPmwjqzbvcN1uuKdjP6WGDpFQtc92tbF-t-mrcqyx9bRKkliR6e8ge6LoF4iEtI3f9O1RK4H-lrOLL5Ph_mel11rxdUm9PndPkyhdvVRn1_IhsPrrPbjtwYGRrp38=w1280" alt="グッズ展示" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUBgepH5R5mrTCuIe6HUnEtDqfRisnSAeDG3bj1OFk0QsDwsoyUKYzdveEgYL35iuZpOcVwom5MuD_528FLJH5Suhs_moTOOGw0Vpaow_Mfosmftc44fxhMMDin3P4uhRjZUNDKD-jIk14aTn4n3_-yMN_FUUA8oZHyW98KhQdHiVz5KxSTBH1pqUJZwfFAWg-nHqS6TcVQflOAlEWCox93T7tzfBVufWqEfp7M=w1280" alt="イベントの様子" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUC8X9ET7O7HRpJyv1ou2-q8x3sIu_56rpD0L2nWw0CGunWLT2liVBsDj53rkBvtGJMN5-ZhONtW6PyaD5bl-VM_3NKSqeFmOrs0_sbV_qQb2gFCEK6Ifzf4Kqxq7f_2V6NZNRGRwALrNsrQaFV2Du4bKbM-k3q2GWQpZcoUwosL7LR7fDDPi9ll8-ilJAVIrUk3c8d89bXwcOtV7uek-nmswopOEWmamngm=w1280" alt="山の家グッズ" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==============================
+         ④ WOOD HEAD INC.
+    =============================== -->
+    <div class="member-card">
+      <div class="member-card-header">
+        <div class="member-logo-wrap">
+          <div class="member-logo-placeholder">画像<br>準備中</div>
+        </div>
+        <div class="member-header-info">
+          <h2>WOOD HEAD INC.</h2>
+          <p class="member-role">株式会社Wood Head ／ 木工製品の製造販売</p>
+          <div class="member-sns">
+            <a href="https://www.woodheadkito.com/" target="_blank" rel="noopener">
+              公式サイト
+            </a>
+            <a href="https://www.instagram.com/kkwoodhead63/" target="_blank" rel="noopener">
+              Instagram
+            </a>
+            <a href="https://www.facebook.com/woodhead55?locale=ja_JP" target="_blank" rel="noopener">
+              Facebook
+            </a>
+            <a href="https://twitter.com/WoodHead_Kito" target="_blank" rel="noopener">
+              X（旧Twitter）
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="member-body">
+
+        <div class="member-section">
+          <div class="member-section-title">木頭からの贈り物</div>
+          <p>
+            高知との県境、徳島の最果てに在るここ那賀町木頭を知って頂く機会は多くはありません。<br><br>
+            しかしお箸という伝統文化を通して県内外の皆様に木頭杉の歴史や木頭の風土を感じてもらいたい。<br><br>
+            そんな思いから、木頭杉の箸を中心とした木工製品の製造販売を中心に、地域の環境問題と地域創生に向けたプロジェクトに取り組んでいます。
+          </p>
+        </div>
+
+        <div class="member-photos">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUDMvcqqIfXRKJq6VB8EngP5bWaXig5WkdnHlCdCC7HqkVYh46Gv8pOeQKAHv3ess95PmPEiJlQdCGiDj2u5v0IpFHRPUIdktV7oCgzlwx_aIWqbkIaRAOAK8oMSbYDARqNAn2_greVfNxC2Wy3rB4Xf3joQGcSwvVsxsqsx1=w1280" alt="WOOD HEAD 木工製品" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUAnKlb0XHsMLkM1IuTfBFHgyqh8nBhYWLU0rPDR-EqUAKXO0-V3m_rxbirdSQNgibE5Ha0CXQU19rtaHoX16ZE91_ylseSTl_DVHhJ0PS74son5jzXLP7OwYWzNRPeZuJfcFUNhwVKBXi1HWiPE4VuXj38VjxZUUbBh0eW2CM3YYuohuz9uoWOreNm1a6Jm50mZQcJs-w5M4DqXKX3fmqchNVhCqUmjgUBf3CM=w1280" alt="木頭杉のお箸" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUC3yF8xaQGsIPzzs3rDrwR59X0SBzsxFLm1jA2PbzA7b2T4BsBXzatoLTsEr24KWlY7cmKXB1o2UY46tTAM4wLyp5ulYEmYsRqd5t3bWILLaY4tYC8ZGeiJsjbJueEbdyUR0-HE3o4JHf_rfGLFDFZ5zVorWz1elPKueRq1bRp3U6nUndQ1VZcQUvUWwsmggXIs0zJx-U8mBmi3Dpi6K5HPhdL46x2HHSh8=w1280" alt="木工製品の展示" loading="lazy">
+          <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUChfzhdw0mCpmVPXV-J0tWHND5DXaWjTJqBhjs4z07BhIY3QWCiuVEYbw8YYbGvSIgcRdyQxR6RWUVCMHD14h6Br_niDUfMlHoGbaU0z5Zf_zIUkr24-H8rxfNxG4a9RCXmz0egONSo0rGssh98cRDXXywM4h1bX7dNPRttNGIoLTCTMr_42sDfnjXTK4nNfa5Du5wDtqJP66FTDr8qZwqoe0hCf17qmd8dDhw=w1280" alt="木頭の林業" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 関連リンク -->
+    <div class="related-links">
+      <h4>関連ページ</h4>
+      <div class="related-grid">
+        <a href="about.html" class="related-link">阿波山雅について</a>
+        <a href="facility-okuyarito.html" class="related-link">奥槍戸山の家</a>
+        <a href="support.html" class="related-link">応援・参加する</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <strong>協同組合 阿波山雅</strong>
+      徳島・剣山系のふもとから、山と地域を次の世代へ。<br>
+      所在地：<span class="placeholder-note">要記入</span><br>
+      電話：<span class="placeholder-note">要記入</span><br>
+      メール：<span class="placeholder-note">要記入</span>
+    </div>
+    <div>
+      <h5>サイト</h5>
+      <ul>
+        <li><a href="index.html">ホーム</a></li>
+        <li><a href="about.html">阿波山雅について</a></li>
+        <li><a href="facility-okuyarito.html">施設・拠点</a></li>
+        <li><a href="trail-guide.html">山と林道ガイド</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>関わる</h5>
+      <ul>
+        <li><a href="projects.html">活動・プロジェクト</a></li>
+        <li><a href="activity-report.html">活動報告</a></li>
+        <li><a href="support.html">応援・参加する</a></li>
+        <li><a href="contact.html">お問い合わせ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>SNS</h5>
+      <ul>
+        <li><a href="https://www.instagram.com/yamanoie.okuyarido/" target="_blank" rel="noopener">Instagram（山の家）</a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=100015930728117" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.youtube.com/channel/UCiNdPqkS416QPpi5k0MbsJg" target="_blank" rel="noopener">YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2024-2025 協同組合 阿波山雅 All Rights Reserved.</div>
+</footer>
+
+</body>
+</html>

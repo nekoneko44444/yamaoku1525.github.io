@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="協同組合 阿波山雅の活動報告。数字の裏にある人の動きと、山を次の世代へつなぐ具体的な取り組みを報告します。" />
+  <title>活動報告｜数字と物語で見る阿波山雅｜協同組合 阿波山雅</title>
+  <link rel="stylesheet" href="about-styles.css" />
+  <style>
+    .report-lead {
+      position: relative;
+      z-index: 3;
+      margin-top: -70px;
+    }
+
+    .report-statement {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 36px;
+      align-items: center;
+      padding: clamp(30px, 5vw, 60px);
+      border-radius: 38px;
+      background:
+        linear-gradient(135deg, rgba(255,250,240,.98), rgba(255,255,255,.92)),
+        url("./img/top_yamanoie1.png") center/cover no-repeat;
+      border: 1px solid rgba(36,75,55,.12);
+      box-shadow: var(--shadow);
+    }
+
+    .report-statement h2 {
+      margin: 0;
+      color: var(--green);
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.22;
+      letter-spacing: .08em;
+    }
+
+    .report-statement p {
+      color: var(--muted);
+      line-height: 2;
+    }
+
+    .statement-note {
+      padding: 28px;
+      border-radius: 28px;
+      color: #fff;
+      background: rgba(36,75,55,.94);
+      box-shadow: 0 22px 60px rgba(22,50,36,.22);
+    }
+
+    .statement-note .section-kicker {
+      color: var(--gold);
+    }
+
+    .statement-note p {
+      color: rgba(255,255,255,.9);
+      margin: 16px 0 0;
+    }
+
+    .kpi-story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .kpi-story-card {
+      position: relative;
+      overflow: hidden;
+      padding: 30px;
+      border-radius: 30px;
+      background: #fff;
+      border: 1px solid rgba(36,75,55,.1);
+      box-shadow: 0 18px 46px rgba(22,50,36,.08);
+    }
+
+    .kpi-story-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 7px;
+      background: linear-gradient(90deg, var(--green), var(--gold));
+    }
+
+    .kpi-number {
+      color: var(--green);
+      font-size: clamp(42px, 5vw, 68px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      margin-bottom: 8px;
+    }
+
+    .kpi-label {
+      color: var(--ink);
+      font-weight: 900;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-story-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.85;
+      margin: 0;
+    }
+
+    .kpi-story-card .meaning {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: var(--paper);
+      color: var(--green);
+      font-size: 13px;
+      line-height: 1.75;
+      font-weight: 700;
+    }
+
+    .report-chapter-list {
+      display: grid;
+      gap: 30px;
+    }
+
+    .report-chapter {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 30px;
+      padding: clamp(26px, 4vw, 42px);
+      border-radius: 34px;
+      background: #fff;
+      border: 1px solid rgba(36,75,55,.1);
+      box-shadow: 0 18px 52px rgba(22,50,36,.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .report-chapter::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 8px;
+      background: linear-gradient(90deg, var(--green), var(--gold));
+    }
+
+    .chapter-symbol {
+      align-self: start;
+      display: grid;
+      place-items: center;
+      min-height: 180px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 25% 20%, rgba(218,165,63,.45), transparent 34%),
+        linear-gradient(135deg, var(--green), #517b55);
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 16px 36px rgba(22,50,36,.18);
+    }
+
+    .chapter-symbol .icon {
+      font-size: 54px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .chapter-symbol span {
+      display: block;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      opacity: .86;
+    }
+
+    .report-body .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .report-body .tag-row span {
+      display: inline-flex;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(36,75,55,.08);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .report-body h3 {
+      margin: 0 0 14px;
+      color: var(--green);
+      font-size: clamp(25px, 3vw, 38px);
+      line-height: 1.35;
+    }
+
+    .report-body p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 2;
+    }
+
+    .report-body p + p {
+      margin-top: 12px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .detail-box {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: var(--paper);
+      border: 1px solid rgba(36,75,55,.08);
+    }
+
+    .detail-box b {
+      display: block;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+
+    .detail-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .next-action {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 6px solid var(--gold);
+      border-radius: 18px;
+      background: rgba(248,242,232,.86);
+    }
+
+    .next-action b {
+      color: var(--green);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .next-action p {
+      color: var(--ink);
+      line-height: 1.85;
+      margin: 0;
+    }
+
+    .trust-wall {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .trust-item {
+      min-height: 112px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(36,75,55,.1);
+      color: var(--green);
+      font-weight: 900;
+      box-shadow: 0 14px 34px rgba(22,50,36,.06);
+    }
+
+    .trust-item small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .timeline-deep {
+      display: grid;
+      gap: 16px;
+      position: relative;
+    }
+
+    .timeline-deep-item {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 20px;
+      padding: 22px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid rgba(36,75,55,.1);
+      box-shadow: 0 12px 30px rgba(22,50,36,.06);
+    }
+
+    .timeline-deep-date {
+      color: var(--gold-dark);
+      font-weight: 900;
+    }
+
+    .timeline-deep-body strong {
+      display: block;
+      color: var(--green);
+      margin-bottom: 4px;
+      font-size: 17px;
+    }
+
+    .timeline-deep-body span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .trust-wall { grid-template-columns: repeat(3, 1fr); }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .report-statement,
+      .kpi-story-grid,
+      .report-chapter {
+        grid-template-columns: 1fr;
+      }
+
+      .report-lead {
+        margin-top: -48px;
+      }
+
+      .chapter-symbol {
+        min-height: 120px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .report-statement,
+      .report-chapter {
+        border-radius: 26px;
+      }
+
+      .trust-wall {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .timeline-deep-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="協同組合阿波山雅 ホーム">
+          <img src="./img/awasanga_logo_w2.png" alt="協同組合阿波山雅ロゴ" />
+          <div>
+            <small>協同組合</small>
+            <strong>阿波山雅</strong>
+            <span>あわさんが</span>
+          </div>
+        </a>
+
+        <nav class="nav" aria-label="メインナビゲーション">
+          <a href="index.html">ホーム</a>
+          <a href="about.html">阿波山雅について</a>
+          <a href="facility_guide.html">施設・山と林道ガイド</a>
+          <a href="projects.html">活動・プロジェクト</a>
+          <a class="is-active" href="activity-report.html">活動報告</a>
+          <a href="characters.html">仲間たち</a>
+          <a href="support.html">応援する</a>
+          <a href="contact.html">お問い合わせ</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="sub-hero">
+        <div class="container sub-hero-inner">
+          <div class="breadcrumb">
+            <a href="index.html">ホーム</a>
+            <span>›</span>
+            <span>活動報告</span>
+          </div>
+          <div class="hero-label">Activity Report</div>
+          <h1>数字の裏に、<br>人の動きがある。</h1>
+          <p>活動報告は、実績を大きく見せるためだけのページではありません。どんな人が動き、何が生まれ、次に何へつながるのかを、正直に積み重ねていく記録です。</p>
+        </div>
+        <div class="hero-badge" aria-hidden="true"><span>2024-2026<br>小さな実践を<br>積み上げる</span></div>
+      </section>
+
+      <section class="report-lead">
+        <div class="container">
+          <div class="report-statement">
+            <div>
+              <div class="section-kicker">Report Statement</div>
+              <h2>まだ途中。<br>でも、確かに動いている。</h2>
+              <p>阿波山雅は新しい団体です。大きな成果だけを並べられる段階ではありません。けれど、山の拠点を開け、食を届け、人を迎え、行政や地域の仲間と話し、次の取り組みを準備してきました。</p>
+              <p>このページでは、単なる実績名ではなく、その背景、行動、意味、次に進めることまで記録します。</p>
+            </div>
+            <div class="statement-note">
+              <div class="section-kicker">杉じぃ</div>
+              <p>短い年月でも、続けてきたことには年輪ができるんじゃ。数字だけでなく、人の動きまで見てほしいのう。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Key Numbers</div>
+              <h2 class="section-title">数字で見る阿波山雅</h2>
+            </div>
+            <p class="section-text">数字は、山に人が動き始めていることを示す手がかりです。</p>
+          </div>
+
+          <div class="kpi-story-grid">
+            <article class="kpi-story-card">
+              <div class="kpi-number">6,174</div>
+              <div class="kpi-label">来場者</div>
+              <p>2025年4月〜11月、奥槍戸山の家を訪れてくださった方の実績です。山の奥にある拠点にも、人が立ち寄る理由があれば流れは生まれます。</p>
+              <div class="meaning">意味：奥槍戸山の家が、登山者・バイカー・地域の人をつなぐ入口になり得ることを示しています。</div>
+            </article>
+
+            <article class="kpi-story-card">
+              <div class="kpi-number">約15,400</div>
+              <div class="kpi-label">林道通行量</div>
+              <p>剣山スーパー林道の実測データをもとにした年間推計です。林道にはすでに人の流れがあり、その流れを地域の滞在・食・体験へつなげる余地があります。</p>
+              <div class="meaning">意味：通過する人を、地域に関わる人へ変える余地があります。</div>
+            </article>
+
+            <article class="kpi-story-card">
+              <div class="kpi-number">6</div>
+              <div class="kpi-label">連携・掲載先</div>
+              <p>行政、財団、メディア、企業、地域団体など、少しずつ外部との接点が生まれています。信頼は一度でできるものではなく、対話と実績の積み重ねです。</p>
+              <div class="meaning">意味：阿波山雅の活動が、地域内外に届き始めています。</div>
+            </article>
+          </div>
+
+          <p class="section-text" style="margin-top:20px; text-align:center;">※ 来場者は2025年4〜11月の実績。林道通行量は同期間の実測データに基づく年間推計です。</p>
+        </div>
+      </section>
+
+      <section class="members-section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">What We Have Done</div>
+              <h2 class="section-title">私たちがやってきたこと</h2>
+            </div>
+            <p class="section-text">ひとつずつの活動に、背景と次の一手があります。</p>
+          </div>
+
+          <div class="report-chapter-list">
+            <article class="report-chapter">
+              <div class="chapter-symbol"><div><div class="icon">🥾</div><span>Trail</span></div></div>
+              <div class="report-body">
+                <div class="tag-row"><span>継続中</span><span>次郎笈</span><span>山道整備</span></div>
+                <h3>次郎笈トレイル再生</h3>
+                <p>剣山系の名峰・次郎笈の稜線にあるトレイルは、山を愛する人にとって特別な道です。一方で、山道は自然に任せるだけでは維持できません。風雨、人の通行、植生の変化によって、少しずつ歩きにくくなり、放っておけば次の世代が安心して歩ける道ではなくなってしまいます。</p>
+                <p>阿波山雅は、地域の山仲間とともに、この道を「次の世代も歩ける道」として再生していく活動を進めています。大規模な整備だけでなく、現状を確認し、できる作業を積み重ね、山に関わる人を増やしていくことを大切にしています。</p>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>背景</b><span>山道は自然環境と人の利用の両方に影響され、継続的な見守りが必要です。</span></div>
+                  <div class="detail-box"><b>行動</b><span>地域の山仲間と連携し、現地確認・整備・次回活動の準備を進めています。</span></div>
+                  <div class="detail-box"><b>意味</b><span>山を歩く人が、山を支える側にも回れる入口になります。</span></div>
+                </div>
+                <div class="next-action"><b>次に進めること</b><p>安全管理、参加者募集、活動報告の発信を整え、ボランティア参加につながる仕組みをつくります。</p></div>
+              </div>
+            </article>
+
+            <article class="report-chapter">
+              <div class="chapter-symbol"><div><div class="icon">🍚</div><span>Food</span></div></div>
+              <div class="report-body">
+                <div class="tag-row"><span>2024年3月〜</span><span>年間500食目標</span><span>徳島新聞掲載</span></div>
+                <h3>フードリボン</h3>
+                <p>フードリボンは、「お腹が空いている子も、年配の方も、誰でも一食を」という思いから始まった飲食支援活動です。山の拠点である奥槍戸山の家が、ただ食事を提供する場所ではなく、人を気にかけ、支え合う場所になることを目指しています。</p>
+                <p>食は、誰にとってもわかりやすい支援です。けれど、その背景には「困っている人が声を上げやすい地域でありたい」「食べることを通じて人がつながる場所でありたい」という願いがあります。</p>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>背景</b><span>山間地域では、子ども・高齢者・来訪者が自然に交わる場所が限られます。</span></div>
+                  <div class="detail-box"><b>行動</b><span>奥槍戸山の家と周辺で、年間500食を目標に一食支援を進めています。</span></div>
+                  <div class="detail-box"><b>意味</b><span>食を通じて、支援が特別ではなく日常の中にある状態をつくります。</span></div>
+                </div>
+                <div class="next-action"><b>次に進めること</b><p>支援者への報告、提供数の記録、協賛の受け皿を整え、継続できる活動にしていきます。</p></div>
+              </div>
+            </article>
+
+            <article class="report-chapter">
+              <div class="chapter-symbol"><div><div class="icon">🗺</div><span>Quest</span></div></div>
+              <div class="report-body">
+                <div class="tag-row"><span>Woodhead協力</span><span>木頭クマ祭り</span><span>体験型企画</span></div>
+                <h3>木頭クエスト × クマ祭り</h3>
+                <p>地域の魅力は、ただ並べるだけでは届きません。人が自分で歩き、探し、出会い、発見する仕掛けがあることで、地域体験は記憶に残ります。木頭クエストは、そうした発見の楽しさを取り入れた体験型コンテンツです。</p>
+                <p>第4回木頭クマ祭りでは、Woodheadの協力のもと、通常のスタンプラリーよりも参加者が主体的に動きやすい仕組みを試しました。地域資源をゲームのように楽しめる形にすることで、子どもや初めて来る人にも入口が生まれます。</p>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>背景</b><span>地域の魅力を知っている人だけでなく、初めて来る人にも伝える必要があります。</span></div>
+                  <div class="detail-box"><b>行動</b><span>木頭クマ祭りで体験型コンテンツを実施し、参加しやすい仕掛けを検証しました。</span></div>
+                  <div class="detail-box"><b>意味</b><span>地域資源を「知る」だけでなく「遊びながら巡る」体験へ変えます。</span></div>
+                </div>
+                <div class="next-action"><b>次に進めること</b><p>剣山スーパー林道との連携版を検討し、周遊・滞在・SNS発信につながる企画へ発展させます。</p></div>
+              </div>
+            </article>
+
+            <article class="report-chapter">
+              <div class="chapter-symbol"><div><div class="icon">🤝</div><span>Town</span></div></div>
+              <div class="report-body">
+                <div class="tag-row"><span>2026年3月〜</span><span>行政協議</span><span>平の里</span></div>
+                <h3>那賀町賑わい課との連携協議</h3>
+                <p>地域を動かすには、思いだけでなく、行政・事業者・地域住民・来訪者をつなぐ設計が必要です。阿波山雅は「平の里を基点とした那賀町活性化」をテーマに、那賀町賑わい課との認識合わせと協議を進めています。</p>
+                <p>ポイントは、新規客層の開拓と、すでに林道を訪れているユーザーの取り込みです。通過するだけの人を、食べる人、泊まる人、買う人、また来る人に変えていく。そこに地域活性化の余地があります。</p>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>背景</b><span>山と林道には人の流れがある一方で、地域内の消費や滞在へ十分につながっていません。</span></div>
+                  <div class="detail-box"><b>行動</b><span>行政との対話を始め、平の里を基点とした活性化構想を整理しています。</span></div>
+                  <div class="detail-box"><b>意味</b><span>公共性のある取り組みとして、行政・団体・個人が協働する土台になります。</span></div>
+                </div>
+                <div class="next-action"><b>次に進めること</b><p>周遊導線、情報発信、イベント連携、施設間の役割分担を具体化していきます。</p></div>
+              </div>
+            </article>
+
+            <article class="report-chapter">
+              <div class="chapter-symbol"><div><div class="icon">📖</div><span>Media</span></div></div>
+              <div class="report-body">
+                <div class="tag-row"><span>vol.001-004</span><span>季刊発行</span><span>記録と発信</span></div>
+                <h3>奥槍戸やま日和</h3>
+                <p>活動は、記録しなければ見えなくなります。奥槍戸やま日和は、山と地域の話題、組合員紹介、プロジェクト報告などを届ける広報誌です。vol.001からvol.004まで発行を重ね、地域の記憶を少しずつ蓄積してきました。</p>
+                <p>広報誌は、単なるお知らせではありません。活動に関わった人の思いを残し、支援者に現在地を伝え、まだ阿波山雅を知らない人へ入口をつくる役割があります。</p>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>背景</b><span>地域活動は、現場に来た人以外には見えにくく、時間が経つと忘れられます。</span></div>
+                  <div class="detail-box"><b>行動</b><span>季刊広報誌として、活動報告・人物紹介・地域の話題を発信しています。</span></div>
+                  <div class="detail-box"><b>意味</b><span>阿波山雅の活動を、記憶と信頼の積み重ねとして残します。</span></div>
+                </div>
+                <div class="next-action"><b>次に進めること</b><p>Web掲載やSNS連携を進め、紙とデジタルの両方で活動を届けます。</p></div>
+              </div>
+            </article>
+
+            <article class="report-chapter">
+              <div class="chapter-symbol"><div><div class="icon">🏆</div><span>Trust</span></div></div>
+              <div class="report-body">
+                <div class="tag-row"><span>掲載</span><span>助成採択</span><span>企業連携</span></div>
+                <h3>メディア・受託・登録実績</h3>
+                <p>四国放送ゴジカル特集、徳島新聞掲載、日亜ふるさと振興財団の助成採択、徳島ガンバロウズ サポートカンパニー登録、とくしま林道ナビ主催イベント参加。これらは一つひとつ、外部から阿波山雅の活動が認識され始めている証です。</p>
+                <p>私たちは、掲載や採択をゴールとは考えていません。そこから新しい人に知ってもらい、協働の機会を増やし、現場に還元していくことが大切です。</p>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>背景</b><span>新しい団体が継続的に活動するには、外部からの信頼と接点が必要です。</span></div>
+                  <div class="detail-box"><b>行動</b><span>メディア掲載、助成採択、企業登録、イベント参加を通じて接点を広げています。</span></div>
+                  <div class="detail-box"><b>意味</b><span>阿波山雅の活動が、地域内外へ届き始めていることを示します。</span></div>
+                </div>
+                <div class="next-action"><b>次に進めること</b><p>実績を次の協賛・連携・参加へつなげ、活動の継続性を高めます。</p></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head center">
+            <div>
+              <div class="section-kicker">Partners</div>
+              <h2 class="section-title">一緒に動いてくれているみなさん</h2>
+              <p class="section-text">ロゴ画像が揃い次第、テキストバッジから正式ロゴへ差し替えます。</p>
+            </div>
+          </div>
+
+          <div class="trust-wall">
+            <div class="trust-item">四国放送<small>メディア</small></div>
+            <div class="trust-item">徳島新聞<small>掲載</small></div>
+            <div class="trust-item">日亜ふるさと<br>振興財団<small>助成採択</small></div>
+            <div class="trust-item">徳島<br>ガンバロウズ<small>サポートカンパニー</small></div>
+            <div class="trust-item">Woodhead<small>企画協力</small></div>
+            <div class="trust-item">那賀町<br>賑わい課<small>協議中</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="members-section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Timeline</div>
+              <h2 class="section-title">主な沿革</h2>
+            </div>
+            <p class="section-text">設立から現在まで、活動を少しずつ積み上げてきました。</p>
+          </div>
+
+          <div class="timeline-deep">
+            <div class="timeline-deep-item">
+              <div class="timeline-deep-date">2024年1月</div>
+              <div class="timeline-deep-body"><strong>協同組合 阿波山雅 設立</strong><span>山と地域を次の世代へつなぐため、組織としての活動を開始しました。</span></div>
+            </div>
+            <div class="timeline-deep-item">
+              <div class="timeline-deep-date">2024年3月</div>
+              <div class="timeline-deep-body"><strong>フードリボン活動開始</strong><span>食を通じた支援活動を始め、徳島新聞にも掲載されました。</span></div>
+            </div>
+            <div class="timeline-deep-item">
+              <div class="timeline-deep-date">2024年</div>
+              <div class="timeline-deep-body"><strong>木頭クマ祭り 出店・登壇</strong><span>地域イベントに参加し、木頭クエストなど体験型企画の可能性を広げました。</span></div>
+            </div>
+            <div class="timeline-deep-item">
+              <div class="timeline-deep-date">2025年4-11月</div>
+              <div class="timeline-deep-body"><strong>奥槍戸山の家 来場6,174人</strong><span>山の奥にある拠点にも、食・休憩・情報の価値があれば人が訪れることを示しました。</span></div>
+            </div>
+            <div class="timeline-deep-item">
+              <div class="timeline-deep-date">2025年</div>
+              <div class="timeline-deep-body"><strong>助成採択・メディア掲載・企業登録</strong><span>日亜ふるさと振興財団の助成採択、徳島ガンバロウズ サポートカンパニー登録、四国放送ゴジカル特集など、外部接点が広がりました。</span></div>
+            </div>
+            <div class="timeline-deep-item">
+              <div class="timeline-deep-date">2026年3月</div>
+              <div class="timeline-deep-body"><strong>那賀町賑わい課との協議開始</strong><span>平の里を基点とした地域活性化について、行政との認識合わせを始めました。</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta-section">
+        <div class="container">
+          <div class="cta-panel cta-panel-wide">
+            <h2>ここまで来られたのは、<br>皆さまのおかげです。</h2>
+            <p>活動は、まだ途中です。けれど、山を守るための人の動きは確かに生まれています。続けていくために、もう一歩、一緒にお願いします。</p>
+            <div class="cta-actions">
+              <a class="btn btn-gold" href="support.html">応援・参加する　→</a>
+              <a class="btn btn-dark" href="projects.html">活動・プロジェクトへ　→</a>
+            </div>
+          </div>
+
+          <div class="related-links" aria-label="関連ページ">
+            <a class="related-link" href="projects.html">活動・プロジェクト <span>→</span></a>
+            <a class="related-link" href="facility_guide.html">施設・山と林道ガイド <span>→</span></a>
+            <a class="related-link" href="support.html">応援・参加する <span>→</span></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="contact">
+      <div class="container">
+        <div class="footer-inner">
+          <div class="footer-brand">協同組合 阿波山雅</div>
+          <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="about.html">阿波山雅について</a>
+            <a href="facility_guide.html">施設・山と林道ガイド</a>
+            <a href="projects.html">活動・プロジェクト</a>
+            <a href="activity-report.html">活動報告</a>
+            <a href="news.html">お知らせ</a>
+            <a href="support.html">応援・参加する</a>
+            <a href="contact.html">お問い合わせ</a>
+          </div>
+        </div>
+        <p class="copyright">© 協同組合阿波山雅（あわさんが） All Rights Reserved.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
