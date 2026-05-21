@@ -1,75 +1,236 @@
 {
-  "_comment": "お知らせデータ。新しい順に items 配列の先頭に1ブロック追加してください。日付は ISO 形式（YYYY-MM-DD）でソートに使われます。displayDate は表示用の自由フォーマットです。",
+  "_comment": "www.awasanga.com の TOPIC／過去TOPIC（2026-05-21確認）に合わせたお知らせデータです。date はソート用、displayDate は表示用です。section は TOPIC／過去TOPIC の由来を示します。",
   "items": [
     {
-      "id": "2026-03-naga-symposium",
-      "date": "2026-03-15",
-      "displayDate": "2026/03/15",
-      "category": "行政連携",
-      "title": "那賀町賑わい課との連携協議スタート",
-      "summary": "「平の里を基点とした那賀町活性化」をテーマに、那賀町賑わい課との認識合わせ・協議を開始しました。林道走破→平の里→木頭→那賀川沿いの周回経済モデルを提案しています。",
-      "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=85",
-      "url": "projects.html"
-    },
-    {
       "id": "2025-11-16-jiroggi-trail-2",
+      "section": "TOPIC",
       "date": "2025-11-16",
       "displayDate": "2025/11/16",
       "category": "プロジェクト",
       "title": "次郎笈トレイル再生プロジェクト（第二弾）活動実施中！",
-      "summary": "剣山系の名峰・次郎笈の稜線にあるトレイルを「次の世代も歩ける道」として整備するプロジェクトの第二弾を実施中です。",
+      "summary": "次郎笈トレイル再生プロジェクトの第二弾を実施中です。山道を次の世代も歩ける道として守るための活動です。",
       "image": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=85",
-      "url": "projects.html"
+      "url": "projects.html#trail"
     },
     {
       "id": "2025-11-16-rindo-meeting",
+      "section": "TOPIC",
       "date": "2025-11-16",
       "displayDate": "2025/11/16",
       "category": "イベント",
-      "title": "剣山スーパー林道ミーティングに参加します",
-      "summary": "とくしま林道ナビ主催のミーティングに参加し、林道の現状と利用者の声を共有しました。",
-      "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=85",
-      "url": "facility_guide.html"
+      "title": "とくしま林道ナビ主催「剣山スーパー林道ミーティング」に参加します。",
+      "summary": "とくしま林道ナビ主催の剣山スーパー林道ミーティングに参加します。奥槍戸周辺の林道利用と地域交流につながる機会です。",
+      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=85",
+      "url": "https://rindonavi.com/info.html?news_id=17606704497413"
     },
     {
       "id": "2025-11-10-yamabiyori-vol004",
+      "section": "TOPIC",
       "date": "2025-11-10",
       "displayDate": "2025/11/10",
       "category": "広報誌",
-      "title": "奥槍戸やま日和 vol.004（秋号）発行",
-      "summary": "木頭杉と地域の物語、組合員紹介、プロジェクト報告などを掲載した季刊広報誌の最新号を発行しました。",
+      "title": "奥槍戸やま日和 vol004（秋号）発行",
+      "summary": "奥槍戸やま日和 vol004（秋号）を発行しました。阿波山雅の活動や地域の物語をお届けします。",
       "image": "https://images.unsplash.com/photo-1474366521946-c3d4b507abf2?auto=format&fit=crop&w=800&q=85",
-      "url": "projects.html"
+      "url": "projects.html#newsletter"
+    },
+    {
+      "id": "2025-10-27-nichia-furusato",
+      "section": "TOPIC",
+      "date": "2025-10-27",
+      "displayDate": "2025/10/27",
+      "category": "メディア",
+      "title": "日亜ふるさと振興財団様のサイトに助成先活動団体として紹介されました。",
+      "summary": "日亜ふるさと振興財団様のサイト「助成先の活動紹介」に、阿波山雅の活動が紹介されました。",
+      "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=85",
+      "url": "https://www.nichia-furusato.or.jp/josei"
+    },
+    {
+      "id": "2025-10-18-jiroggi-trail-1",
+      "section": "TOPIC",
+      "date": "2025-10-18",
+      "displayDate": "2025/10/18",
+      "category": "プロジェクト",
+      "title": "次郎笈トレイル再生プロジェクト活動（第一弾）実施中！",
+      "summary": "次郎笈トレイル再生プロジェクトの第一弾を実施中です。山道整備と保全活動を進めています。",
+      "image": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=85",
+      "url": "projects.html#trail"
+    },
+    {
+      "id": "2025-08-01-gambarous",
+      "section": "TOPIC",
+      "date": "2025-08-01",
+      "displayDate": "2025/08/01",
+      "category": "団体",
+      "title": "当組合は「徳島ガンバロウズ」を応援しています。サポートカンパニーに登録しました！",
+      "summary": "協同組合阿波山雅は徳島ガンバロウズを応援しています。サポートカンパニーとして登録しました。",
+      "image": "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=85",
+      "url": "https://gambarous.jp/"
+    },
+    {
+      "id": "2025-04-30-foodribbon-tokushima-news",
+      "section": "TOPIC",
+      "date": "2025-04-30",
+      "displayDate": "2025/04/30",
+      "category": "メディア",
+      "title": "当組合が参加している“フードリボン活動”が徳島新聞の記事に掲載されました。",
+      "summary": "阿波山雅が参加しているフードリボン活動について、徳島新聞の記事で紹介されました。",
+      "image": "https://images.unsplash.com/photo-1519984388953-d2406bc725e1?auto=format&fit=crop&w=800&q=85",
+      "url": "https://www.topics.or.jp/articles/-/1231668"
     },
     {
       "id": "2025-04-05-okuyarito-open",
+      "section": "TOPIC",
       "date": "2025-04-05",
       "displayDate": "2025/04/05",
       "category": "営業情報",
-      "title": "「奥槍戸山の家」今年度営業開始",
-      "summary": "4月5日より、奥槍戸山の家の今年度の営業がスタートしました。看板メニュー「おとこ気カレー」とともに、皆さまのお越しをお待ちしています。営業期間は11月末まで。",
-      "image": "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=800&q=85",
-      "url": "facility_guide.html"
+      "title": "「奥槍戸山の家」4/5（土）〜11月末まで今年度も営業開始いたします！",
+      "summary": "奥槍戸山の家が4月5日（土）から11月末まで今年度の営業を開始します。",
+      "image": "./img/top_yamanoie1.png",
+      "url": "facility_guide.html#okuyarito"
+    },
+    {
+      "id": "2024-11-12-gojical-okuyarito",
+      "section": "TOPIC",
+      "date": "2024-11-12",
+      "displayDate": "2024/11/12",
+      "category": "メディア",
+      "title": "四国放送のゴジカルで「奥槍戸山の家」特集が放送されました。※YouTube動画有",
+      "summary": "四国放送のゴジカルで、奥槍戸山の家の特集が放送されました。",
+      "image": "./img/top_yamanoie1.png",
+      "url": "https://www.jrt.co.jp/movies/gojical_173025334512973"
+    },
+    {
+      "id": "2025-03-23-kito-kuma-festival",
+      "section": "過去TOPIC",
+      "date": "2025-03-23",
+      "displayDate": "2025/03/23",
+      "category": "イベント",
+      "title": "木頭クマ祭り：「奥槍戸山の家」「WoodHead」出店・登壇",
+      "summary": "木頭クマ祭りに、奥槍戸山の家とWoodHeadが出店・登壇しました。",
+      "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=85",
+      "url": "projects.html#kito-quest"
+    },
+    {
+      "id": "2025-03-09-yamazakura-planting",
+      "section": "過去TOPIC",
+      "date": "2025-03-09",
+      "displayDate": "2025/03/09",
+      "category": "イベント",
+      "title": "ヤマザクラ植樹イベント：奥槍戸・山の家カレー提供",
+      "summary": "ヤマザクラ植樹イベントで、奥槍戸山の家カレー提供などを行いました。",
+      "image": "https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=800&q=85",
+      "url": "projects.html#tree-planting"
+    },
+    {
+      "id": "2025-03-08-supporter-thanks",
+      "section": "過去TOPIC",
+      "date": "2025-03-08",
+      "displayDate": "2025/03/08",
+      "category": "イベント",
+      "title": "山の家サポーター向け感謝祭を開催します。",
+      "summary": "山の家サポーター向け感謝祭を開催します。詳細はサポーター向けDMまたはお問い合わせでご確認ください。",
+      "image": "./img/top_yamanoie1.png",
+      "url": "support.html#individual"
+    },
+    {
+      "id": "2025-01-11-tairanosato-open",
+      "section": "過去TOPIC",
+      "date": "2025-01-11",
+      "displayDate": "2025/01/11",
+      "category": "営業情報",
+      "title": "高ノ瀬峡レストハウス平の里にて今年も3月まで奥槍戸山の家店長絶賛営業中。※毎週月火休み。",
+      "summary": "高ノ瀬峡レストハウス平の里にて、今年も3月まで奥槍戸山の家店長が営業中です。毎週月火休みです。",
+      "image": "./img/top_yuzu1.png",
+      "url": "facility_guide.html#tairanosato"
     },
     {
       "id": "2025-01-11-1st-anniversary",
+      "section": "過去TOPIC",
       "date": "2025-01-11",
       "displayDate": "2025/01/11",
       "category": "団体",
-      "title": "協同組合 阿波山雅 設立1周年",
-      "summary": "2024年1月11日の設立から1年。地域のみなさま、サポーターのみなさまの応援のおかげで、活動の幅を広げることができました。これからもよろしくお願いします。",
+      "title": "あけましておめでとうございます。協同組合阿波山雅は設立1周年を迎えました。今年もよろしくお願いいたします。",
+      "summary": "2024年1月11日の設立から1周年を迎えました。地域の皆さま、サポーターの皆さまへの感謝をお伝えします。",
       "image": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?auto=format&fit=crop&w=800&q=85",
-      "url": "about.html"
+      "url": "about.html#timeline"
+    },
+    {
+      "id": "2024-11-10-cup-ramen-meeting",
+      "section": "過去TOPIC",
+      "date": "2024-11-10",
+      "displayDate": "2024/11/10",
+      "category": "イベント",
+      "title": "「奥槍戸山の家」剣山スーパー林道で「カップラーメンミーティング」イベントに参加",
+      "summary": "剣山スーパー林道で開催されたカップラーメンミーティングイベントに、奥槍戸山の家として参加しました。",
+      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=85",
+      "url": "https://rindonavi.com/news.html?news_id=17252642675974"
+    },
+    {
+      "id": "2024-10-15-yamabiyori-vol002",
+      "section": "過去TOPIC",
+      "date": "2024-10-15",
+      "displayDate": "2024/10/15",
+      "category": "広報誌",
+      "title": "奥槍戸やま日和 vol002（秋号）発行",
+      "summary": "奥槍戸やま日和 vol002（秋号）を発行しました。",
+      "image": "https://images.unsplash.com/photo-1474366521946-c3d4b507abf2?auto=format&fit=crop&w=800&q=85",
+      "url": "https://drive.google.com/file/d/1bemxAIeLRkB9qDGrkobF0x8rIx3updei/view?usp=drive_link"
+    },
+    {
+      "id": "2024-08-11-yamabiyori-vol001",
+      "section": "過去TOPIC",
+      "date": "2024-08-11",
+      "displayDate": "2024/08/11",
+      "category": "広報誌",
+      "title": "奥槍戸やま日和 vol001創刊",
+      "summary": "奥槍戸やま日和 vol001を創刊しました。",
+      "image": "https://images.unsplash.com/photo-1474366521946-c3d4b507abf2?auto=format&fit=crop&w=800&q=85",
+      "url": "https://drive.google.com/file/d/1P0EfZoZvTFAdWegsVaCJAr8JyF3emk4B/view?usp=drive_link"
+    },
+    {
+      "id": "2024-04-21-foodribbon-report-1month",
+      "section": "過去TOPIC",
+      "date": "2024-04-21",
+      "displayDate": "2024/04/21",
+      "category": "プロジェクト",
+      "title": "フードリボン開始1カ月時点の活動報告（提供117食、支援148食）",
+      "summary": "フードリボン活動開始から1カ月時点の活動報告です。提供117食、支援148食の実績を報告しました。",
+      "image": "https://images.unsplash.com/photo-1519984388953-d2406bc725e1?auto=format&fit=crop&w=800&q=85",
+      "url": "https://www.awasanga.com/topic%E8%A9%B3%E7%B4%B0"
     },
     {
       "id": "2024-03-21-foodribbon-start",
+      "section": "過去TOPIC",
       "date": "2024-03-21",
       "displayDate": "2024/03/21",
       "category": "プロジェクト",
-      "title": "フードリボン活動 開始（徳島新聞掲載）",
-      "summary": "「お腹が空いている子も、年配の方も、誰でも一食を」というフードリボン活動を開始しました。徳島新聞でもご紹介いただいています。",
+      "title": "フードリボン活動開始：（平の里、奥槍戸山の家）",
+      "summary": "平の里、奥槍戸山の家でフードリボン活動を開始しました。",
       "image": "https://images.unsplash.com/photo-1519984388953-d2406bc725e1?auto=format&fit=crop&w=800&q=85",
-      "url": "projects.html"
+      "url": "projects.html#foodribbon"
+    },
+    {
+      "id": "2024-03-03-yamazakura-planting",
+      "section": "過去TOPIC",
+      "date": "2024-03-03",
+      "displayDate": "2024/03/03",
+      "category": "イベント",
+      "title": "ヤマザクラ植樹イベント：奥槍戸・山の家カレー提供",
+      "summary": "ヤマザクラ植樹イベントで、奥槍戸山の家カレー提供などを行いました。",
+      "image": "https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=800&q=85",
+      "url": "projects.html#tree-planting"
+    },
+    {
+      "id": "2024-03-02-kito-kuma-festival",
+      "section": "過去TOPIC",
+      "date": "2024-03-02",
+      "displayDate": "2024/03/02",
+      "category": "イベント",
+      "title": "木頭クマ祭り：「奥槍戸山の家」「WoodHead」出店・登壇",
+      "summary": "木頭クマ祭りに、奥槍戸山の家とWoodHeadが出店・登壇しました。",
+      "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=85",
+      "url": "projects.html#kito-quest"
     }
   ]
 }
