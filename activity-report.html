@@ -315,6 +315,69 @@
       font-size: 14px;
     }
 
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .evidence-photo {
+      background: #fff;
+      border: 1px solid rgba(36,75,55,.1);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(22,50,36,.08);
+    }
+
+    .evidence-photo img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .evidence-photo figcaption {
+      padding: 14px 16px 16px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .evidence-links {
+      background: #fff;
+      border: 1px solid rgba(36,75,55,.1);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(22,50,36,.08);
+    }
+
+    .evidence-links h3 {
+      margin: 0 0 10px;
+      color: var(--green);
+      font-size: 22px;
+    }
+
+    .evidence-links p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .evidence-links ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .evidence-links a {
+      color: var(--green);
+      font-weight: 700;
+      text-underline-offset: 2px;
+    }
+
     @media (max-width: 1100px) {
       .trust-wall { grid-template-columns: repeat(3, 1fr); }
       .detail-grid { grid-template-columns: 1fr; }
@@ -324,6 +387,10 @@
       .report-statement,
       .kpi-story-grid,
       .report-chapter {
+        grid-template-columns: 1fr;
+      }
+
+      .evidence-grid {
         grid-template-columns: 1fr;
       }
 
@@ -568,6 +635,24 @@
             <div class="trust-item">徳島<br>ガンバロウズ<small>サポートカンパニー</small></div>
             <div class="trust-item">Woodhead<small>企画協力</small></div>
             <div class="trust-item">那賀町<br>賑わい課<small>協議中</small></div>
+          </div>
+
+          <div class="evidence-grid" aria-label="活動の根拠資料と写真">
+            <figure class="evidence-photo">
+              <img src="./img/top_yamanoie1.png" alt="奥槍戸山の家の様子" loading="lazy" />
+              <figcaption>奥槍戸山の家。来場データの記録拠点であり、食事提供や休憩、地域案内の現場です。</figcaption>
+            </figure>
+            <aside class="evidence-links">
+              <h3>外部リンク（掲載・連携先）</h3>
+              <p>活動実績の裏付けとして、公開されている外部サイトを掲載しています。</p>
+              <ul>
+                <li><a href="https://www.jrt.co.jp/tv/gojical/" target="_blank" rel="noopener noreferrer">四国放送「ゴジカル！」公式ページ</a></li>
+                <li><a href="https://www.topics.or.jp/" target="_blank" rel="noopener noreferrer">徳島新聞（TOPICS）</a></li>
+                <li><a href="https://www.nichia.co.jp/" target="_blank" rel="noopener noreferrer">日亜化学工業株式会社（財団関連情報）</a></li>
+                <li><a href="https://gambarous.jp/" target="_blank" rel="noopener noreferrer">徳島ガンバロウズ 公式サイト</a></li>
+                <li><a href="https://www.town.tokushima-naka.lg.jp/" target="_blank" rel="noopener noreferrer">那賀町公式サイト（賑わい課）</a></li>
+              </ul>
+            </aside>
           </div>
         </div>
       </section>
