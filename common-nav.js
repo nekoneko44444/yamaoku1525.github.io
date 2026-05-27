@@ -10,6 +10,7 @@
     Object.freeze({ href: 'activity-report.html', label: '活動報告', key: 'activity' }),
     Object.freeze({ href: 'characters.html', label: '仲間たち', key: 'characters' }),
     Object.freeze({ href: 'support.html', label: '応援する', key: 'support' }),
+    Object.freeze({ href: 'design-doc.html', label: '設計書', key: 'design' }),
   ]);
 
   shared.menuItems = menuItems;
@@ -26,6 +27,7 @@
       'characters.html': 'characters',
       'support.html': 'support',
       'contact.html': 'support',
+      'design-doc.html': 'design',
     };
     return map[fileName] || '';
   }
