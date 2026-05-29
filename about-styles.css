@@ -584,3 +584,18 @@
   .member-gallery { gap: 6px; padding: 6px; }
   .member-gallery img { border-radius: 10px; }
 }
+
+/* ===== Site consistency pass ===== */
+.breadcrumb {
+  display: none !important;
+}
+
+.sub-hero-inner {
+  padding-top: 88px;
+}
+
+@media (max-width: 640px) {
+  .sub-hero-inner {
+    padding-top: 64px;
+  }
+}
