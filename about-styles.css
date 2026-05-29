@@ -599,3 +599,69 @@
     padding-top: 64px;
   }
 }
+
+/* ===== Facility guide page header ===== */
+.page-header {
+  position: relative;
+  min-height: 420px;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  color: #fff;
+  padding: 92px 24px 112px;
+  background:
+    linear-gradient(90deg, rgba(22,50,36,.92) 0%, rgba(36,75,55,.78) 58%, rgba(36,75,55,.5) 100%),
+    url("./img/top_yamanoie1.png") center/cover no-repeat;
+}
+
+.page-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 110px;
+  background: linear-gradient(180deg, transparent, rgba(248,242,232,1));
+  pointer-events: none;
+}
+
+.page-header-inner {
+  width: min(calc(100% - 40px), var(--container));
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1.12;
+  letter-spacing: .08em;
+}
+
+.page-header p {
+  max-width: 760px;
+  margin: 24px 0 0;
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.9;
+  color: rgba(255,255,255,.9);
+}
+
+.page-header .breadcrumb {
+  color: rgba(255,255,255,.7);
+  margin-bottom: 16px;
+}
+
+.page-header .breadcrumb a {
+  border-bottom: 0;
+}
+
+.breadcrumb-sep {
+  margin: 0 8px;
+  opacity: .5;
+}
+
+@media (max-width: 640px) {
+  .page-header {
+    min-height: 360px;
+    padding: 72px 20px 96px;
+  }
+}
