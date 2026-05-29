@@ -3,15 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="協同組合 阿波山雅の活動・プロジェクト。食・技・実を軸に、山の課題を未来の物語へつなぎます。" />
+  <meta name="description" content="協同組合 阿波山雅の活動・プロジェクト。奥槍戸山の家、フードリボン、次郎笈トレイル、林道、木頭杉、果樹、広報誌など、みんなが集まる場所を守るための具体的な活動を紹介します。" />
   <title>活動・プロジェクト｜協同組合 阿波山雅</title>
   <link rel="stylesheet" href="about-styles.css" />
   <style>
-    /* =========================================================
-       projects.html 専用デザイン
-       目的：課題に向き合う物語と、食・技・実の活動構造を両立する
-       ========================================================= */
-
     .projects-lead {
       position: relative;
       z-index: 3;
@@ -41,7 +36,10 @@
       letter-spacing: .08em;
     }
 
-    .resolve-panel p {
+    .resolve-panel p,
+    .activity-story p,
+    .principle-card p,
+    .path-card p {
       color: var(--muted);
       line-height: 2;
     }
@@ -54,34 +52,80 @@
       box-shadow: 0 22px 60px rgba(22,50,36,.22);
     }
 
-    .resolve-message .section-kicker {
-      color: var(--gold);
+    .resolve-message .section-kicker { color: var(--gold); }
+    .resolve-message p { color: rgba(255,255,255,.9); margin: 16px 0 0; }
+
+    .plain-intro {
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: left;
     }
 
-    .resolve-message p {
-      color: rgba(255,255,255,.9);
-      margin: 16px 0 0;
+    .plain-intro h2 {
+      color: var(--green);
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.35;
+      margin: 0 0 22px;
+      letter-spacing: .05em;
     }
 
-    .chapter-list {
+    .plain-intro p {
+      color: var(--muted);
+      line-height: 2.1;
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .plain-intro p + p { margin-top: 16px; }
+
+    .principle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .principle-card {
+      background: #fff;
+      border: 1px solid rgba(36,75,55,.1);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 16px 44px rgba(22,50,36,.08);
+    }
+
+    .principle-card .big-letter {
+      color: var(--gold-dark);
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .principle-card h3 {
+      color: var(--green);
+      font-size: 24px;
+      line-height: 1.4;
+      margin: 0 0 12px;
+    }
+
+    .activity-list {
       display: grid;
       gap: 34px;
     }
 
-    .chapter-card {
-      position: relative;
+    .activity-story {
       display: grid;
-      grid-template-columns: 210px 1fr;
-      gap: 32px;
+      grid-template-columns: 260px 1fr;
+      gap: 34px;
       padding: clamp(26px, 4vw, 44px);
       border-radius: 34px;
       background: #fff;
       border: 1px solid rgba(36,75,55,.1);
       box-shadow: 0 18px 52px rgba(22,50,36,.08);
+      position: relative;
       overflow: hidden;
     }
 
-    .chapter-card::before {
+    .activity-story::before {
       content: "";
       position: absolute;
       inset: 0 0 auto;
@@ -89,357 +133,149 @@
       background: linear-gradient(90deg, var(--green), var(--gold));
     }
 
-    .narrator {
-      position: relative;
-      text-align: center;
-      padding: 24px 18px;
-      border-radius: 28px;
+    .activity-side {
+      align-self: start;
+      border-radius: 26px;
+      overflow: hidden;
       background: var(--paper);
       border: 1px solid rgba(36,75,55,.08);
-      align-self: start;
     }
 
-    .narrator img {
-      width: 138px;
-      height: 138px;
-      object-fit: contain;
-      filter: drop-shadow(0 16px 18px rgba(22,50,36,.16));
-      margin-bottom: 16px;
+    .activity-side img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
     }
 
-    .narrator strong {
-      display: block;
-      color: var(--green);
-      font-size: 20px;
-      margin-bottom: 4px;
+    .activity-side-inner {
+      padding: 18px;
     }
 
-    .narrator span {
-      display: block;
+    .activity-no {
       color: var(--gold-dark);
       font-size: 12px;
       font-weight: 900;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .chapter-content .chapter-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--gold-dark);
-      font-size: 13px;
-      font-weight: 900;
       letter-spacing: .16em;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
-    .chapter-content h3 {
+    .activity-side strong {
+      display: block;
+      color: var(--green);
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .activity-body h3 {
       margin: 0 0 16px;
       color: var(--green);
-      font-size: clamp(26px, 3.2vw, 42px);
+      font-size: clamp(26px, 3.4vw, 42px);
       line-height: 1.35;
-      letter-spacing: .05em;
+      letter-spacing: .04em;
     }
 
-    .chapter-content p {
-      color: var(--muted);
-      line-height: 2;
-      margin: 0;
-    }
+    .activity-body p { margin: 0; }
+    .activity-body p + p { margin-top: 12px; }
 
-    .chapter-content p + p {
-      margin-top: 12px;
-    }
-
-    .voice {
-      margin-top: 24px;
+    .scene-box {
+      margin-top: 22px;
       padding: 22px 24px;
       border-left: 6px solid var(--gold);
       border-radius: 18px;
       background: rgba(248,242,232,.86);
     }
 
-    .voice strong {
+    .scene-box strong {
       display: block;
       color: var(--green);
       margin-bottom: 8px;
     }
 
-    .voice p {
-      margin: 0;
+    .scene-box p {
       color: var(--ink);
       line-height: 1.9;
     }
 
-    .response-box {
-      margin-top: 24px;
+    .detail-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 22px;
     }
 
-    .response-item {
+    .detail-box {
       padding: 16px 18px;
       border-radius: 18px;
-      background: #fff;
-      border: 1px solid rgba(36,75,55,.1);
+      background: var(--paper);
+      border: 1px solid rgba(36,75,55,.08);
     }
 
-    .response-item b {
+    .detail-box b {
       display: block;
       color: var(--green);
       margin-bottom: 4px;
     }
 
-    .response-item span {
+    .detail-box span {
       display: block;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.75;
     }
 
-    .axis-stage {
+    .path-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 24px;
     }
 
-    .axis-stage-card {
-      min-height: 380px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: end;
-      overflow: hidden;
-      border-radius: 34px;
-      padding: 30px;
-      color: #fff;
-      box-shadow: var(--shadow);
-      background: linear-gradient(180deg, rgba(22,50,36,.06), rgba(22,50,36,.92)), var(--green);
-    }
-
-    .axis-stage-card:nth-child(1) {
-      background:
-        linear-gradient(180deg, rgba(22,50,36,.06), rgba(22,50,36,.92)),
-        url("./img/top_insyoku1.png") center/cover no-repeat;
-    }
-
-    .axis-stage-card:nth-child(2) {
-      background:
-        linear-gradient(180deg, rgba(22,50,36,.06), rgba(22,50,36,.92)),
-        url("./img/top_kouri1.png") center/cover no-repeat;
-    }
-
-    .axis-stage-card:nth-child(3) {
-      background:
-        linear-gradient(180deg, rgba(22,50,36,.06), rgba(22,50,36,.92)),
-        url("./img/top_yuzu1.png") center/cover no-repeat;
-    }
-
-    .axis-big {
-      position: absolute;
-      top: 22px;
-      right: 28px;
-      color: rgba(255,255,255,.22);
-      font-size: 128px;
-      line-height: .8;
-      font-weight: 900;
-      letter-spacing: -.08em;
-    }
-
-    .axis-stage-card .section-kicker {
-      color: var(--gold);
-    }
-
-    .axis-stage-card h3 {
-      margin: 0 0 10px;
-      color: #fff;
-      font-size: 28px;
-      line-height: 1.35;
-    }
-
-    .axis-stage-card p {
-      margin: 0;
-      color: rgba(255,255,255,.9);
-      line-height: 1.85;
-      font-size: 14px;
-    }
-
-    .activity-map {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-    }
-
-    .activity-card {
-      min-height: 285px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      padding: 24px;
-      border-radius: 26px;
+    .path-card {
+      padding: clamp(26px, 4vw, 38px);
+      border-radius: 30px;
       background: #fff;
       border: 1px solid rgba(36,75,55,.1);
-      box-shadow: 0 18px 46px rgba(22,50,36,.08);
-      overflow: hidden;
+      box-shadow: 0 16px 44px rgba(22,50,36,.08);
     }
 
-    .activity-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto;
-      height: 7px;
-      background: linear-gradient(90deg, var(--green), var(--gold));
-    }
-
-    .activity-card .project-no {
-      color: var(--gold-dark);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .activity-card h3 {
-      margin: 0 0 10px;
-      color: var(--green);
-      font-size: 19px;
-      line-height: 1.45;
-    }
-
-    .activity-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.75;
-    }
-
-    .axis-tags {
-      margin-top: auto;
-      padding-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .axis-tags span {
-      display: inline-flex;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: rgba(36,75,55,.08);
-      color: var(--green);
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .audience-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 26px;
-    }
-
-    .audience-panel {
-      border-radius: 32px;
-      padding: clamp(28px, 4vw, 44px);
-      box-shadow: var(--shadow);
-    }
-
-    .audience-panel.public {
-      background: #fff;
-      border: 1px solid var(--line);
-    }
-
-    .audience-panel.personal {
+    .path-card.dark {
       color: #fff;
       background:
         linear-gradient(90deg, rgba(22,50,36,.94), rgba(36,75,55,.78)),
         url("./img/top_yamanoie1.png") center/cover no-repeat;
     }
 
-    .audience-panel h3 {
-      margin: 0 0 16px;
+    .path-card h3 {
       color: var(--green);
-      font-size: clamp(26px, 3vw, 38px);
+      font-size: clamp(24px, 3vw, 36px);
       line-height: 1.35;
+      margin: 0 0 14px;
     }
 
-    .audience-panel.personal h3 {
-      color: #fff;
-    }
+    .path-card.dark h3 { color: #fff; }
+    .path-card.dark p, .path-card.dark li { color: rgba(255,255,255,.88); }
 
-    .audience-panel p,
-    .audience-panel li {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.85;
-    }
-
-    .audience-panel.personal p,
-    .audience-panel.personal li {
-      color: rgba(255,255,255,.88);
-    }
-
-    .audience-panel ul {
+    .path-card ul {
       margin: 18px 0 0 1.2em;
       padding: 0;
     }
 
-    .audience-panel li {
+    .path-card li {
+      color: var(--muted);
+      line-height: 1.85;
       margin-bottom: 8px;
-    }
-
-    @media (max-width: 1100px) {
-      .activity-map { grid-template-columns: repeat(2, 1fr); }
-      .activity-card:last-child { grid-column: 1 / -1; }
     }
 
     @media (max-width: 980px) {
       .resolve-panel,
-      .chapter-card,
-      .axis-stage,
-      .audience-grid {
+      .principle-grid,
+      .activity-story,
+      .detail-grid,
+      .path-grid {
         grid-template-columns: 1fr;
       }
 
-      .activity-map {
-        grid-template-columns: 1fr;
-      }
-
-      .activity-card:last-child {
-        grid-column: auto;
-      }
-
-      .projects-lead {
-        margin-top: -48px;
-      }
-
-      .response-box {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .resolve-panel,
-      .chapter-card {
-        border-radius: 26px;
-      }
-
-      .narrator {
-        display: grid;
-        grid-template-columns: 76px 1fr;
-        gap: 14px;
-        align-items: center;
-        text-align: left;
-      }
-
-      .narrator img {
-        width: 76px;
-        height: 76px;
-        margin: 0;
-      }
+      .projects-lead { margin-top: -48px; }
     }
   </style>
   <script src="common-nav.js" defer></script>
@@ -457,7 +293,6 @@
             <span>あわさんが</span>
           </div>
         </a>
-
         <nav class="nav" aria-label="メインナビゲーション" data-common-nav data-current="projects"></nav>
       </div>
     </header>
@@ -471,8 +306,8 @@
             <span>活動・プロジェクト</span>
           </div>
           <div class="hero-label">Projects</div>
-          <h1>山の課題を、<br>未来の物語へ。</h1>
-          <p>私たちは、奥槍戸の山を一時的に盛り上げたいのではありません。山に残る記憶、拠点、食、木、実り、人のつながりを、次の世代が関われる形へ整えていきます。</p>
+          <h1>みんなが集まる場所を、<br>山に残していく。</h1>
+          <p>阿波山雅の活動は、山を大きく変えるためのものではありません。奥槍戸に来た人が安心して立ち寄れる場所、地域の人が誇れる仕事、子どもたちに渡せる記憶を、一つずつ守り育てるための活動です。</p>
         </div>
         <div class="hero-badge" aria-hidden="true"><span>食・技・実で<br>山の未来を<br>つくる</span></div>
       </section>
@@ -483,15 +318,53 @@
             <div>
               <div class="section-kicker">Our Resolve</div>
               <h2>山を、<br>消えゆく場所にしない。</h2>
-              <p>山の課題は、目に見えにくいところから進みます。人が来なくなる。拠点の維持が難しくなる。木や食や果樹の価値が伝わらなくなる。活動を担う人が限られていく。</p>
-              <p>だからこそ阿波山雅は、山の課題を「仕方がない」で終わらせません。小さくても続く活動に変え、訪れる人、支える人、手を動かす人を増やしていきます。</p>
+              <p>私たちがいちばん守りたいのは、「みんなが集まる場所」です。登山の前に一息つける場所。林道を走ってきた人が言葉を交わせる場所。地域の食や木や実りに触れて、ここを好きになってくれる場所。</p>
+              <p>場所が残ると、人が戻ってきます。人が戻ってくると、食べる人、手伝う人、伝える人、応援する人が生まれます。阿波山雅は、その小さな循環を絶やさないために活動しています。</p>
             </div>
             <div class="resolve-message">
               <div class="section-kicker">Statement</div>
-              <p>私たちが守りたいのは、建物だけではありません。</p>
-              <p>山に来た人がほっとする時間。地域の人が誇れる仕事。子どもたちに渡せる記憶。もう一度ここへ来たいと思える理由。</p>
-              <p>その一つひとつを、食・技・実の活動として形にしていきます。</p>
+              <p>「山を守る」と言うと、大きなことに聞こえるかもしれません。</p>
+              <p>けれど私たちにとっては、来てくれた人に温かいごはんを出すこと、道の情報を伝えること、子どもが山を好きになる入口をつくること、木や実りの価値をもう一度見つけ直すことです。</p>
+              <p>共感してくれる人が一人増えるたびに、山の未来は少し明るくなります。</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container plain-intro">
+          <div class="section-kicker">Concept</div>
+          <h2>共感は、活動の入口です。</h2>
+          <p>阿波山雅の活動は、正しさだけで人を動かそうとはしません。山の現状を知ってもらうことは大切ですが、それだけでは人はなかなか動けません。大切なのは、「ここがなくなったら寂しい」「この場所を誰かに教えたい」「自分にも少しできることがありそう」と思えることです。</p>
+          <p>だから私たちは、活動を数字や制度だけで説明するのではなく、そこにいる人の顔、食べたときのうれしさ、道を歩いたときの景色、木に触れたときの手ざわりまで伝えたいと思っています。共感が生まれると、訪問も、発信も、寄付も、手伝いも、自然な応援になります。</p>
+        </div>
+      </section>
+
+      <section class="members-section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Three Fields</div>
+              <h2 class="section-title">食・技・実で、山との関わりをつくる</h2>
+            </div>
+            <p class="section-text">活動は一つに見えても、入口はいくつもあります。食べること、手を動かすこと、実りを仕事にすること。その全部が、山を次につなぐ力になります。</p>
+          </div>
+          <div class="principle-grid">
+            <article class="principle-card">
+              <div class="big-letter">食</div>
+              <h3>立ち寄れる理由をつくる</h3>
+              <p>温かい食事があると、人は安心して山へ向かえます。奥槍戸山の家や平の里での食の活動は、山と人をつなぐ入口です。</p>
+            </article>
+            <article class="principle-card">
+              <div class="big-letter">技</div>
+              <h3>山の知恵を手ざわりにする</h3>
+              <p>木頭杉や木工、道の整備、ものづくりを通して、山に積み重なった知恵と技を、見て触れられる形にします。</p>
+            </article>
+            <article class="principle-card">
+              <div class="big-letter">実</div>
+              <h3>地域の実りを未来の仕事にする</h3>
+              <p>ゆずや地域産品、季節の恵みを活かし、小さくても続く仕事と応援の形をつくります。買うことも、食べることも、山への参加です。</p>
+            </article>
           </div>
         </div>
       </section>
@@ -500,99 +373,161 @@
         <div class="container">
           <div class="section-head">
             <div>
-              <div class="section-kicker">Story of Issues</div>
-              <h2 class="section-title">5つの課題と、語り部たち</h2>
+              <div class="section-kicker">Activities</div>
+              <h2 class="section-title">活動を一つずつ、丁寧に紹介します</h2>
             </div>
-            <p class="section-text">キャラクターは紹介用ではなく、阿波山雅が向き合う課題を伝える語り部として登場します。</p>
+            <p class="section-text">ここでは、阿波山雅が何をしているのかを、まとめすぎずに一つずつ書いています。読んだ人が「どんな場面なのか」を思い浮かべられることを大切にしています。</p>
           </div>
 
-          <div class="chapter-list">
-            <article class="chapter-card">
-              <aside class="narrator">
-                <img src="./img/奥槍どん.png" alt="奥槍どん" />
-                <div><strong>奥槍どん</strong><span>拠点を守る語り部</span></div>
+          <div class="activity-list">
+            <article class="activity-story" id="okuyarito-base">
+              <aside class="activity-side">
+                <img src="./img/top_yamanoie1.png" alt="奥槍戸山の家">
+                <div class="activity-side-inner"><div class="activity-no">Activity 01</div><strong>奥槍戸山の家を守り、育てる</strong></div>
               </aside>
-              <div class="chapter-content">
-                <div class="chapter-label">Issue 01</div>
-                <h3>人が立ち寄る場所がなくなると、山との接点が切れてしまう。</h3>
-                <p>山を訪れる人にとって、休める場所、食べられる場所、情報を得られる場所は大切です。けれど、山間部の拠点は、人手、設備、道路状況、季節変動の影響を受けやすく、維持すること自体が簡単ではありません。</p>
-                <p>拠点が弱くなると、登山者やバイカーが立ち寄る理由が減り、地域と来訪者の接点も薄くなっていきます。奥槍戸山の家を守ることは、単に一つの施設を続けることではなく、山に人が戻ってくる入口を守ることです。</p>
-                <div class="voice"><strong>奥槍どんの声</strong><p>「よう来てくれたね」と迎えられる場所があるだけで、山の旅は少し安心できる。僕は、この場所を山に来る人のよりどころにしたいんだ。</p></div>
-                <div class="response-box">
-                  <div class="response-item"><b>取り組むこと</b><span>奥槍戸山の家の運営支援、食と休憩の場づくり、来訪者との接点づくり。</span></div>
-                  <div class="response-item"><b>つながる軸</b><span>食｜レストハウス支援、交流人口、山の拠点づくり。</span></div>
+              <div class="activity-body">
+                <h3>山に来た人が、ほっとできる場所を残す。</h3>
+                <p>奥槍戸山の家は、ただ食事をする施設ではありません。登山の前後に休む人、林道を走って立ち寄る人、家族で山に来た人、地域の人に会いに来た人が、同じ空間で少しずつ交わる場所です。</p>
+                <p>山の中で「開いている場所」があることは、思っている以上に大きな安心です。天気や道のことを聞ける。温かいものを食べられる。誰かの声がある。そういう小さな安心が、山へ向かう人の背中を押します。</p>
+                <p>阿波山雅は、この拠点を一時的なにぎわいで終わらせず、何度も訪れたくなる場所として育てていきます。食事、休憩、情報発信、イベント、サポーターとの交流を重ねながら、「山に人が戻ってくる入口」を守ります。</p>
+                <div class="scene-box"><strong>なぎかちゃんの声</strong><p>はじめてでも大丈夫。山に来てくれた人が「来てよかった」って思えるように、まずは笑顔で迎えたいんよ。</p></div>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>具体例</b><span>奥槍戸山の家の営業、食事提供、登山者・来訪者への案内。</span></div>
+                  <div class="detail-box"><b>守りたいもの</b><span>山の入口、人が集まる時間、安心して立ち寄れる空気。</span></div>
+                  <div class="detail-box"><b>関わり方</b><span>食べに行く、紹介する、サポーターとして支える。</span></div>
                 </div>
               </div>
             </article>
 
-            <article class="chapter-card">
-              <aside class="narrator">
-                <img src="./img/杉じぃ.png" alt="杉じぃ" />
-                <div><strong>杉じぃ</strong><span>山の記憶を語る</span></div>
+            <article class="activity-story" id="foodribbon">
+              <aside class="activity-side">
+                <img src="./img/top_insyoku1.png" alt="食の活動">
+                <div class="activity-side-inner"><div class="activity-no">Activity 02</div><strong>フードリボンと食の支援</strong></div>
               </aside>
-              <div class="chapter-content">
-                <div class="chapter-label">Issue 02</div>
-                <h3>木や森の価値が、暮らしの実感から遠くなっている。</h3>
-                <p>木頭杉をはじめ、山の木には長い時間と人の手が積み重なっています。植える人、育てる人、伐る人、使う人。その連なりがあって、山の文化は残ってきました。</p>
-                <p>しかし今、木がどのように育ち、地域の暮らしや仕事を支えてきたのかを知る機会は少なくなっています。木をただの素材としてではなく、山の時間、地域の知恵、未来の学びとして伝える必要があります。</p>
-                <div class="voice"><strong>杉じぃの声</strong><p>木は急がん。じゃが、人が忘れるのは早いんじゃ。山の時間を知ることは、これからの山を考えることでもあるんじゃよ。</p></div>
-                <div class="response-box">
-                  <div class="response-item"><b>取り組むこと</b><span>木頭杉の価値発信、木育、ものづくり体験、地域の記憶の記録。</span></div>
-                  <div class="response-item"><b>つながる軸</b><span>技｜モノづくり支援、木の文化、次世代への学び。</span></div>
+              <div class="activity-body">
+                <h3>一食の応援が、子どもと地域をつなぐ。</h3>
+                <p>フードリボンは、誰かの一食を地域で支える活動です。阿波山雅では、平の里や奥槍戸山の家でこの取り組みを始め、食を通じて子どもや地域の人を応援する形をつくってきました。</p>
+                <p>大切なのは、支援を特別なものにしすぎないことです。食べる人がいて、支える人がいて、お店や地域の人が間に立つ。そこに「ありがとう」が生まれ、次の応援が生まれます。</p>
+                <p>開始から1か月時点では、提供117食、支援148食という報告もありました。数字は結果ですが、その奥には、誰かが誰かを思って一食を託した場面があります。阿波山雅は、そうしたやさしい循環を山の地域に根づかせていきます。</p>
+                <div class="scene-box"><strong>この活動で伝えたいこと</strong><p>食は、いちばん身近な共感です。「おいしかった」「助かった」「また来たい」という気持ちが、地域を支える力になります。</p></div>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>具体例</b><span>フードリボン活動、子どもへの食事提供、支援食数の報告。</span></div>
+                  <div class="detail-box"><b>守りたいもの</b><span>子どもが安心できる食、地域で支え合う関係。</span></div>
+                  <div class="detail-box"><b>関わり方</b><span>食べる、支援する、活動を知人に伝える。</span></div>
                 </div>
               </div>
             </article>
 
-            <article class="chapter-card">
-              <aside class="narrator">
-                <img src="./img/ユズリ.png" alt="ユズリ" />
-                <div><strong>ユズリ</strong><span>価値を整理する</span></div>
+            <article class="activity-story" id="trail">
+              <aside class="activity-side">
+                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" alt="山道の風景">
+                <div class="activity-side-inner"><div class="activity-no">Activity 03</div><strong>次郎笈トレイル再生</strong></div>
               </aside>
-              <div class="chapter-content">
-                <div class="chapter-label">Issue 03</div>
-                <h3>地域資源はあるのに、未来へ届く形になっていない。</h3>
-                <p>山には、食材、果樹、木材、景色、林道、歴史、人の技術があります。ただ、資源があることと、それが地域の力として続くことは同じではありません。</p>
-                <p>価値を見つけ直し、伝わる言葉にし、商品や体験や来訪理由へ整えていく必要があります。地域資源を未来へ渡すには、記録、広報、企画、連携が必要です。</p>
-                <div class="voice"><strong>ユズリの声</strong><p>残すだけでは足りません。伝わる形にしましょう。誰かが価値を見つけ直せば、地域資源は次の仕事や学びに変わります。</p></div>
-                <div class="response-box">
-                  <div class="response-item"><b>取り組むこと</b><span>情報発信、ニュースレター、地域資源を活かした商品・企画づくり。</span></div>
-                  <div class="response-item"><b>つながる軸</b><span>実｜果樹作農業支援、地域産品、広報、連携。</span></div>
+              <div class="activity-body">
+                <h3>歩ける道を残すことは、山の記憶を残すこと。</h3>
+                <p>山道は、自然にずっと残るものではありません。人が歩き、気にかけ、整え続けることで、次の人も歩ける道になります。次郎笈トレイル再生プロジェクトは、そんな当たり前のようで難しい営みを、もう一度みんなで支える活動です。</p>
+                <p>道が荒れると、山は遠くなります。初めて来る人は不安になり、慣れている人も足が向きにくくなります。逆に、道が整い、情報が届き、関わる人が増えると、山はもう一度「行ってみたい場所」になります。</p>
+                <p>阿波山雅は、トレイル再生活動を単なる整備作業としてではなく、山と人の関係をつなぎ直す取り組みとして進めます。歩く人、整える人、知らせる人、応援する人が一緒になって、未来の登山者へ道を渡していきます。</p>
+                <div class="scene-box"><strong>スギトの声</strong><p>山を守るって、手を動かすことから始まるんだ。小さな作業でも、続けば山の力になる。</p></div>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>具体例</b><span>次郎笈トレイル再生プロジェクト第1弾・第2弾。</span></div>
+                  <div class="detail-box"><b>守りたいもの</b><span>歩ける道、登山の入口、次の世代が山へ向かう機会。</span></div>
+                  <div class="detail-box"><b>関わり方</b><span>活動参加、情報拡散、安全に歩いて利用すること。</span></div>
                 </div>
               </div>
             </article>
 
-            <article class="chapter-card">
-              <aside class="narrator">
-                <img src="./img/スギト.png" alt="スギト" />
-                <div><strong>スギト</strong><span>実践を担う</span></div>
+            <article class="activity-story" id="rindo">
+              <aside class="activity-side">
+                <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="林道と山の風景">
+                <div class="activity-side-inner"><div class="activity-no">Activity 04</div><strong>林道と山の楽しみ方を伝える</strong></div>
               </aside>
-              <div class="chapter-content">
-                <div class="chapter-label">Issue 04</div>
-                <h3>思いだけでは、山を支える活動は続かない。</h3>
-                <p>山を守りたいという気持ちは大切です。しかし、現場には手を動かす作業があります。施設を整える。イベントを準備する。ものをつくる。情報を届ける。来訪者を迎える。</p>
-                <p>担い手が少なければ、活動は続きません。だから阿波山雅は、参加できる入口を増やし、できる人が、できる形で関われる仕組みをつくります。</p>
-                <div class="voice"><strong>スギトの声</strong><p>山を守るって、手を動かすことから始まるんだ。小さな作業でも、続けば山の力になる。</p></div>
-                <div class="response-box">
-                  <div class="response-item"><b>取り組むこと</b><span>ボランティア、イベント運営、ものづくり、現場活動、サポーター制度。</span></div>
-                  <div class="response-item"><b>つながる軸</b><span>食・技・実｜応援と参加の仕組みづくり。</span></div>
+              <div class="activity-body">
+                <h3>道を知ると、山はもっと近くなる。</h3>
+                <p>剣山スーパー林道や奥槍戸周辺の道は、山の魅力に出会う大切な入口です。バイクで走る人、車で景色を見に来る人、登山口へ向かう人にとって、林道は目的地までの通路であると同時に、山そのものを感じる場所でもあります。</p>
+                <p>一方で、林道には天候や路面状況、通行情報、安全確認が欠かせません。楽しい場所だからこそ、正しい情報と、地域への配慮が必要です。</p>
+                <p>阿波山雅は、林道イベントへの参加や情報発信を通じて、山を楽しむ人と地域をつなぎます。来訪者が安全に楽しみ、地域の拠点に立ち寄り、山のことを少し深く知って帰る。そんな流れをつくっていきます。</p>
+                <div class="scene-box"><strong>この活動で伝えたいこと</strong><p>山は、詳しい人だけのものではありません。はじめての人にも届く言葉で、道と楽しみ方を伝えることが、次の来訪につながります。</p></div>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>具体例</b><span>剣山スーパー林道ミーティング、林道利用者への案内。</span></div>
+                  <div class="detail-box"><b>守りたいもの</b><span>安全な来訪、地域への配慮、山を楽しむ文化。</span></div>
+                  <div class="detail-box"><b>関わり方</b><span>事前確認をする、拠点に立ち寄る、魅力を発信する。</span></div>
                 </div>
               </div>
             </article>
 
-            <article class="chapter-card">
-              <aside class="narrator">
-                <img src="./img/なぎかちゃん.png" alt="なぎかちゃん" />
-                <div><strong>なぎかちゃん</strong><span>初めての人を迎える</span></div>
+            <article class="activity-story" id="kito-quest">
+              <aside class="activity-side">
+                <img src="./img/top_kouri1.png" alt="木とものづくり">
+                <div class="activity-side-inner"><div class="activity-no">Activity 05</div><strong>木頭杉とものづくり</strong></div>
               </aside>
-              <div class="chapter-content">
-                <div class="chapter-label">Issue 05</div>
-                <h3>初めて来る人に、山はまだ少し遠い。</h3>
-                <p>山の魅力を知っている人には、奥槍戸や剣山系は特別な場所です。けれど、初めて訪れる人には、道、天気、休憩場所、楽しみ方がわかりにくいことがあります。</p>
-                <p>だから、難しい情報をやさしく伝え、家族連れや子どもたちにも山を身近に感じてもらうことが大切です。山を好きになる入口を増やすことは、未来の担い手を増やすことにもつながります。</p>
-                <div class="voice"><strong>なぎかちゃんの声</strong><p>はじめてでも大丈夫！山って、楽しいこといっぱいあるんよ。なぎかが、元気いっぱい案内するね！</p></div>
-                <div class="response-box">
-                  <div class="response-item"><b>取り組むこと</b><span>子ども向け案内、イベント紹介、やさしい情報発信、来訪者目線の広報。</span></div>
-                  <div class="response-item"><b>つながる軸</b><span>食・実｜来訪理由づくり、家族・初心者への入口づくり。</span></div>
+              <div class="activity-body">
+                <h3>木の価値を、触れられる形にする。</h3>
+                <p>木頭杉には、長い時間と人の手仕事が積み重なっています。ただ、その価値は、説明されなければ見えにくくなっています。木がどこで育ち、誰が関わり、どんな暮らしや仕事につながってきたのか。その物語を届けることが必要です。</p>
+                <p>阿波山雅は、木工やものづくり、イベント出店、学びの機会を通じて、木頭杉を「知っている人だけが知っている素材」にしないようにします。子どもが触れる。来訪者が持ち帰る。作り手の技に出会う。そうした体験が、木の文化を次に渡します。</p>
+                <p>木頭クマ祭りなどの地域イベントも、山の技や人の手仕事を外へ開く大切な機会です。楽しさの入口から入って、地域資源の奥行きに出会ってもらうことを目指します。</p>
+                <div class="scene-box"><strong>杉じぃの声</strong><p>木は急がん。じゃが、人が忘れるのは早いんじゃ。昔話ではなく、これからの山を考えるために、木の時間を伝えるんじゃよ。</p></div>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>具体例</b><span>木頭杉の価値発信、木工体験、木頭クマ祭りでの出店・登壇。</span></div>
+                  <div class="detail-box"><b>守りたいもの</b><span>木の文化、作り手の技、山の時間を感じる学び。</span></div>
+                  <div class="detail-box"><b>関わり方</b><span>体験する、商品を使う、イベントに参加する。</span></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="activity-story" id="tree-planting">
+              <aside class="activity-side">
+                <img src="https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=900&q=80" alt="植樹のイメージ">
+                <div class="activity-side-inner"><div class="activity-no">Activity 06</div><strong>植樹と季節の景色づくり</strong></div>
+              </aside>
+              <div class="activity-body">
+                <h3>未来の誰かが見る景色を、今つくる。</h3>
+                <p>ヤマザクラの植樹は、すぐに大きな成果が見える活動ではありません。苗を植え、根づくのを待ち、季節がめぐるのを見守る。時間のかかる活動です。</p>
+                <p>でも、山の未来はそういう時間の積み重ねでできています。今植えた木が、何年か後に花を咲かせる。その景色を見に、誰かがまた山へ来る。子どもたちが「この木は昔、みんなで植えたんだ」と話せる。そんな未来を想像しながら、植樹や環境づくりに関わります。</p>
+                <p>イベントでカレーを提供することも、植樹そのものを支えることも、どちらも同じ活動の一部です。人が集まり、食べ、手を動かし、記憶に残る一日をつくることが、次の参加につながります。</p>
+                <div class="scene-box"><strong>この活動で伝えたいこと</strong><p>山の仕事は、すぐに結果が出るものばかりではありません。だからこそ、みんなで関わった記憶を残すことが大切です。</p></div>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>具体例</b><span>ヤマザクラ植樹イベント、奥槍戸山の家カレー提供。</span></div>
+                  <div class="detail-box"><b>守りたいもの</b><span>季節の景色、植える経験、未来へ渡す記憶。</span></div>
+                  <div class="detail-box"><b>関わり方</b><span>植樹に参加する、イベントを手伝う、記録を残す。</span></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="activity-story" id="newsletter">
+              <aside class="activity-side">
+                <img src="https://images.unsplash.com/photo-1474366521946-c3d4b507abf2?auto=format&fit=crop&w=900&q=80" alt="広報誌のイメージ">
+                <div class="activity-side-inner"><div class="activity-no">Activity 07</div><strong>奥槍戸やま日和と情報発信</strong></div>
+              </aside>
+              <div class="activity-body">
+                <h3>活動を、届く言葉にして残す。</h3>
+                <p>どれだけ活動していても、伝わらなければ、知らない人にとっては存在しないのと同じです。阿波山雅は、広報誌「奥槍戸やま日和」やお知らせ、SNS、メディア掲載を通じて、山で起きていることを届けています。</p>
+                <p>情報発信は、単なる報告ではありません。来られなかった人にも、山の空気や活動の意味を届けること。次に参加したい人が、入口を見つけられること。支援してくれた人が、自分の応援がどこにつながったのかを感じられること。</p>
+                <p>言葉にして残すことで、活動は一日限りで終わらず、次の参加者、次の支援者、次の仲間へ届いていきます。</p>
+                <div class="scene-box"><strong>ユズリの声</strong><p>残すだけでは足りません。伝わる形にしましょう。山の魅力は、知っている人だけのものにしておくには惜しいです。</p></div>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>具体例</b><span>奥槍戸やま日和 vol001からvol004、お知らせ更新、活動報告。</span></div>
+                  <div class="detail-box"><b>守りたいもの</b><span>活動の記録、支援者とのつながり、次に参加する入口。</span></div>
+                  <div class="detail-box"><b>関わり方</b><span>読む、共有する、活動を紹介する、取材や発信で協力する。</span></div>
+                </div>
+              </div>
+            </article>
+
+            <article class="activity-story" id="local-products">
+              <aside class="activity-side">
+                <img src="./img/top_yuzu1.png" alt="地域の実り">
+                <div class="activity-side-inner"><div class="activity-no">Activity 08</div><strong>果樹と地域産品を活かす</strong></div>
+              </aside>
+              <div class="activity-body">
+                <h3>地域の実りを、続く仕事に変えていく。</h3>
+                <p>山の地域には、ゆずをはじめとした実りがあります。けれど、実りがあることと、それが続く仕事になることは同じではありません。育てる人、収穫する人、加工する人、届ける人、買う人がつながって初めて、地域の力になります。</p>
+                <p>阿波山雅は、果樹や地域産品を「買って終わり」のものにせず、山へ来る理由、地域を知る入口、応援の形として育てていきます。食べること、贈ること、使うことが、地域への参加になる仕組みをつくります。</p>
+                <p>小さな商品や季節の一品でも、そこに物語があれば、人は覚えてくれます。「あの山の、あの人たちの実り」として届くことが、次の訪問や支援につながります。</p>
+                <div class="scene-box"><strong>この活動で伝えたいこと</strong><p>地域の実りは、ただの素材ではありません。山の気候、人の手、続けてきた暮らしが詰まった応援の入口です。</p></div>
+                <div class="detail-grid">
+                  <div class="detail-box"><b>具体例</b><span>ゆず・地域産品の活用、加工品や食の企画、販売支援。</span></div>
+                  <div class="detail-box"><b>守りたいもの</b><span>地域の仕事、季節の実り、生産者の誇り。</span></div>
+                  <div class="detail-box"><b>関わり方</b><span>買う、食べる、贈る、商品づくりを応援する。</span></div>
                 </div>
               </div>
             </article>
@@ -604,120 +539,30 @@
         <div class="container">
           <div class="section-head">
             <div>
-              <div class="section-kicker">Business Fields</div>
-              <h2 class="section-title">食・技・実で、活動を形にする</h2>
+              <div class="section-kicker">Join</div>
+              <h2 class="section-title">関わり方は、一つではありません</h2>
             </div>
-            <p class="section-text">課題に対して、阿波山雅は3つの事業領域から取り組みます。</p>
+            <p class="section-text">山に行くことも、食べることも、発信することも、寄付することも、手伝うことも、すべて活動の一部です。</p>
           </div>
-
-          <div class="axis-stage">
-            <article class="axis-stage-card">
-              <div class="axis-big">食</div>
-              <div class="section-kicker">Food / Base</div>
-              <h3>山の拠点を守る</h3>
-              <p>奥槍戸山の家を中心に、食事・休憩・交流が生まれる場所を育てます。山を訪れる理由と、人が戻ってくる入口をつくります。</p>
-            </article>
-
-            <article class="axis-stage-card">
-              <div class="axis-big">技</div>
-              <div class="section-kicker">Craft / Skill</div>
-              <h3>木とものづくりを伝える</h3>
-              <p>木頭杉や地域の技を、学び・体験・商品づくりへつなげます。山の時間と人の手仕事を、未来の価値に変えていきます。</p>
-            </article>
-
-            <article class="axis-stage-card">
-              <div class="axis-big">実</div>
-              <div class="section-kicker">Fruit / Work</div>
-              <h3>地域の実りを仕事にする</h3>
-              <p>果樹や地域産品を活かし、小さくても続く仕事と来訪理由をつくります。食べる、買う、贈ることも応援になります。</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="container">
-          <div class="section-head">
-            <div>
-              <div class="section-kicker">Activity Map</div>
-              <h2 class="section-title">5つの活動マップ</h2>
-            </div>
-            <p class="section-text">課題に対する具体的な活動を、食・技・実の軸で整理します。</p>
-          </div>
-
-          <div class="activity-map">
-            <article class="activity-card">
-              <div class="project-no">Project 01</div>
-              <h3>奥槍戸山の家を守り、育てる</h3>
-              <p>食事・休憩・情報・交流が集まる山の入口として拠点を育てます。</p>
-              <div class="axis-tags"><span>食</span></div>
-            </article>
-
-            <article class="activity-card">
-              <div class="project-no">Project 02</div>
-              <h3>山の食と地域の実りを活かす</h3>
-              <p>カレー、地域食材、果樹、加工品を来訪理由と地域の仕事へつなげます。</p>
-              <div class="axis-tags"><span>食</span><span>実</span></div>
-            </article>
-
-            <article class="activity-card">
-              <div class="project-no">Project 03</div>
-              <h3>木頭杉と木の文化を伝える</h3>
-              <p>木に触れ、学び、使う体験を通じて、木頭杉の価値を伝えます。</p>
-              <div class="axis-tags"><span>技</span></div>
-            </article>
-
-            <article class="activity-card">
-              <div class="project-no">Project 04</div>
-              <h3>山と林道の魅力を伝える</h3>
-              <p>登山道、林道、展望、渓谷、季節の風景をわかりやすく発信します。</p>
-              <div class="axis-tags"><span>技</span><span>実</span></div>
-            </article>
-
-            <article class="activity-card">
-              <div class="project-no">Project 05</div>
-              <h3>応援と参加の仕組みをつくる</h3>
-              <p>訪問、投稿、参加、寄付、協賛など、関わり方を増やします。</p>
-              <div class="axis-tags"><span>食</span><span>技</span><span>実</span></div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="members-section">
-        <div class="container">
-          <div class="section-head">
-            <div>
-              <div class="section-kicker">For whom</div>
-              <h2 class="section-title">公共団体向け / 個人向け</h2>
-            </div>
-            <p class="section-text">同じ活動でも、見る人によって価値の伝え方を変えます。</p>
-          </div>
-
-          <div class="audience-grid">
-            <article class="audience-panel public">
-              <div class="section-kicker">Public / Business</div>
-              <h3>公共団体・企業の方へ</h3>
-              <p>阿波山雅の活動は、地域拠点の維持、交流人口の創出、森林資源の価値発信、農業支援、関係人口づくりにつながります。</p>
-              <ul>
-                <li>地域拠点の維持・活用</li>
-                <li>観光・周遊導線の整備</li>
-                <li>木育・地域資源の価値発信</li>
-                <li>農業・地域産品の活用支援</li>
-                <li>行政・企業・個人が連携する仕組みづくり</li>
-              </ul>
-            </article>
-
-            <article class="audience-panel personal">
-              <div class="section-kicker">Personal</div>
-              <h3>個人の方へ</h3>
-              <p>関わり方は一つではありません。食べに行く、木に触れる、イベントに参加する、SNSで広げる、寄付や協賛で支えることも、山の未来につながります。</p>
+          <div class="path-grid">
+            <article class="path-card">
+              <div class="section-kicker">For Visitors</div>
+              <h3>まずは、山に来てください</h3>
+              <p>奥槍戸山の家に立ち寄る。林道を安全に楽しむ。イベントに参加する。地域の食を味わう。来てくれる人がいること自体が、場所を続ける力になります。</p>
               <ul>
                 <li>奥槍戸山の家へ食べに行く</li>
-                <li>山や林道の魅力をSNSで広げる</li>
-                <li>木工・自然体験に参加する</li>
-                <li>イベントやボランティアに参加する</li>
+                <li>施設・林道情報を確認して安全に訪れる</li>
+                <li>写真や感想を周りの人に伝える</li>
+              </ul>
+            </article>
+            <article class="path-card dark">
+              <div class="section-kicker">For Supporters</div>
+              <h3>できる形で、支えてください</h3>
+              <p>個人サポーター、法人スポンサー、ボランティア、組合加盟など、関わり方はいくつもあります。大きな支援だけでなく、継続して見守ることも力になります。</p>
+              <ul>
                 <li>サポーターとして応援する</li>
+                <li>イベントや現場活動を手伝う</li>
+                <li>企業・団体として連携する</li>
               </ul>
             </article>
           </div>
@@ -727,22 +572,22 @@
       <section class="final-cta-section">
         <div class="container">
           <div class="cta-panel cta-panel-wide">
-            <h2>あなたも、山の物語に<br>加わりませんか？</h2>
-            <p>食べに行く。木に触れる。活動を広げる。手伝う。応援する。関わり方はひとつではありません。</p>
+            <h2>あなたも、山に集まる理由を<br>一緒につくりませんか。</h2>
+            <p>食べに行く。木に触れる。活動を広げる。手伝う。応援する。関わり方はひとつではありません。あなたの一歩が、奥槍戸に人が集まる未来につながります。</p>
             <div class="cta-actions">
               <a class="btn btn-gold" href="support.html">応援・参加する　→</a>
               <a class="btn btn-dark" href="facility_guide.html">施設・山と林道ガイドへ　→</a>
             </div>
           </div>
-
           <div class="related-links" aria-label="関連ページ">
-            <a class="related-link" href="facility_guide.html">施設・山と林道ガイド <span>→</span></a>
             <a class="related-link" href="activity-report.html">活動報告 <span>→</span></a>
+            <a class="related-link" href="news.html">お知らせ <span>→</span></a>
             <a class="related-link" href="characters.html">仲間たち <span>→</span></a>
           </div>
         </div>
       </section>
     </main>
+
     <footer class="footer" id="contact">
       <div class="container">
         <div class="footer-inner">
