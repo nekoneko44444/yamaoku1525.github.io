@@ -8,9 +8,9 @@
     Object.freeze({ href: 'facility_guide.html', label: '施設・山と林道ガイド', key: 'facility' }),
     Object.freeze({ href: 'projects.html', label: '活動・プロジェクト', key: 'projects' }),
     Object.freeze({ href: 'activity-report.html', label: '活動報告', key: 'activity' }),
+    Object.freeze({ href: 'news.html', label: 'お知らせ', key: 'news' }),
     Object.freeze({ href: 'characters.html', label: '仲間たち', key: 'characters' }),
     Object.freeze({ href: 'support.html', label: '応援する', key: 'support' }),
-    Object.freeze({ href: 'design-doc.html', label: '設計書', key: 'design' }),
   ]);
 
   shared.menuItems = menuItems;
@@ -24,6 +24,7 @@
       'facility_guide.html': 'facility',
       'projects.html': 'projects',
       'activity-report.html': 'activity',
+      'news.html': 'news',
       'characters.html': 'characters',
       'support.html': 'support',
       'contact.html': 'support',
