@@ -13,6 +13,26 @@
     Object.freeze({ href: 'support.html', label: '応援する', key: 'support' }),
   ]);
 
+  const activityReportSectionIds = Object.freeze({
+    '数字で見る阿波山雅': 'visitor-report',
+    '次郎笈トレイル再生': 'trail-report',
+    'フードリボン': 'foodribbon-report',
+    '木頭クエスト × クマ祭り': 'kito-quest-report',
+    '那賀町賑わい課との連携協議': 'town-report',
+    '奥槍戸やま日和': 'newsletter-report',
+    'メディア・受託・登録実績': 'media-report',
+    '主な沿革': 'timeline-report',
+  });
+
+  const projectRecordLinks = Object.freeze({
+    'okuyarito-base': Object.freeze({ href: 'activity-report.html#visitor-report', label: '来場者数と活動実績を見る' }),
+    foodribbon: Object.freeze({ href: 'activity-report.html#foodribbon-report', label: 'フードリボンの活動報告を見る' }),
+    trail: Object.freeze({ href: 'activity-report.html#trail-report', label: '次郎笈トレイルの活動報告を見る' }),
+    'kito-quest': Object.freeze({ href: 'activity-report.html#kito-quest-report', label: '木頭クエストの活動報告を見る' }),
+    'tree-planting': Object.freeze({ href: 'activity-report.html#timeline-report', label: '主な沿革で植樹記録を見る' }),
+    newsletter: Object.freeze({ href: 'activity-report.html#newsletter-report', label: '広報誌の活動報告を見る' }),
+  });
+
   shared.menuItems = menuItems;
   window.AWASANGA_MENU_ITEMS = menuItems;
 
@@ -70,5 +90,39 @@
     target.replaceChildren(fragment);
   }
 
+  function setNearestSectionId(headingText, id) {
+    const headings = document.querySelectorAll('h2, h3');
+    const heading = Array.from(headings).find((element) => element.textContent.trim() === headingText);
+    const target = heading && heading.closest('article, section');
+
+    if (target && !target.id) {
+      target.id = id;
+    }
+  }
+
+  function enhanceActivityReportAnchors() {
+    if (!document.querySelector('[data-current="activity"]')) return;
+
+    Object.entries(activityReportSectionIds).forEach(([headingText, id]) => {
+      setNearestSectionId(headingText, id);
+    });
+  }
+
+  function enhanceProjectRecordLinks() {
+    if (!document.querySelector('[data-current="projects"]')) return;
+
+    Object.entries(projectRecordLinks).forEach(([articleId, linkConfig]) => {
+      const article = document.getElementById(articleId);
+      const link = article && article.querySelector('.record-links a[href="activity-report.html"]');
+
+      if (!link) return;
+
+      link.href = linkConfig.href;
+      link.textContent = linkConfig.label;
+    });
+  }
+
   document.querySelectorAll('[data-common-nav]').forEach(renderMenu);
+  enhanceActivityReportAnchors();
+  enhanceProjectRecordLinks();
 })();
