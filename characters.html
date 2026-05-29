@@ -6,6 +6,8 @@
 <meta name="description" content="協同組合 阿波山雅の仲間たち。奥槍どん、なぎかちゃん、杉じぃ、ユズリ、スギトを紹介します。">
 <title>仲間たち｜協同組合 阿波山雅</title>
 <link rel="stylesheet" href="awasanga-styles.css">
+<script src="common-nav.js" defer></script>
+<script src="common-footer.js" defer></script>
 <style>
 .character-intro {
   background: white;
@@ -123,17 +125,9 @@
 </head>
 <body>
 
-<nav class="nav">
+<nav class="nav" aria-label="メインナビゲーション">
   <div class="nav-logo"><a href="index.html">協同組合 阿波山雅</a></div>
-  <ul class="nav-links">
-    <li><a href="about.html">阿波山雅について</a></li>
-    <li><a href="facility_guide.html#okuyarito">施設・拠点</a></li>
-    <li><a href="facility_guide.html">山と林道ガイド</a></li>
-    <li><a href="projects.html">活動・プロジェクト</a></li>
-    <li><a href="activity-report.html">活動報告</a></li>
-    <li><a class="active" href="characters.html">仲間たち</a></li>
-    <li><a href="support.html">応援する</a></li>
-  </ul>
+  <ul class="nav-links" data-common-nav data-current="characters"></ul>
 </nav>
 
 <header class="page-header">
@@ -176,10 +170,7 @@
   <div class="container character-grid">
 
     <article class="character-card" id="okuyaridon">
-      <div class="character-visual">
-        <!-- 画像ファイル名は実際の配置に合わせて変更してください -->
-        <img src="奥槍どん.png" alt="奥槍どん">
-      </div>
+      <div class="character-visual"><img src="奥槍どん.png" alt="奥槍どん"></div>
       <div class="character-body">
         <div class="eyebrow">奥槍戸山の家を支える兄</div>
         <h2>奥槍どん</h2>
@@ -193,45 +184,25 @@
           <dt>口ぐせ</dt><dd>よう来てくれたね。ゆっくりしていって。</dd>
           <dt>担当</dt><dd>食、拠点、休憩、安心できる場所づくり</dd>
         </dl>
-        <div class="phrase-list">
-          <h3>セリフ例</h3>
-          <ul>
-            <li>「よう来てくれたね。ゆっくりしていって。」</li>
-            <li>「山道、疲れたでしょう。まずは少し休んでいってね。」</li>
-            <li>「ここが、山に来る人にとって安心できる場所であってほしいんだ。」</li>
-            <li>「なぎか、そんなに急がなくても大丈夫だよ。」</li>
-          </ul>
-        </div>
+        <div class="phrase-list"><h3>セリフ例</h3><ul><li>「よう来てくれたね。ゆっくりしていって。」</li><li>「ここが、山に来る人にとって安心できる場所であってほしいんだ。」</li></ul></div>
       </div>
     </article>
 
     <article class="character-card" id="nagika">
-      <div class="character-visual">
-        <!-- 画像ファイル名は実際の配置に合わせて変更してください -->
-        <img src="なぎちゃん.png" alt="なぎかちゃん">
-      </div>
+      <div class="character-visual"><img src="なぎちゃん.png" alt="なぎかちゃん"></div>
       <div class="character-body">
         <div class="eyebrow">奥槍どんの妹</div>
         <h2>なぎかちゃん</h2>
         <div class="character-copy">山の元気を届ける、奥槍どんの妹。</div>
         <p>なぎかちゃんは、奥槍どんの妹で、元気いっぱいな女の子です。奥槍戸山の家のメニュー「おんなぎカレー」から生まれたキャラクターで、山に来てくれた人を明るく迎えるのが大好きです。</p>
-        <p>初めて来た人にも、子どもたちにも、すぐに声をかけて、山の楽しさや奥槍戸山の家の魅力を伝えてくれます。</p>
-        <p>少し勢いがありすぎて、兄の奥槍どんに心配されることもありますが、その明るさは、まわりの人を自然と笑顔にしてくれます。</p>
+        <p>初めて来た人にも、子どもたちにも、すぐに声をかけて、山の楽しさや奥槍戸山の家の魅力を伝えてくれます。少し勢いがありすぎて、兄の奥槍どんに心配されることもありますが、その明るさは、まわりの人を自然と笑顔にしてくれます。</p>
         <dl class="profile-table">
           <dt>性格</dt><dd>元気いっぱい、明るい、人なつっこい、前向き</dd>
           <dt>役割</dt><dd>来訪者案内、子ども向け案内、イベントの盛り上げ役</dd>
           <dt>口ぐせ</dt><dd>はじめてでも大丈夫！なぎかが案内するよ！</dd>
           <dt>担当</dt><dd>おんなぎカレー、イベント、初めての人への案内</dd>
         </dl>
-        <div class="phrase-list">
-          <h3>セリフ例</h3>
-          <ul>
-            <li>「いらっしゃーい！奥槍戸山の家へようこそ！」</li>
-            <li>「お山って、楽しいこといっぱいあるんよ！」</li>
-            <li>「お兄ちゃん、今日もいっぱいお客さん来てくれるかな？」</li>
-            <li>「おんなぎカレー、食べてみて！元気出るよ！」</li>
-          </ul>
-        </div>
+        <div class="phrase-list"><h3>セリフ例</h3><ul><li>「いらっしゃーい！奥槍戸山の家へようこそ！」</li><li>「お山って、楽しいこといっぱいあるんよ！」</li></ul></div>
       </div>
     </article>
 
@@ -242,21 +213,14 @@
         <h2>杉じぃ</h2>
         <div class="character-copy">千年の記憶を持つ、木頭杉の長老。</div>
         <p>杉じぃは、木頭杉の森に長い長い時間を生きてきた長老です。山のこと、木のこと、昔の暮らしのことをよく知っています。</p>
-        <p>いつもは「フォッフォッフォ」と陽気に笑っていますが、山の話になると少しだけ真剣になります。木をただの材料として見るのではなく、山の時間そのものとして見ることを大切にしています。</p>
+        <p>いつもは陽気に笑っていますが、山の話になると少しだけ真剣になります。木をただの材料として見るのではなく、山の時間そのものとして見ることを大切にしています。</p>
         <dl class="profile-table">
           <dt>性格</dt><dd>陽気、物知り、少し説教好き、あたたかい</dd>
           <dt>役割</dt><dd>山の記憶、木頭杉の文化、地域の歴史を伝える</dd>
-          <dt>口ぐせ</dt><dd>フォッフォッフォ。木にはのう、時間が詰まっとるんじゃ。</dd>
+          <dt>口ぐせ</dt><dd>木にはのう、時間が詰まっとるんじゃ。</dd>
           <dt>担当</dt><dd>木頭杉、山の歴史、木育、自然の循環</dd>
         </dl>
-        <div class="phrase-list">
-          <h3>セリフ例</h3>
-          <ul>
-            <li>「木は急がん。じゃが、人が忘れるのは早いんじゃ。」</li>
-            <li>「年輪は、山の日記みたいなものじゃよ。」</li>
-            <li>「昔話ではないぞ。これからの話をするために、昔を知るんじゃ。」</li>
-          </ul>
-        </div>
+        <div class="phrase-list"><h3>セリフ例</h3><ul><li>「木は急がん。じゃが、人が忘れるのは早いんじゃ。」</li><li>「昔話ではないぞ。これからの話をするために、昔を知るんじゃ。」</li></ul></div>
       </div>
     </article>
 
@@ -274,14 +238,7 @@
           <dt>口ぐせ</dt><dd>残すだけでは足りません。伝わる形にしましょう。</dd>
           <dt>担当</dt><dd>広報、地域資源、郷土資料、学習コンテンツ</dd>
         </dl>
-        <div class="phrase-list">
-          <h3>セリフ例</h3>
-          <ul>
-            <li>「資源は、見つけ直して、伝わる形にして、初めて未来へ残ります。」</li>
-            <li>「山の魅力は、知っている人だけのものにしておくには惜しいです。」</li>
-            <li>「次の世代に渡すためには、記録と仕組みが必要です。」</li>
-          </ul>
-        </div>
+        <div class="phrase-list"><h3>セリフ例</h3><ul><li>「資源は、見つけ直して、伝わる形にして、初めて未来へ残ります。」</li><li>「次の世代に渡すためには、記録と仕組みが必要です。」</li></ul></div>
       </div>
     </article>
 
@@ -299,14 +256,7 @@
           <dt>口ぐせ</dt><dd>まず、やってみようぜ。</dd>
           <dt>担当</dt><dd>木工、拠点整備、ボランティア、現場活動</dd>
         </dl>
-        <div class="phrase-list">
-          <h3>セリフ例</h3>
-          <ul>
-            <li>「山を守るって、手を動かすことから始まるんだ。」</li>
-            <li>「触ればわかる。木にはちゃんと、ぬくもりがある。」</li>
-            <li>「小さな作業でも、続けば山の力になる。」</li>
-          </ul>
-        </div>
+        <div class="phrase-list"><h3>セリフ例</h3><ul><li>「山を守るって、手を動かすことから始まるんだ。」</li><li>「小さな作業でも、続けば山の力になる。」</li></ul></div>
       </div>
     </article>
 
@@ -339,21 +289,7 @@
     </div>
     <div>
       <h5>サイト</h5>
-      <ul>
-        <li><a href="index.html">ホーム</a></li>
-        <li><a href="about.html">阿波山雅について</a></li>
-        <li><a href="characters.html">仲間たち</a></li>
-        <li><a href="facility_guide.html#okuyarito">施設・拠点</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>関わる</h5>
-      <ul>
-        <li><a href="projects.html">活動・プロジェクト</a></li>
-        <li><a href="activity-report.html">活動報告</a></li>
-        <li><a href="support.html">応援する</a></li>
-        <li><a href="support.html#general">お問い合わせ</a></li>
-      </ul>
+      <ul data-common-footer></ul>
     </div>
     <div>
       <h5>SNS</h5>
