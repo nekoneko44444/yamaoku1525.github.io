@@ -7,6 +7,7 @@
     Object.freeze({ href: 'facility_guide.html', label: '施設・山と林道ガイド' }),
     Object.freeze({ href: 'projects.html', label: '活動・プロジェクト' }),
     Object.freeze({ href: 'activity-report.html', label: '活動報告' }),
+    Object.freeze({ href: 'news.html', label: 'お知らせ' }),
     Object.freeze({ href: 'characters.html', label: '仲間たち' }),
     Object.freeze({ href: 'support.html', label: '応援する' }),
   ]);
