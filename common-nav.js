@@ -243,12 +243,6 @@
     document.head.append(style);
   }
 
-  function setText(element, text) {
-    if (element && text) {
-      element.textContent = text;
-    }
-  }
-
   function removeBrokenImage(image) {
     const grid = image.closest('.activity-photo-grid');
     image.remove();
@@ -320,36 +314,32 @@
     tryCharacterSource(image, sources, 0);
   }
 
-  function updateProjectDetail(article, index, text) {
-    const detail = article.querySelectorAll('.detail-box')[index];
-    const span = detail && detail.querySelector('span:not(.record-links)');
-    setText(span, text);
-  }
-
   function enhanceProjectStories() {
     if (!document.querySelector('[data-current="projects"]')) return;
 
     injectProjectEnhancementStyles();
     enhanceProjectGalleries();
+  }
 
-    Object.entries(projectStoryEnhancements).forEach(([articleId, copy]) => {
+  function enhanceProjectSceneCharacters() {
+    if (!document.querySelector('[data-current="projects"]')) return;
+
+    const characterByArticle = {
+      'okuyarito-base': 'nagika',
+      foodribbon: 'nagika',
+      trail: 'sugito',
+      rindo: 'sugito',
+      'kito-quest': 'sugijii',
+      'tree-planting': 'yuzuri',
+      newsletter: 'yuzuri',
+      'local-products': 'yuzuri',
+    };
+
+    Object.entries(characterByArticle).forEach(([articleId, character]) => {
       const article = document.getElementById(articleId);
-      if (!article) return;
-
-      setText(article.querySelector('.activity-body h3'), copy.heading);
-
-      const paragraphs = Array.from(article.querySelectorAll('.activity-body > p'));
-      copy.paragraphs.forEach((text, index) => setText(paragraphs[index], text));
-
-      const sceneBox = article.querySelector('.scene-box');
-      if (sceneBox) {
-        setText(sceneBox.querySelector('strong'), copy.voiceTitle);
-        setText(sceneBox.querySelector('p'), copy.voice);
-        addCharacterToScene(sceneBox, copy.character, copy.voiceTitle);
-      }
-
-      updateProjectDetail(article, 0, copy.activity);
-      updateProjectDetail(article, 2, copy.support);
+      const sceneBox = article && article.querySelector('.scene-box');
+      const voiceTitle = sceneBox && sceneBox.querySelector('strong')?.textContent.trim();
+      if (sceneBox) addCharacterToScene(sceneBox, character, voiceTitle);
     });
   }
 
@@ -436,30 +426,10 @@
       '入口は複数ありますが、送信先は下部の共通フォーム1つにまとめます。迷った場合は、一般お問い合わせとして送ってください。'
     );
 
-    simplifySupportCard(
-      'individual',
-      '向いている方',
-      '活動を継続して見守りたい方、最新情報を受け取りたい方、応援メッセージを届けたい方。',
-      '共通フォームで送る　→'
-    );
-    simplifySupportCard(
-      'corporate',
-      '相談できること',
-      '協賛、共同企画、地域産品の活用、イベント連携、広報・取材協力など。',
-      '共通フォームで相談する　→'
-    );
-    simplifySupportCard(
-      'volunteer',
-      '確認したいこと',
-      '参加できる時期、興味のある活動、山の経験、交通手段、配慮が必要なこと。',
-      '共通フォームで相談する　→'
-    );
-    simplifySupportCard(
-      'join',
-      '確認したいこと',
-      '事業内容、所在地、関心のある連携、これから一緒に取り組みたいテーマ。',
-      '共通フォームで相談する　→'
-    );
+    simplifySupportCard('individual', '向いている方', '活動を継続して見守りたい方、最新情報を受け取りたい方、応援メッセージを届けたい方。', '共通フォームで送る　→');
+    simplifySupportCard('corporate', '相談できること', '協賛、共同企画、地域産品の活用、イベント連携、広報・取材協力など。', '共通フォームで相談する　→');
+    simplifySupportCard('volunteer', '確認したいこと', '参加できる時期、興味のある活動、山の経験、交通手段、配慮が必要なこと。', '共通フォームで相談する　→');
+    simplifySupportCard('join', '確認したいこと', '事業内容、所在地、関心のある連携、これから一緒に取り組みたいテーマ。', '共通フォームで相談する　→');
 
     const finalCta = document.querySelector('.final-cta-section .cta-panel');
     if (finalCta) {
@@ -468,9 +438,7 @@
       const actions = finalCta.querySelector('.cta-actions');
 
       if (heading) heading.innerHTML = '迷ったら、<br>まずは一通送ってください。';
-      if (paragraph) {
-        paragraph.textContent = '用件はフォーム内で選べます。応援、相談、取材、一般のお問い合わせをひとつの窓口で受け取り、内容に応じて確認します。';
-      }
+      if (paragraph) paragraph.textContent = '用件はフォーム内で選べます。応援、相談、取材、一般のお問い合わせをひとつの窓口で受け取り、内容に応じて確認します。';
       if (actions) {
         actions.querySelectorAll('a').forEach((link, index) => {
           if (index > 0) link.remove();
@@ -497,9 +465,7 @@
         const paragraph = cta.querySelector('p');
         const actions = cta.querySelector('.cta-actions');
         if (heading) heading.innerHTML = '活動の背景を、<br>続けて見てください。';
-        if (paragraph) {
-          paragraph.textContent = '阿波山雅が何を守ろうとしているのかは、日々の活動の中に表れます。活動報告とプロジェクトを通して、山に人が集まる理由を見てください。';
-        }
+        if (paragraph) paragraph.textContent = '阿波山雅が何を守ろうとしているのかは、日々の活動の中に表れます。活動報告とプロジェクトを通して、山に人が集まる理由を見てください。';
         if (actions) {
           const links = actions.querySelectorAll('a');
           replaceLink(links[0], 'activity-report.html', '活動報告を見る　→');
@@ -509,9 +475,7 @@
     }
 
     if (current === 'facility') {
-      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => (
-        link.getAttribute('href') === 'support.html'
-      ));
+      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => link.getAttribute('href') === 'support.html');
       if (supportLink) {
         supportLink.href = 'news.html';
         supportLink.innerHTML = 'お知らせ <span>→</span>';
@@ -526,9 +490,7 @@
         replaceLink(links[1], 'facility_guide.html', '施設・林道ガイドへ　→');
       }
 
-      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => (
-        link.getAttribute('href') === 'support.html'
-      ));
+      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => link.getAttribute('href') === 'support.html');
       if (supportLink) {
         supportLink.href = 'news.html';
         supportLink.innerHTML = 'お知らせ <span>→</span>';
@@ -542,9 +504,7 @@
         const paragraph = finalCta.querySelector('p');
         const actions = finalCta.querySelector('.cta-actions');
         if (heading) heading.innerHTML = '活動の記録から、<br>山の今を見てください。';
-        if (paragraph) {
-          paragraph.textContent = 'このページで紹介した活動は、活動報告に実績や背景を残しています。数字だけでは見えない、現場の動きと次に進めたいことを確認できます。';
-        }
+        if (paragraph) paragraph.textContent = 'このページで紹介した活動は、活動報告に実績や背景を残しています。数字だけでは見えない、現場の動きと次に進めたいことを確認できます。';
         if (actions) {
           const links = actions.querySelectorAll('a');
           replaceLink(links[0], 'activity-report.html', '活動報告を見る　→');
@@ -554,9 +514,7 @@
     }
 
     if (current === 'members') {
-      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => (
-        link.getAttribute('href') === 'support.html'
-      ));
+      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => link.getAttribute('href') === 'support.html');
       if (supportLink) {
         supportLink.href = 'projects.html';
         supportLink.textContent = '活動・プロジェクト';
@@ -569,6 +527,7 @@
   enhanceActivityReportAnchors();
   enhanceProjectRecordLinks();
   enhanceProjectStories();
+  enhanceProjectSceneCharacters();
   simplifySupportPage();
   reduceRepeatedRecruitmentLinks();
 })();
