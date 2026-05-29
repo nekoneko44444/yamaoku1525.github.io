@@ -210,6 +210,55 @@
         margin-top: 0 !important;
       }
 
+      .footer .footer-inner {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 28px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid rgba(255,255,255,.12);
+      }
+
+      .footer .footer-brand {
+        flex: 0 0 auto;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: .1em;
+        white-space: nowrap;
+      }
+
+      .footer .footer-links {
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        gap: 10px 14px;
+        max-width: none !important;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .footer .footer-links a {
+        color: rgba(255,255,255,.82);
+        text-decoration: none;
+      }
+
+      .footer .copyright {
+        margin: 20px 0 0;
+        color: rgba(255,255,255,.52);
+        font-size: 12px;
+      }
+
+      @media (max-width: 1120px) {
+        .footer .footer-links {
+          flex-wrap: wrap;
+        }
+      }
+
       @media (max-width: 880px) {
         .header-inner {
           align-items: flex-start;
@@ -230,6 +279,15 @@
 
         .sub-hero h1 {
           font-size: clamp(34px, 10vw, 48px);
+        }
+
+        .footer .footer-inner {
+          display: block;
+        }
+
+        .footer .footer-links {
+          justify-content: flex-start;
+          margin-top: 18px;
         }
       }
     `;
@@ -282,7 +340,35 @@
     oldNav.replaceWith(header);
   }
 
+  function normalizeLegacyFooter() {
+    const legacyGrid = document.querySelector('footer.footer > .footer-grid');
+    if (!legacyGrid) return;
+
+    const footer = legacyGrid.closest('footer.footer');
+    const container = document.createElement('div');
+    const inner = document.createElement('div');
+    const brand = document.createElement('div');
+    const nav = document.createElement('nav');
+    const copyright = document.createElement('p');
+
+    footer.id = footer.id || 'contact';
+    container.className = 'container';
+    inner.className = 'footer-inner';
+    brand.className = 'footer-brand';
+    brand.textContent = '協同組合 阿波山雅';
+    nav.className = 'footer-links';
+    nav.setAttribute('aria-label', 'フッターナビゲーション');
+    nav.setAttribute('data-common-footer', '');
+    copyright.className = 'copyright';
+    copyright.textContent = '© 協同組合阿波山雅（あわさんが） All Rights Reserved.';
+
+    inner.append(brand, nav);
+    container.append(inner, copyright);
+    footer.replaceChildren(container);
+  }
+
   injectHeaderAlignmentStyles();
   normalizeLegacyHeader();
+  normalizeLegacyFooter();
   document.querySelectorAll('[data-common-footer]').forEach(renderFooterLinks);
 })();
