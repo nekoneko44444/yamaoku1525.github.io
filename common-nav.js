@@ -33,6 +33,33 @@
     newsletter: Object.freeze({ href: 'activity-report.html#newsletter-report', label: '広報誌の活動報告を見る' }),
   });
 
+  const projectGalleryImages = Object.freeze({
+    'okuyarito-base': Object.freeze(['./img/top_yamanoie1.png', './img/top_yamanoie2.png', './img/top_yamanoie3.png']),
+    foodribbon: Object.freeze(['./img/top_insyoku1.png', './img/top_insyoku2.png', './img/top_insyoku3.png']),
+    trail: Object.freeze([
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80',
+      './img/trail2.png',
+      './img/trail3.png',
+    ]),
+    rindo: Object.freeze([
+      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
+      './img/rindo2.png',
+      './img/rindo3.png',
+    ]),
+    'kito-quest': Object.freeze(['./img/top_kouri1.png', './img/top_kouri2.png', './img/top_kouri3.png']),
+    'tree-planting': Object.freeze([
+      'https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=900&q=80',
+      './img/tree_planting2.png',
+      './img/tree_planting3.png',
+    ]),
+    newsletter: Object.freeze([
+      'https://images.unsplash.com/photo-1474366521946-c3d4b507abf2?auto=format&fit=crop&w=900&q=80',
+      './img/newsletter2.png',
+      './img/newsletter3.png',
+    ]),
+    'local-products': Object.freeze(['./img/top_yuzu1.png', './img/top_yuzu2.png', './img/top_yuzu3.png']),
+  });
+
   const characterAssets = Object.freeze({
     nagika: Object.freeze(['./img/なぎかちゃん.png', './img/ナギカ.png', './img/nagika.png']),
     sugito: Object.freeze(['./img/スギト.png', './img/sugito.png']),
@@ -249,6 +276,26 @@
     const style = document.createElement('style');
     style.id = 'project-story-enhancement-styles';
     style.textContent = `
+      .activity-photo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        background: rgba(36,75,55,.08);
+      }
+      .activity-photo-grid img {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        display: block;
+      }
+      .activity-photo-grid img:first-child {
+        grid-column: 1 / -1;
+        aspect-ratio: 4 / 3;
+      }
+      .activity-photo-grid img:only-child {
+        aspect-ratio: 4 / 3;
+      }
       .scene-box.has-character {
         display: grid;
         grid-template-columns: 76px 1fr;
@@ -298,6 +345,40 @@
     }
   }
 
+  function removeBrokenImage(image) {
+    const grid = image.closest('.activity-photo-grid');
+    image.remove();
+    if (grid && !grid.querySelector('img')) {
+      grid.remove();
+    }
+  }
+
+  function enhanceProjectGalleries() {
+    if (!document.querySelector('[data-current="projects"]')) return;
+
+    Object.entries(projectGalleryImages).forEach(([articleId, sources]) => {
+      const article = document.getElementById(articleId);
+      const side = article && article.querySelector('.activity-side');
+      const firstImage = side && side.querySelector(':scope > img');
+      if (!side || !firstImage || side.querySelector('.activity-photo-grid')) return;
+
+      const grid = document.createElement('div');
+      grid.className = 'activity-photo-grid';
+      grid.dataset.maxPhotos = '3';
+
+      sources.slice(0, 3).forEach((src, index) => {
+        const image = document.createElement('img');
+        image.src = src;
+        image.alt = index === 0 ? firstImage.alt : `${firstImage.alt} ${index + 1}`;
+        image.loading = index === 0 ? 'eager' : 'lazy';
+        image.onerror = () => removeBrokenImage(image);
+        grid.append(image);
+      });
+
+      firstImage.replaceWith(grid);
+    });
+  }
+
   function tryCharacterSource(image, sources, index) {
     if (!sources || index >= sources.length) {
       image.hidden = true;
@@ -345,6 +426,7 @@
     if (!document.querySelector('[data-current="projects"]')) return;
 
     injectProjectEnhancementStyles();
+    enhanceProjectGalleries();
 
     Object.entries(projectStoryEnhancements).forEach(([articleId, copy]) => {
       const article = document.getElementById(articleId);
