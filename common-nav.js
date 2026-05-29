@@ -67,104 +67,7 @@
     yuzuri: Object.freeze(['./img/ユズリ.png', './img/yuzuri.png']),
   });
 
-  const projectStoryEnhancements = Object.freeze({
-    'okuyarito-base': Object.freeze({
-      heading: '山の入口に、もう一度「ただいま」と言える灯りを残す。',
-      paragraphs: Object.freeze([
-        '奥槍戸山の家に灯りがついているだけで、山へ向かう人の気持ちは少し軽くなります。登山の前に息を整える人、林道を走ってきて温かいものを求める人、家族で景色を見に来た人。違う目的で来た人たちが、同じ場所で湯気の立つごはんを囲み、言葉を交わします。',
-        '私たちが守りたいのは、建物だけではありません。疲れた人が休める時間、初めて来た人が安心できる案内、また誰かを連れて来たくなる記憶です。ここが続くことは、山に人が戻ってくる理由を残すことです。',
-      ]),
-      voiceTitle: 'なぎかちゃんの声',
-      voice: '山の奥まで来てくれた人に、最初に渡せるものは安心だと思うんよ。ごはんでも、ひと言でも、笑顔でもいい。「ここに来てよかった」って思える時間を、ちゃんと残したいんよ。',
-      character: 'nagika',
-      activity: '奥槍戸山の家の営業、食事提供、来訪者案内、営業開始情報の発信、サポーターや地域の人との交流づくり。',
-      support: '食べに行く、誰かを連れて行く、営業情報を広める、サポーターとして場所の継続を支える。',
-    }),
-    foodribbon: Object.freeze({
-      heading: '一食を差し出す気持ちが、誰かの今日をあたためる。',
-      paragraphs: Object.freeze([
-        'フードリボンは、困っている人だけのための特別な仕組みではありません。「今日は誰かの分も置いていこう」と思う人と、「今日は少し助けてほしい」と思う人が、同じ地域の中で自然につながるための小さな合図です。',
-        '提供117食、支援148食という数字の奥には、顔の見えない誰かを思って託された一食があります。食べることは生きることに近いからこそ、そこに生まれる共感は強く、地域のやさしさを見える形にしてくれます。',
-      ]),
-      voiceTitle: 'なぎかちゃんの声',
-      voice: 'お腹がすいている時って、心まで小さくなることがあるんよね。だから一食を渡すことは、ただ食べてもらうだけじゃなくて、「気にかけている人がいるよ」って伝えることなんよ。',
-      character: 'nagika',
-      activity: 'フードリボン活動、子どもへの食事提供、支援食数の報告、新聞掲載を通じた周知。',
-      support: '食べる、支援する、活動を知人に伝える。誰かの今日を少し軽くする一食として応援する。',
-    }),
-    trail: Object.freeze({
-      heading: '足もとの道を整えることは、山との約束をつなぎ直すこと。',
-      paragraphs: Object.freeze([
-        '次郎笈へ続く道は、ただの通路ではありません。何度も歩いた人の記憶、初めて稜線に立つ人の高鳴り、山を好きになるきっかけが積み重なる場所です。けれど山道は、誰かが気にかけなければ少しずつ消えていきます。',
-        '草を払い、崩れたところを見て、次に歩く人の安全を想像する。派手な作業ではなくても、その一つひとつが「また歩ける道」を残します。山を楽しむ人が、山を支える人にもなる入口をつくります。',
-      ]),
-      voiceTitle: 'スギトの声',
-      voice: '道は、歩く人だけのものじゃない。次に来る人のために、少し手を入れて帰る。それだけで山との関わり方は変わるんだ。',
-      character: 'sugito',
-      activity: '次郎笈トレイル再生プロジェクト第1弾・第2弾、現地確認、整備活動、活動告知。',
-      support: '整備活動に参加する、情報を広げる、安全に歩いて利用する。歩いた記憶を、次の整備につなげる。',
-    }),
-    rindo: Object.freeze({
-      heading: '道を知る人が増えるほど、山は会いに行ける場所になる。',
-      paragraphs: Object.freeze([
-        '剣山スーパー林道や奥槍戸周辺の道は、山の奥へ人を運ぶ大切な入口です。けれど、そこには天候、路面、通行規制、落石や凍結の不安もあります。知らずに向かえば危険でも、知って向かえば山の楽しみはぐっと広がります。',
-        '私たちは、林道イベントへの参加や情報発信を通じて、道の楽しさと安全の両方を伝えます。通り過ぎるだけだった人が、拠点に立ち寄り、地域の人と話し、次の来訪につながる流れをつくります。',
-      ]),
-      voiceTitle: 'スギトの声',
-      voice: '山道は、勢いだけで入る場所じゃない。知って、備えて、無理をしない。そうすれば、道はちゃんと楽しい時間につながってくれる。',
-      character: 'sugito',
-      activity: '剣山スーパー林道ミーティングへの参加、林道利用者への案内、施設・林道情報の整理。',
-      support: '事前確認をして安全に訪れる、拠点に立ち寄る、林道の魅力と注意点をあわせて発信する。',
-    }),
-    'kito-quest': Object.freeze({
-      heading: '木の時間に触れると、山の見え方が変わる。',
-      paragraphs: Object.freeze([
-        '木頭杉には、植えた人、育てた人、伐った人、使い道を考えた人の時間が染み込んでいます。木に触れることは、山の長い営みに触れることです。',
-        '木工体験や木頭クエスト、地域イベントでの出店は、木頭杉を「知っている人だけの素材」にしないための入口です。子どもも大人も、遊びながら、手を動かしながら、山の価値を自分の感覚で受け取れるようにします。',
-      ]),
-      voiceTitle: '杉じぃの声',
-      voice: '木は急がん。じゃが、人が忘れるのは早い。だから触れて、作って、持ち帰れる形にするんじゃ。木の時間を知ると、山の未来の見え方も変わるんじゃよ。',
-      character: 'sugijii',
-      activity: '木頭杉の価値発信、木工体験、木頭クマ祭りでの出店・登壇、木頭クエスト企画。',
-      support: '体験する、商品を使う、イベントに参加する。木の手ざわりを、誰かに話して広げる。',
-    }),
-    'tree-planting': Object.freeze({
-      heading: '今日植えた一本が、未来の誰かを山へ呼ぶ。',
-      paragraphs: Object.freeze([
-        'ヤマザクラの苗を植えても、すぐに満開の景色は見られません。土をかぶせ、水をやり、根づくのを待つ。結果が見えるまで時間がかかるからこそ、この活動には未来を信じる力があります。',
-        '何年か後、花が咲いた山を見に誰かが来るかもしれない。その人が写真を撮り、誰かに話し、また季節がめぐる。植樹は、今ここにいない人へ景色を手渡す活動です。',
-      ]),
-      voiceTitle: 'ユズリの声',
-      voice: 'すぐに咲かないからこそ、植える意味があると思うんです。未来の誰かが「きれい」と立ち止まる景色を、今の私たちが準備しているんです。',
-      character: 'yuzuri',
-      activity: 'ヤマザクラ植樹イベント、奥槍戸山の家カレー提供、季節の景色づくり。',
-      support: '植樹に参加する、イベントを手伝う、成長の記録を残す。未来の景色を一緒に待つ。',
-    }),
-    newsletter: Object.freeze({
-      heading: '記録しなければ、活動は風のように過ぎてしまう。',
-      paragraphs: Object.freeze([
-        '山で起きた小さな出来事は、その場にいた人の記憶には残ります。でも、記録しなければ、まだ出会っていない人には届きません。奥槍戸やま日和は、山の出来事を次の誰かへ渡すための手紙です。',
-        '活動報告、組合員の紹介、地域の話題。紙面に残すことで、一日の出来事が支援者や来訪者の入口になります。言葉にすることは、山の魅力を閉じ込めるのではなく、遠くへ届けることです。',
-      ]),
-      voiceTitle: 'ユズリの声',
-      voice: '残すだけでは足りません。読む人が「行ってみたい」「関わってみたい」と思える形にしましょう。山の魅力は、知っている人だけのものにしておくには惜しいです。',
-      character: 'yuzuri',
-      activity: '奥槍戸やま日和 vol001からvol004、お知らせ更新、活動報告、メディア掲載の整理。',
-      support: '読む、共有する、活動を紹介する、取材や発信で協力する。届いていない人へ言葉を渡す。',
-    }),
-    'local-products': Object.freeze({
-      heading: '地域の実りを、買って終わりではなく、続く関係にする。',
-      paragraphs: Object.freeze([
-        'ゆずや地域産品は、ただの商品ではありません。山の気候、手入れを続ける人、収穫の時期を待つ時間、加工する工夫が詰まっています。',
-        '食べる、買う、贈る。その一つひとつが、地域の仕事を次につなぐ応援になります。私たちは、実りを「お土産」で終わらせず、山へ来る理由、地域を思い出すきっかけ、また関わる入口に育てていきます。',
-      ]),
-      voiceTitle: 'ユズリの声',
-      voice: 'おいしいものには、土地の記憶が入っています。買ってくれた人の暮らしに少し山が届いて、またここを思い出してもらえたら、それも大切な応援です。',
-      character: 'yuzuri',
-      activity: 'ゆず・地域産品の活用、加工品や食の企画、販売支援、平の里との接点づくり。',
-      support: '買う、食べる、贈る、商品づくりを応援する。地域の実りを、次の仕事につなげる。',
-    }),
-  });
+  const projectStoryEnhancements = Object.freeze({});
 
   shared.menuItems = menuItems;
   window.AWASANGA_MENU_ITEMS = menuItems;
@@ -179,6 +82,7 @@
       'activity-report.html': 'activity',
       'news.html': 'news',
       'characters.html': 'characters',
+      'members.html': 'members',
       'support.html': 'support',
       'contact.html': 'support',
       'design-doc.html': 'design',
@@ -449,8 +353,222 @@
     });
   }
 
+  function injectConsistencyStyles() {
+    if (document.getElementById('site-consistency-runtime-styles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'site-consistency-runtime-styles';
+    style.textContent = `
+      .breadcrumb {
+        display: none !important;
+      }
+
+      .engage-note {
+        margin-top: 18px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: var(--paper);
+        border: 1px solid rgba(36,75,55,.08);
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      .engage-note b {
+        display: block;
+        color: var(--green);
+        margin-bottom: 6px;
+      }
+
+      .engage-action {
+        margin-top: 18px;
+      }
+    `;
+    document.head.append(style);
+  }
+
+  function setTextBySelector(selector, text) {
+    const target = document.querySelector(selector);
+    if (target) target.textContent = text;
+  }
+
+  function createSupportNote(title, text) {
+    const note = document.createElement('div');
+    note.className = 'engage-note';
+
+    const heading = document.createElement('b');
+    heading.textContent = title;
+    note.append(heading, document.createTextNode(text));
+
+    return note;
+  }
+
+  function createSupportAction(label) {
+    const wrap = document.createElement('div');
+    wrap.className = 'engage-action';
+
+    const link = document.createElement('a');
+    link.className = 'btn btn-outline';
+    link.href = '#unified-form';
+    link.textContent = label;
+
+    wrap.append(link);
+    return wrap;
+  }
+
+  function simplifySupportCard(id, noteTitle, noteText, actionLabel) {
+    const card = document.getElementById(id);
+    if (!card) return;
+
+    card.querySelectorAll('.form-spec, .form-stub, .engage-note, .engage-action').forEach((node) => {
+      node.remove();
+    });
+
+    card.append(createSupportNote(noteTitle, noteText), createSupportAction(actionLabel));
+  }
+
+  function simplifySupportPage() {
+    if (!document.querySelector('[data-current="support"]')) return;
+
+    setTextBySelector('.members-section .section-title', '関わり方を選ぶ');
+    setTextBySelector(
+      '.members-section .section-text',
+      '入口は複数ありますが、送信先は下部の共通フォーム1つにまとめます。迷った場合は、一般お問い合わせとして送ってください。'
+    );
+
+    simplifySupportCard(
+      'individual',
+      '向いている方',
+      '活動を継続して見守りたい方、最新情報を受け取りたい方、応援メッセージを届けたい方。',
+      '共通フォームで送る　→'
+    );
+    simplifySupportCard(
+      'corporate',
+      '相談できること',
+      '協賛、共同企画、地域産品の活用、イベント連携、広報・取材協力など。',
+      '共通フォームで相談する　→'
+    );
+    simplifySupportCard(
+      'volunteer',
+      '確認したいこと',
+      '参加できる時期、興味のある活動、山の経験、交通手段、配慮が必要なこと。',
+      '共通フォームで相談する　→'
+    );
+    simplifySupportCard(
+      'join',
+      '確認したいこと',
+      '事業内容、所在地、関心のある連携、これから一緒に取り組みたいテーマ。',
+      '共通フォームで相談する　→'
+    );
+
+    const finalCta = document.querySelector('.final-cta-section .cta-panel');
+    if (finalCta) {
+      const heading = finalCta.querySelector('h2');
+      const paragraph = finalCta.querySelector('p');
+      const actions = finalCta.querySelector('.cta-actions');
+
+      if (heading) heading.innerHTML = '迷ったら、<br>まずは一通送ってください。';
+      if (paragraph) {
+        paragraph.textContent = '用件はフォーム内で選べます。応援、相談、取材、一般のお問い合わせをひとつの窓口で受け取り、内容に応じて確認します。';
+      }
+      if (actions) {
+        actions.querySelectorAll('a').forEach((link, index) => {
+          if (index > 0) link.remove();
+        });
+      }
+    }
+  }
+
+  function replaceLink(link, href, text) {
+    if (!link) return;
+    link.href = href;
+    link.textContent = text;
+  }
+
+  function reduceRepeatedRecruitmentLinks() {
+    const current = currentKeyFromPath();
+
+    if (current === 'about') {
+      document.querySelector('a[href="support.html#join"]')?.remove();
+
+      const cta = document.querySelector('.cta-panel');
+      if (cta) {
+        const heading = cta.querySelector('h2');
+        const paragraph = cta.querySelector('p');
+        const actions = cta.querySelector('.cta-actions');
+        if (heading) heading.innerHTML = '活動の背景を、<br>続けて見てください。';
+        if (paragraph) {
+          paragraph.textContent = '阿波山雅が何を守ろうとしているのかは、日々の活動の中に表れます。活動報告とプロジェクトを通して、山に人が集まる理由を見てください。';
+        }
+        if (actions) {
+          const links = actions.querySelectorAll('a');
+          replaceLink(links[0], 'activity-report.html', '活動報告を見る　→');
+          replaceLink(links[1], 'projects.html', '活動を見る　→');
+        }
+      }
+    }
+
+    if (current === 'facility') {
+      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => (
+        link.getAttribute('href') === 'support.html'
+      ));
+      if (supportLink) {
+        supportLink.href = 'news.html';
+        supportLink.innerHTML = 'お知らせ <span>→</span>';
+      }
+    }
+
+    if (current === 'activity') {
+      const actions = document.querySelector('.final-cta-section .cta-actions');
+      if (actions) {
+        const links = actions.querySelectorAll('a');
+        replaceLink(links[0], 'projects.html', '活動・プロジェクトへ　→');
+        replaceLink(links[1], 'facility_guide.html', '施設・林道ガイドへ　→');
+      }
+
+      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => (
+        link.getAttribute('href') === 'support.html'
+      ));
+      if (supportLink) {
+        supportLink.href = 'news.html';
+        supportLink.innerHTML = 'お知らせ <span>→</span>';
+      }
+    }
+
+    if (current === 'projects') {
+      const finalCta = document.querySelector('.final-cta-section .cta-panel');
+      if (finalCta) {
+        const heading = finalCta.querySelector('h2');
+        const paragraph = finalCta.querySelector('p');
+        const actions = finalCta.querySelector('.cta-actions');
+        if (heading) heading.innerHTML = '活動の記録から、<br>山の今を見てください。';
+        if (paragraph) {
+          paragraph.textContent = 'このページで紹介した活動は、活動報告に実績や背景を残しています。数字だけでは見えない、現場の動きと次に進めたいことを確認できます。';
+        }
+        if (actions) {
+          const links = actions.querySelectorAll('a');
+          replaceLink(links[0], 'activity-report.html', '活動報告を見る　→');
+          replaceLink(links[1], 'facility_guide.html', '施設・林道ガイドへ　→');
+        }
+      }
+    }
+
+    if (current === 'members') {
+      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => (
+        link.getAttribute('href') === 'support.html'
+      ));
+      if (supportLink) {
+        supportLink.href = 'projects.html';
+        supportLink.textContent = '活動・プロジェクト';
+      }
+    }
+  }
+
   document.querySelectorAll('[data-common-nav]').forEach(renderMenu);
+  injectConsistencyStyles();
   enhanceActivityReportAnchors();
   enhanceProjectRecordLinks();
   enhanceProjectStories();
+  simplifySupportPage();
+  reduceRepeatedRecruitmentLinks();
 })();
