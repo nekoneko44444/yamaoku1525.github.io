@@ -100,12 +100,27 @@
     }
   }
 
+  function scrollToHashTarget() {
+    const rawHash = window.location.hash.slice(1);
+    if (!rawHash) return;
+
+    const id = decodeURIComponent(rawHash);
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    window.requestAnimationFrame(() => {
+      target.scrollIntoView({ block: 'start' });
+    });
+  }
+
   function enhanceActivityReportAnchors() {
     if (!document.querySelector('[data-current="activity"]')) return;
 
     Object.entries(activityReportSectionIds).forEach(([headingText, id]) => {
       setNearestSectionId(headingText, id);
     });
+
+    scrollToHashTarget();
   }
 
   function enhanceProjectRecordLinks() {
