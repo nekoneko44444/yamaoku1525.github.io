@@ -245,6 +245,12 @@ img {
   background: var(--green-900);
 }
 
+.btn-facebook {
+  background: #315f8f;
+  color: var(--white);
+  box-shadow: 0 16px 34px rgba(18, 48, 84, 0.24);
+}
+
 .hero-note {
   padding: 26px;
   border: 1px solid rgba(255, 255, 255, 0.28);
@@ -337,6 +343,12 @@ section {
   margin: 8px 0 20px;
   font-size: 26px;
   letter-spacing: 0.08em;
+}
+
+.social-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .instagram-panel {
