@@ -152,7 +152,7 @@ img {
   background:
     linear-gradient(90deg, rgba(9, 28, 20, 0.84) 0%, rgba(12, 35, 25, 0.6) 48%, rgba(12, 35, 25, 0.22) 100%),
     linear-gradient(180deg, rgba(13, 36, 28, 0.18), rgba(13, 36, 28, 0.32)),
-    url("https://lh3.googleusercontent.com/sitesv/AA5AbUCFrKg-avshycWwpgVUwQgydzWiYGYjWTEYl3bOKALTXrrTgUZyQi2T57k649BLKJ62MWTNJfxzieUk2jGB36Du9qd_lf9wfeOsvLfrDm2pJmGMLXwZx3uRAH4W0oSRLmaNzjOPZSD_3b86VURnEXoI_YXAuOXpuMnDV7J_Bm_IWxO6cpsR__9YASo=w16383") center / cover;
+    url("../img/top_yamanoie1.png") center/cover no-repeat;
 }
 
 .hero-inner {
