@@ -6,6 +6,69 @@
   <meta name="description" content="協同組合 阿波山雅は徳島・剣山系のふもと、奥槍戸を拠点に山と地域を次の世代へ繋ぐ協同組合です。山の恵みと人のつながりを大切にしながら、持続可能な地域づくりを進めています。" />
   <title>協同組合 阿波山雅（あわさんが） | 徳島・奥槍戸 山と人をつなぐ協同組合</title>
   <link rel="stylesheet" href="awasanga-top_styles.css">
+  <style>
+    body { margin: 0 !important; }
+    .page { background: #f5f0e6; }
+    .site-header {
+      position: absolute !important;
+      inset: 0 0 auto 0 !important;
+      z-index: 20 !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 24px 0 !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      color: #fffdf8 !important;
+    }
+    .site-header::before,
+    .site-header::after { content: none !important; }
+    .header-inner {
+      min-height: auto !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      flex-direction: row !important;
+      gap: 32px !important;
+    }
+    .brand,
+    .nav { color: #fffdf8 !important; }
+    .brand small,
+    .brand span { color: rgba(255, 253, 248, .86) !important; }
+    .nav {
+      display: flex !important;
+      justify-content: flex-end !important;
+      width: auto !important;
+      background: transparent !important;
+    }
+    main#top,
+    .hero {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+    .hero {
+      min-height: 760px !important;
+      background:
+        linear-gradient(90deg, rgba(9, 28, 20, 0.82) 0%, rgba(12, 35, 25, 0.58) 42%, rgba(12, 35, 25, 0.18) 100%),
+        linear-gradient(180deg, rgba(13, 36, 28, 0.22), rgba(13, 36, 28, 0.34)),
+        url("./img/top_g.png?auto=format&fit=crop&w=2200&q=85") center / cover no-repeat !important;
+    }
+    @media (max-width: 980px) {
+      .header-inner {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+      }
+      .nav {
+        justify-content: flex-start !important;
+        width: 100% !important;
+      }
+    }
+    @media (max-width: 680px) {
+      .site-header { padding: 18px 0 !important; }
+      .hero { min-height: 680px !important; }
+    }
+  </style>
   <script src="common-footer.js" defer></script>
 </head>
 <body>
