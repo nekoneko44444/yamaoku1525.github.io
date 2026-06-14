@@ -1,0 +1,82 @@
+name: Apply page role review
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/apply-page-role-review.yml
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply reviewed page changes
+        shell: python
+        run: |
+          from pathlib import Path
+
+          def edit(name, replacements):
+              path = Path(name)
+              text = path.read_text(encoding="utf-8")
+              for old, new in replacements:
+                  if old not in text:
+                      raise SystemExit(f"Expected text not found in {name}: {old[:80]}")
+                  text = text.replace(old, new)
+              path.write_text(text, encoding="utf-8")
+
+          guide_activity = '''          <div class="page-role-guide" aria-label="ページの使い分け">
+            <a class="page-role-card" href="projects.html"><small>活動・プロジェクト</small><strong>何を、なぜ行うのかを知る</strong><span>活動の目的、取り組み内容、関わり方を紹介します。</span></a>
+            <div class="page-role-card current"><small>活動報告・現在のページ</small><strong>何が、いつ、どれだけ進んだかを見る</strong><span>数値、日付、写真、掲載・連携実績を確認できます。</span></div>
+          </div>
+'''
+          guide_projects = '''          <div class="page-role-guide" aria-label="ページの使い分け">
+            <div class="page-role-card current"><small>活動・プロジェクト・現在のページ</small><strong>何を、なぜ行うのかを知る</strong><span>活動の目的、取り組み内容、関わり方を紹介します。</span></div>
+            <a class="page-role-card" href="activity-report.html"><small>活動報告</small><strong>何が、いつ、どれだけ進んだかを見る</strong><span>数値、日付、写真、掲載・連携実績を確認できます。</span></a>
+          </div>
+'''
+
+          edit("activity-report.html", [
+            ("このページは活動紹介ではなく、実際に動いた日付、数値、掲載、写真をまとめる報告ページです。山に人が戻り、食が届き、記録が残り、外部との接点が生まれていることを、できるだけ具体的に示します。", "ここは、活動の成果を確認するページです。実際に動いた日付、数値、写真、掲載・連携実績を時系列でまとめています。活動の目的や参加方法を知りたい方は「活動・プロジェクト」をご覧ください。"),
+            ("          </div>\n        </div>\n      </section>\n\n      <section id=\"visitor-report\">", "          </div>\n" + guide_activity + "        </div>\n      </section>\n\n      <section id=\"visitor-report\">"),
+            ("<h2 class=\"section-title\">実績別レポート</h2>", "<h2 class=\"section-title\">主要実績の記録</h2>"),
+            ("活動の説明は `projects.html` に集約し、このページでは「いつ、何が起きたか」を中心に整理します。", "ここでは「いつ、何が起きて、どんな成果につながったか」を記録します。活動の目的や関わり方は、<a href=\"projects.html\">活動・プロジェクト</a>で紹介しています。"),
+            ("<div class=\"report-visual-meta\"><b>行政協議</b><span>2026/03から協議開始</span></div>", "<div class=\"report-visual-meta\"><b>特産品開発・物販自販機</b><span>2026/03から協議開始</span></div>"),
+            ("<h3>那賀町賑わい課との連携協議</h3>", "<h3>那賀町特産品開発・物販自販機設置による那賀地域活性化</h3>"),
+            ("2026年3月から、平の里を基点とした那賀町活性化について協議を開始。新規客層の開拓と、すでに林道を訪れているユーザーの取り込みをテーマに、通過する人を地域で滞在する人へ変える構想を進めています。", "2026年3月から、那賀町の特産品開発と物販自販機の設置による地域活性化について協議を開始。地域産品を手に取れる販売接点を増やし、林道利用者や来訪者を那賀地域の消費と滞在につなげる構想を進めています。"),
+            ("<div class=\"fact-box\"><b>テーマ</b><span>平の里を基点とした地域活性化</span></div>", "<div class=\"fact-box\"><b>テーマ</b><span>特産品開発・物販自販機設置による那賀地域活性化</span></div>"),
+            ("<div class=\"fact-box\"><b>関連</b><a href=\"facility_guide.html#tairanosato\">平の里を見る</a></div>", "<div class=\"fact-box\"><b>関連</b><a href=\"projects.html#local-products\">活動の目的を見る</a></div>"),
+            ("<div class=\"trust-item\">那賀町<br>賑わい課<small>2026/03 協議開始</small></div>", "<div class=\"trust-item\">那賀地域<br>活性化<small>2026/03 協議開始</small></div>"),
+            ("<b>那賀町賑わい課との連携協議</b><span>平の里を基点とした地域活性化について協議開始。</span>", "<b>那賀町特産品開発・物販自販機設置による那賀地域活性化</b><span>特産品開発と物販自販機設置に向けた協議を開始。</span>")
+          ])
+
+          edit("projects.html", [
+            ("阿波山雅の活動は、奥槍戸に来た人が安心して立ち寄れる場所、地域の人が誇れる仕事、子どもたちに渡せる記憶を、一つずつ守り育てるための活動です。", "ここは、阿波山雅が「何を、なぜ行うのか」を知るページです。活動の目的、具体的な取り組み、関わり方を紹介します。数値や日付などの成果は「活動報告」で確認できます。"),
+            ("          </div>\n        </div>\n      </section>\n\n      <section>\n        <div class=\"container plain-intro\">", "          </div>\n" + guide_projects + "        </div>\n      </section>\n\n      <section>\n        <div class=\"container plain-intro\">"),
+            ("だからこのページでは、活動の説明だけで終わらせず、実際に何をしているのか、どの記録を見ればよいのか、次にどう関われるのかまで並べます。", "このページでは、各活動の背景と目指す姿、具体的な取り組み、関わり方を紹介します。実施日、数値、掲載などの成果は、活動報告に分けて記録しています。"),
+            ("活動ごとに、記録へつなげます", "取り組みと関わり方を知る"),
+            ("各活動の下に、実際の活動内容と記録リンクを置きました。気になった活動から、そのまま記録や関連ページへ進めます。", "各活動の目的、具体的な取り組み、関わり方を紹介します。実績を確認したい場合は、各活動から活動報告へ進めます。"),
+            ("<strong>果樹と地域産品を活かす</strong>", "<strong>那賀町特産品開発・物販自販機設置による那賀地域活性化</strong>"),
+            ("<h3>地域の実りを、続く仕事に変えていく。</h3>", "<h3>那賀町の特産品を、いつでも手に取れる地域の入口へ。</h3>"),
+            ("山の地域には、ゆずをはじめとした実りがあります。育てる人、収穫する人、加工する人、届ける人、買う人がつながって初めて、地域の力になります。", "那賀町には、ゆずをはじめとした特産品と、それを育て、加工し、届ける人の仕事があります。商品として磨き、買える場所を増やすことで、地域の実りを継続する仕事につなげます。"),
+            ("阿波山雅は、果樹や地域産品を、山へ来る理由、地域を知る入口、応援の形として育てていきます。", "特産品開発と物販自販機の設置を通じて、林道利用者や来訪者が那賀町の商品に出会い、地域を知り、次の訪問につながる接点をつくります。"),
+            ("ゆず・地域産品の活用、加工品や食の企画、販売支援、平の里との接点づくり。", "那賀町特産品の商品開発、物販自販機の設置検討、販売接点づくり、来訪者への地域産品の発信。"),
+            ("<span class=\"record-links\"><a href=\"facility_guide.html#tairanosato\">平の里の案内</a><a href=\"news.html\">お知らせ一覧を見る</a><a href=\"members.html\">組合員紹介を見る</a></span>", "<span class=\"record-links\"><a href=\"activity-report.html#town-report\">協議・実績の記録を見る</a><a href=\"facility_guide.html#tairanosato\">平の里の案内</a><a href=\"news.html\">お知らせ一覧を見る</a></span>"),
+            ("このページで紹介した活動は、活動報告に実績や背景を残しています。数字だけでは見えない、現場の動きと次に進めたいことを確認できます。", "このページで紹介した活動の実施日、数値、写真、掲載・連携実績は、活動報告にまとめています。成果や進捗を確認したい方は、活動報告をご覧ください。")
+          ])
+
+          edit("common-nav.js", [
+            ("'那賀町賑わい課との連携協議': 'town-report'", "'那賀町特産品開発・物販自販機設置による那賀地域活性化': 'town-report'"),
+            ("このページで紹介した活動は、活動報告に実績や背景を残しています。数字だけでは見えない、現場の動きと次に進めたいことを確認できます。", "このページで紹介した活動の実施日、数値、写真、掲載・連携実績は、活動報告にまとめています。成果や進捗を確認したい方は、活動報告をご覧ください。"),
+            ("      .engage-note {", "      .page-role-guide { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:28px; }\n      .page-role-card { display:block; padding:22px 24px; border-radius:22px; background:#fff; border:1px solid rgba(36,75,55,.12); color:var(--ink); box-shadow:0 14px 36px rgba(22,50,36,.07); }\n      .page-role-card.current { background:var(--green); color:#fff; }\n      .page-role-card small { display:block; margin-bottom:6px; color:var(--gold-dark); font-weight:900; letter-spacing:.08em; }\n      .page-role-card.current small { color:var(--gold); }\n      .page-role-card strong { display:block; font-size:20px; line-height:1.45; }\n      .page-role-card span { display:block; margin-top:7px; color:var(--muted); font-size:13px; line-height:1.75; }\n      .page-role-card.current span { color:rgba(255,255,255,.84); }\n      @media (max-width:980px) { .page-role-guide { grid-template-columns:1fr; } }\n\n      .engage-note {")
+          ])
+
+          edit("about.html", [("那賀町賑わい課との認識合わせ協議 開始", "那賀町特産品開発・物販自販機設置による那賀地域活性化 協議開始")])
+      - name: Remove temporary workflow and commit
+        run: |
+          rm .github/workflows/apply-page-role-review.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add activity-report.html projects.html common-nav.js about.html .github/workflows/apply-page-role-review.yml
+          git commit -m "Clarify project and activity report roles"
+          git push
