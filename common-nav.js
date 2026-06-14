@@ -7,31 +7,10 @@
     Object.freeze({ href: 'about.html', label: '阿波山雅について', key: 'about' }),
     Object.freeze({ href: 'facility_guide.html', label: '施設・山と林道ガイド', key: 'facility' }),
     Object.freeze({ href: 'projects.html', label: '活動・プロジェクト', key: 'projects' }),
-    Object.freeze({ href: 'activity-report.html', label: '活動報告', key: 'activity' }),
     Object.freeze({ href: 'news.html', label: 'お知らせ', key: 'news' }),
     Object.freeze({ href: 'characters.html', label: '仲間たち', key: 'characters' }),
     Object.freeze({ href: 'support.html', label: '応援する', key: 'support' }),
   ]);
-
-  const activityReportSectionIds = Object.freeze({
-    '数字で見る阿波山雅': 'visitor-report',
-    '次郎笈トレイル再生': 'trail-report',
-    'フードリボン': 'foodribbon-report',
-    '木頭クエスト × クマ祭り': 'kito-quest-report',
-    '那賀町賑わい課との連携協議': 'town-report',
-    '奥槍戸やま日和': 'newsletter-report',
-    'メディア・受託・登録実績': 'media-report',
-    '主な沿革': 'timeline-report',
-  });
-
-  const projectRecordLinks = Object.freeze({
-    'okuyarito-base': Object.freeze({ href: 'activity-report.html#visitor-report', label: '来場者数と活動実績を見る' }),
-    foodribbon: Object.freeze({ href: 'activity-report.html#foodribbon-report', label: 'フードリボンの活動報告を見る' }),
-    trail: Object.freeze({ href: 'activity-report.html#trail-report', label: '次郎笈トレイルの活動報告を見る' }),
-    'kito-quest': Object.freeze({ href: 'activity-report.html#kito-quest-report', label: '木頭クエストの活動報告を見る' }),
-    'tree-planting': Object.freeze({ href: 'activity-report.html#timeline-report', label: '主な沿革で植樹記録を見る' }),
-    newsletter: Object.freeze({ href: 'activity-report.html#newsletter-report', label: '広報誌の活動報告を見る' }),
-  });
 
   const projectGalleryImages = Object.freeze({
     'okuyarito-base': Object.freeze(['./img/top_yamanoie1.png', './img/top_yamanoie2.png', './img/top_yamanoie3.png']),
@@ -67,8 +46,6 @@
     yuzuri: Object.freeze(['./img/ユズリ.png', './img/yuzuri.png']),
   });
 
-  const projectStoryEnhancements = Object.freeze({});
-
   shared.menuItems = menuItems;
   window.AWASANGA_MENU_ITEMS = menuItems;
 
@@ -79,7 +56,10 @@
       'about.html': 'about',
       'facility_guide.html': 'facility',
       'projects.html': 'projects',
-      'activity-report.html': 'activity',
+      'project-foodribbon.html': 'projects',
+      'project-trail.html': 'projects',
+      'project-kitokuma.html': 'projects',
+      'project-ridgeway.html': 'projects',
       'news.html': 'news',
       'characters.html': 'characters',
       'members.html': 'members',
@@ -125,53 +105,6 @@
     });
 
     target.replaceChildren(fragment);
-  }
-
-  function setNearestSectionId(headingText, id) {
-    const headings = document.querySelectorAll('h2, h3');
-    const heading = Array.from(headings).find((element) => element.textContent.trim() === headingText);
-    const target = heading && heading.closest('article, section');
-
-    if (target && !target.id) {
-      target.id = id;
-    }
-  }
-
-  function scrollToHashTarget() {
-    const rawHash = window.location.hash.slice(1);
-    if (!rawHash) return;
-
-    const id = decodeURIComponent(rawHash);
-    const target = document.getElementById(id);
-    if (!target) return;
-
-    window.requestAnimationFrame(() => {
-      target.scrollIntoView({ block: 'start' });
-    });
-  }
-
-  function enhanceActivityReportAnchors() {
-    if (!document.querySelector('[data-current="activity"]')) return;
-
-    Object.entries(activityReportSectionIds).forEach(([headingText, id]) => {
-      setNearestSectionId(headingText, id);
-    });
-
-    scrollToHashTarget();
-  }
-
-  function enhanceProjectRecordLinks() {
-    if (!document.querySelector('[data-current="projects"]')) return;
-
-    Object.entries(projectRecordLinks).forEach(([articleId, linkConfig]) => {
-      const article = document.getElementById(articleId);
-      const link = article && article.querySelector('.record-links a[href="activity-report.html"]');
-
-      if (!link) return;
-
-      link.href = linkConfig.href;
-      link.textContent = linkConfig.label;
-    });
   }
 
   function injectProjectEnhancementStyles() {
@@ -465,50 +398,11 @@
         const paragraph = cta.querySelector('p');
         const actions = cta.querySelector('.cta-actions');
         if (heading) heading.innerHTML = '活動の背景を、<br>続けて見てください。';
-        if (paragraph) paragraph.textContent = '阿波山雅が何を守ろうとしているのかは、日々の活動の中に表れます。活動報告とプロジェクトを通して、山に人が集まる理由を見てください。';
+        if (paragraph) paragraph.textContent = '阿波山雅が何を守ろうとしているのかは、日々の活動の中に表れます。活動・プロジェクトとお知らせを通して、山に人が集まる理由を見てください。';
         if (actions) {
           const links = actions.querySelectorAll('a');
-          replaceLink(links[0], 'activity-report.html', '活動報告を見る　→');
-          replaceLink(links[1], 'projects.html', '活動を見る　→');
-        }
-      }
-    }
-
-    if (current === 'facility') {
-      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => link.getAttribute('href') === 'support.html');
-      if (supportLink) {
-        supportLink.href = 'news.html';
-        supportLink.innerHTML = 'お知らせ <span>→</span>';
-      }
-    }
-
-    if (current === 'activity') {
-      const actions = document.querySelector('.final-cta-section .cta-actions');
-      if (actions) {
-        const links = actions.querySelectorAll('a');
-        replaceLink(links[0], 'projects.html', '活動・プロジェクトへ　→');
-        replaceLink(links[1], 'facility_guide.html', '施設・林道ガイドへ　→');
-      }
-
-      const supportLink = Array.from(document.querySelectorAll('.related-link')).find((link) => link.getAttribute('href') === 'support.html');
-      if (supportLink) {
-        supportLink.href = 'news.html';
-        supportLink.innerHTML = 'お知らせ <span>→</span>';
-      }
-    }
-
-    if (current === 'projects') {
-      const finalCta = document.querySelector('.final-cta-section .cta-panel');
-      if (finalCta) {
-        const heading = finalCta.querySelector('h2');
-        const paragraph = finalCta.querySelector('p');
-        const actions = finalCta.querySelector('.cta-actions');
-        if (heading) heading.innerHTML = '活動の記録から、<br>山の今を見てください。';
-        if (paragraph) paragraph.textContent = 'このページで紹介した活動は、活動報告に実績や背景を残しています。数字だけでは見えない、現場の動きと次に進めたいことを確認できます。';
-        if (actions) {
-          const links = actions.querySelectorAll('a');
-          replaceLink(links[0], 'activity-report.html', '活動報告を見る　→');
-          replaceLink(links[1], 'facility_guide.html', '施設・林道ガイドへ　→');
+          replaceLink(links[0], 'projects.html', '活動・プロジェクトを見る　→');
+          replaceLink(links[1], 'news.html', 'お知らせを見る　→');
         }
       }
     }
@@ -524,8 +418,6 @@
 
   document.querySelectorAll('[data-common-nav]').forEach(renderMenu);
   injectConsistencyStyles();
-  enhanceActivityReportAnchors();
-  enhanceProjectRecordLinks();
   enhanceProjectStories();
   enhanceProjectSceneCharacters();
   simplifySupportPage();
