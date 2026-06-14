@@ -1,374 +1,123 @@
 (function () {
   'use strict';
 
-  const fallbackMenuItems = Object.freeze([
-    Object.freeze({ href: 'index.html', label: 'ホーム' }),
-    Object.freeze({ href: 'about.html', label: '阿波山雅について' }),
-    Object.freeze({ href: 'facility_guide.html', label: '施設・山と林道ガイド' }),
-    Object.freeze({ href: 'projects.html', label: '活動・プロジェクト' }),
-    Object.freeze({ href: 'activity-report.html', label: '活動報告' }),
-    Object.freeze({ href: 'news.html', label: 'お知らせ' }),
-    Object.freeze({ href: 'characters.html', label: '仲間たち' }),
-    Object.freeze({ href: 'support.html', label: '応援する' }),
-  ]);
+  const items = (window.AWASANGA && window.AWASANGA.menuItems) || [
+    { href: 'index.html', label: 'ホーム' },
+    { href: 'about.html', label: '阿波山雅について' },
+    { href: 'facility_guide.html', label: '施設・山と林道ガイド' },
+    { href: 'projects.html', label: '活動・プロジェクト' },
+    { href: 'activity-report.html', label: '活動報告' },
+    { href: 'news.html', label: 'お知らせ' },
+    { href: 'characters.html', label: '仲間たち' },
+    { href: 'support.html', label: '応援する' }
+  ];
 
-  function getMenuItems() {
-    if (Array.isArray(window.AWASANGA_MENU_ITEMS) && window.AWASANGA_MENU_ITEMS.length > 0) {
-      return window.AWASANGA_MENU_ITEMS;
-    }
-
-    if (
-      window.AWASANGA
-      && Array.isArray(window.AWASANGA.menuItems)
-      && window.AWASANGA.menuItems.length > 0
-    ) {
-      return window.AWASANGA.menuItems;
-    }
-
-    return fallbackMenuItems;
-  }
-
-  function createFooterLink(item) {
-    const link = document.createElement('a');
-    link.href = item.href;
-    link.textContent = item.label;
-    return link;
-  }
-
-  function renderFooterLinks(target) {
-    const isList = target.tagName.toLowerCase() === 'ul';
+  document.querySelectorAll('[data-common-footer]').forEach((target) => {
     const fragment = document.createDocumentFragment();
-
-    getMenuItems().forEach((item) => {
-      const link = createFooterLink(item);
-
-      if (isList) {
-        const listItem = document.createElement('li');
-        listItem.append(link);
-        fragment.append(listItem);
-        return;
-      }
-
+    items.forEach((item) => {
+      const link = document.createElement('a');
+      link.href = item.href;
+      link.textContent = item.label;
       fragment.append(link);
     });
-
     target.replaceChildren(fragment);
+  });
+
+  const style = document.createElement('style');
+  style.textContent = `
+    .page-role-guide{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:28px}
+    .page-role-card{display:block;padding:22px 24px;border-radius:22px;background:#fff;border:1px solid rgba(36,75,55,.12);color:var(--ink);box-shadow:0 14px 36px rgba(22,50,36,.07)}
+    .page-role-card.current{background:var(--green);color:#fff}
+    .page-role-card small{display:block;margin-bottom:6px;color:var(--gold-dark);font-weight:900;letter-spacing:.08em}
+    .page-role-card.current small{color:var(--gold)}
+    .page-role-card strong{display:block;font-size:20px;line-height:1.45}
+    .page-role-card span{display:block;margin-top:7px;color:var(--muted);font-size:13px;line-height:1.75}
+    .page-role-card.current span{color:rgba(255,255,255,.84)}
+    @media(max-width:980px){.page-role-guide{grid-template-columns:1fr}}
+  `;
+  document.head.append(style);
+
+  function exact(selector, text) {
+    return Array.from(document.querySelectorAll(selector)).find((el) => el.textContent.trim() === text);
+  }
+  function setText(selector, text) {
+    const el = document.querySelector(selector);
+    if (el) el.textContent = text;
+  }
+  function guide(current) {
+    const wrap = document.createElement('div');
+    wrap.className = 'page-role-guide';
+    wrap.setAttribute('aria-label', 'ページの使い分け');
+    wrap.innerHTML = current === 'projects'
+      ? '<div class="page-role-card current"><small>活動・プロジェクト・現在のページ</small><strong>何を、なぜ行うのかを知る</strong><span>活動の目的、取り組み内容、関わり方を紹介します。</span></div><a class="page-role-card" href="activity-report.html"><small>活動報告</small><strong>何が、いつ、どれだけ進んだかを見る</strong><span>数値、日付、写真、掲載・連携実績を確認できます。</span></a>'
+      : '<a class="page-role-card" href="projects.html"><small>活動・プロジェクト</small><strong>何を、なぜ行うのかを知る</strong><span>活動の目的、取り組み内容、関わり方を紹介します。</span></a><div class="page-role-card current"><small>活動報告・現在のページ</small><strong>何が、いつ、どれだけ進んだかを見る</strong><span>数値、日付、写真、掲載・連携実績を確認できます。</span></div>';
+    return wrap;
   }
 
-  function injectHeaderAlignmentStyles() {
-    if (document.getElementById('shared-header-alignment-styles')) return;
-
-    const style = document.createElement('style');
-    style.id = 'shared-header-alignment-styles';
-    style.textContent = `
-      .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: rgba(255,250,240,.9);
-        border-bottom: 1px solid rgba(36,75,55,.1);
-        backdrop-filter: blur(14px);
-      }
-
-      .header-inner {
-        width: min(calc(100% - 40px), 1120px);
-        max-width: none;
-        min-height: 84px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 28px;
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        color: var(--green, var(--green-deep, #2D5A3D));
-        text-decoration: none;
-        min-width: max-content;
-      }
-
-      .brand img {
-        width: 80px;
-        height: auto;
-      }
-
-      .brand small {
-        display: block;
-        font-size: 11px;
-        line-height: 1;
-        color: var(--muted, var(--gray, #7A7A7A));
-      }
-
-      .brand strong {
-        display: block;
-        font-size: 21px;
-        line-height: 1.12;
-        letter-spacing: .09em;
-      }
-
-      .brand span {
-        display: block;
-        color: var(--gold-dark, var(--wood, #8B6F4E));
-        font-size: 11px;
-        letter-spacing: .16em;
-      }
-
-      .site-header .nav {
-        position: static;
-        min-height: 0;
-        padding: 0;
-        background: transparent;
-        border-bottom: 0;
-        backdrop-filter: none;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        gap: 7px 16px;
-        font-size: 13px;
-      }
-
-      .site-header .nav a {
-        position: relative;
-        display: inline-block;
-        padding: 6px 0;
-        color: var(--green, var(--green-deep, #2D5A3D));
-        font-size: 13px;
-        text-decoration: none;
-        white-space: nowrap;
-        opacity: .86;
-      }
-
-      .site-header .nav a:hover,
-      .site-header .nav a.is-active,
-      .site-header .nav a.active {
-        opacity: 1;
-      }
-
-      .site-header .nav a::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 1px;
-        background: var(--gold, var(--yuzu, #E8B83A));
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform .24s ease;
-      }
-
-      .site-header .nav a:hover::after,
-      .site-header .nav a.is-active::after,
-      .site-header .nav a.active::after {
-        transform: scaleX(1);
-      }
-
-      .sub-hero {
-        min-height: 420px;
-        display: grid;
-        align-items: center;
-        overflow: hidden;
-        color: #fff;
-        padding: 92px 24px 112px;
-        background:
-          linear-gradient(90deg, rgba(22,50,36,.92) 0%, rgba(36,75,55,.78) 58%, rgba(36,75,55,.5) 100%),
-          url("./img/top_yamanoie1.png") center/cover no-repeat;
-      }
-
-      .sub-hero-inner {
-        width: min(calc(100% - 40px), 1120px);
-        max-width: none;
-        margin: 0 auto;
-        padding: 0;
-      }
-
-      .sub-hero .hero-label,
-      .sub-hero .hero-badge,
-      .hero-badge {
-        display: none !important;
-      }
-
-      .sub-hero h1 {
-        margin: 0;
-        font-size: clamp(42px, 6vw, 72px);
-        line-height: 1.12;
-        letter-spacing: .08em;
-      }
-
-      .sub-hero p {
-        max-width: 760px;
-        margin: 24px 0 0;
-        font-size: clamp(16px, 2vw, 19px);
-        line-height: 1.9;
-        color: rgba(255,255,255,.9);
-      }
-
-      .projects-lead,
-      .report-lead,
-      .support-lead {
-        margin-top: 0 !important;
-      }
-
-      .footer .footer-inner {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 28px;
-        padding-bottom: 28px;
-        border-bottom: 1px solid rgba(255,255,255,.12);
-      }
-
-      .footer .footer-brand {
-        flex: 0 0 auto;
-        color: #fff;
-        font-size: 20px;
-        font-weight: 800;
-        letter-spacing: .1em;
-        white-space: nowrap;
-      }
-
-      .footer .footer-links {
-        display: flex;
-        flex: 1 1 auto;
-        flex-wrap: nowrap;
-        justify-content: flex-end;
-        gap: 10px 14px;
-        max-width: none !important;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        font-size: 12px;
-        white-space: nowrap;
-      }
-
-      .footer .footer-links a {
-        color: rgba(255,255,255,.82);
-        text-decoration: none;
-      }
-
-      .footer .copyright {
-        margin: 20px 0 0;
-        color: rgba(255,255,255,.52);
-        font-size: 12px;
-      }
-
-      @media (max-width: 1120px) {
-        .footer .footer-links {
-          flex-wrap: wrap;
-        }
-      }
-
-      @media (max-width: 880px) {
-        .header-inner {
-          align-items: flex-start;
-          flex-direction: column;
-          padding: 16px 0;
-        }
-
-        .site-header .nav {
-          justify-content: flex-start;
-        }
-      }
-
-      @media (max-width: 640px) {
-        .sub-hero {
-          min-height: 360px;
-          padding: 70px 20px 92px;
-        }
-
-        .sub-hero h1 {
-          font-size: clamp(34px, 10vw, 48px);
-        }
-
-        .footer .footer-inner {
-          display: block;
-        }
-
-        .footer .footer-links {
-          justify-content: flex-start;
-          margin-top: 18px;
-        }
-      }
-    `;
-    document.head.append(style);
+  const file = location.pathname.split('/').pop();
+  if (file === 'projects.html') {
+    setText('.sub-hero p', 'ここは、阿波山雅が「何を、なぜ行うのか」を知るページです。活動の目的、具体的な取り組み、関わり方を紹介します。数値や日付などの成果は「活動報告」で確認できます。');
+    const panel = document.querySelector('.resolve-panel');
+    if (panel && !document.querySelector('.page-role-guide')) panel.after(guide('projects'));
+    const concept = exact('.plain-intro p', 'だからこのページでは、活動の説明だけで終わらせず、実際に何をしているのか、どの記録を見ればよいのか、次にどう関われるのかまで並べます。');
+    if (concept) concept.textContent = 'このページでは、各活動の背景と目指す姿、具体的な取り組み、関わり方を紹介します。実施日、数値、掲載などの成果は、活動報告に分けて記録しています。';
+    const activities = exact('h2', '活動ごとに、記録へつなげます');
+    if (activities) {
+      activities.textContent = '取り組みと関わり方を知る';
+      const desc = activities.closest('.section-head')?.querySelector('.section-text');
+      if (desc) desc.textContent = '各活動の目的、具体的な取り組み、関わり方を紹介します。実績を確認したい場合は、各活動から活動報告へ進めます。';
+    }
+    const local = document.getElementById('local-products');
+    if (local) {
+      const strong = local.querySelector('.activity-side strong');
+      const h3 = local.querySelector('h3');
+      const paragraphs = local.querySelectorAll('.activity-body > p');
+      const boxes = local.querySelectorAll('.detail-box');
+      if (strong) strong.textContent = '那賀町特産品開発・物販自販機設置による那賀地域活性化';
+      if (h3) h3.textContent = '那賀町の特産品を、いつでも手に取れる地域の入口へ。';
+      if (paragraphs[0]) paragraphs[0].textContent = '那賀町には、ゆずをはじめとした特産品と、それを育て、加工し、届ける人の仕事があります。商品として磨き、買える場所を増やすことで、地域の実りを継続する仕事につなげます。';
+      if (paragraphs[1]) paragraphs[1].textContent = '特産品開発と物販自販機の設置を通じて、林道利用者や来訪者が那賀町の商品に出会い、地域を知り、次の訪問につながる接点をつくります。';
+      if (boxes[0]?.querySelector('span')) boxes[0].querySelector('span').textContent = '那賀町特産品の商品開発、物販自販機の設置検討、販売接点づくり、来訪者への地域産品の発信。';
+      if (boxes[1]?.querySelector('.record-links')) boxes[1].querySelector('.record-links').innerHTML = '<a href="activity-report.html#town-report">協議・実績の記録を見る</a><a href="facility_guide.html#tairanosato">平の里の案内</a><a href="news.html">お知らせ一覧を見る</a>';
+    }
+    const cta = document.querySelector('.final-cta-section .cta-panel p');
+    if (cta) cta.textContent = 'このページで紹介した活動の実施日、数値、写真、掲載・連携実績は、活動報告にまとめています。成果や進捗を確認したい方は、活動報告をご覧ください。';
   }
 
-  function createBrand() {
-    const brand = document.createElement('a');
-    brand.className = 'brand';
-    brand.href = 'index.html';
-    brand.setAttribute('aria-label', '協同組合阿波山雅 ホーム');
-    brand.innerHTML = `
-      <img src="./img/awasanga_logo_w2.png" alt="協同組合阿波山雅ロゴ" />
-      <div>
-        <small>協同組合</small>
-        <strong>阿波山雅</strong>
-        <span>あわさんが</span>
-      </div>
-    `;
-    return brand;
+  if (file === 'activity-report.html') {
+    setText('.sub-hero p', 'ここは、活動の成果を確認するページです。実際に動いた日付、数値、写真、掲載・連携実績を時系列でまとめています。活動の目的や参加方法を知りたい方は「活動・プロジェクト」をご覧ください。');
+    const panel = document.querySelector('.report-panel');
+    if (panel && !document.querySelector('.page-role-guide')) panel.after(guide('activity'));
+    const reports = exact('h2', '実績別レポート');
+    if (reports) {
+      reports.textContent = '主要実績の記録';
+      const desc = reports.closest('.section-head')?.querySelector('.section-text');
+      if (desc) desc.innerHTML = 'ここでは「いつ、何が起きて、どんな成果につながったか」を記録します。活動の目的や関わり方は、<a href="projects.html">活動・プロジェクト</a>で紹介しています。';
+    }
+    const town = document.getElementById('town-report');
+    if (town) {
+      const meta = town.querySelector('.report-visual-meta b');
+      const h3 = town.querySelector('h3');
+      const p = town.querySelector('.report-content > p');
+      const facts = town.querySelectorAll('.fact-box');
+      if (meta) meta.textContent = '特産品開発・物販自販機';
+      if (h3) h3.textContent = '那賀町特産品開発・物販自販機設置による那賀地域活性化';
+      if (p) p.textContent = '2026年3月から、那賀町の特産品開発と物販自販機の設置による地域活性化について協議を開始。地域産品を手に取れる販売接点を増やし、林道利用者や来訪者を那賀地域の消費と滞在につなげる構想を進めています。';
+      if (facts[1]?.querySelector('span')) facts[1].querySelector('span').textContent = '特産品開発・物販自販機設置による那賀地域活性化';
+      if (facts[2]) facts[2].innerHTML = '<b>関連</b><a href="projects.html#local-products">活動の目的を見る</a>';
+    }
+    const trust = exact('.trust-item', '那賀町賑わい課2026/03 協議開始');
+    if (trust) trust.innerHTML = '那賀地域<br>活性化<small>2026/03 協議開始</small>';
+    const oldTimeline = exact('.timeline-body b', '那賀町賑わい課との連携協議');
+    if (oldTimeline) {
+      oldTimeline.textContent = '那賀町特産品開発・物販自販機設置による那賀地域活性化';
+      const span = oldTimeline.parentElement.querySelector('span');
+      if (span) span.textContent = '特産品開発と物販自販機設置に向けた協議を開始。';
+    }
   }
 
-  function normalizeLegacyHeader() {
-    const oldNav = document.querySelector('body > nav.nav');
-    if (!oldNav || !oldNav.querySelector('.nav-logo')) return;
-
-    const current = oldNav.querySelector('[data-current]')?.dataset.current || '';
-    const links = Array.from(oldNav.querySelectorAll('.nav-links a'));
-    const header = document.createElement('header');
-    const inner = document.createElement('div');
-    const nav = document.createElement('nav');
-
-    header.className = 'site-header';
-    inner.className = 'container header-inner';
-    nav.className = 'nav';
-    nav.setAttribute('aria-label', oldNav.getAttribute('aria-label') || 'メインナビゲーション');
-    if (current) nav.dataset.current = current;
-
-    links.forEach((link) => {
-      const item = link.cloneNode(true);
-      if (item.classList.contains('active')) {
-        item.classList.remove('active');
-        item.classList.add('is-active');
-      }
-      nav.append(item);
-    });
-
-    inner.append(createBrand(), nav);
-    header.append(inner);
-    oldNav.replaceWith(header);
+  if (file === 'about.html') {
+    const old = exact('.timeline-body', '那賀町賑わい課との認識合わせ協議 開始');
+    if (old) old.textContent = '那賀町特産品開発・物販自販機設置による那賀地域活性化 協議開始';
   }
-
-  function normalizeLegacyFooter() {
-    const legacyGrid = document.querySelector('footer.footer > .footer-grid');
-    if (!legacyGrid) return;
-
-    const footer = legacyGrid.closest('footer.footer');
-    const container = document.createElement('div');
-    const inner = document.createElement('div');
-    const brand = document.createElement('div');
-    const nav = document.createElement('nav');
-    const copyright = document.createElement('p');
-
-    footer.id = footer.id || 'contact';
-    container.className = 'container';
-    inner.className = 'footer-inner';
-    brand.className = 'footer-brand';
-    brand.textContent = '協同組合 阿波山雅';
-    nav.className = 'footer-links';
-    nav.setAttribute('aria-label', 'フッターナビゲーション');
-    nav.setAttribute('data-common-footer', '');
-    copyright.className = 'copyright';
-    copyright.textContent = '© 協同組合阿波山雅（あわさんが） All Rights Reserved.';
-
-    inner.append(brand, nav);
-    container.append(inner, copyright);
-    footer.replaceChildren(container);
-  }
-
-  injectHeaderAlignmentStyles();
-  normalizeLegacyHeader();
-  normalizeLegacyFooter();
-  document.querySelectorAll('[data-common-footer]').forEach(renderFooterLinks);
 })();
