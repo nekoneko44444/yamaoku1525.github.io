@@ -32,15 +32,9 @@
 
   const file = location.pathname.split('/').pop();
   if (file === 'projects.html') {
-    setText('.sub-hero p', 'ここは、阿波山雅が「何を、なぜ行うのか」を知るページです。活動の目的、具体的な取り組み、関わり方を紹介します。各活動の数値・写真・記録は、活動ごとの詳細ページで確認できます。');
+    setText('.sub-hero p', 'ここは、阿波山雅が「何を、なぜ行うのか」を知るページです。活動の目的、具体的な取り組み、関わり方を紹介します。力を入れているプロジェクトは、専用ページで実績や数字を確認できます。');
     const concept = exact('.plain-intro p', 'だからこのページでは、活動の説明だけで終わらせず、実際に何をしているのか、どの記録を見ればよいのか、次にどう関われるのかまで並べます。');
-    if (concept) concept.textContent = 'このページでは、各活動の背景と目指す姿、具体的な取り組み、関わり方を紹介します。実施日や数値、写真などの記録は、活動ごとの詳細ページにまとめています。';
-    const activities = exact('h2', '活動ごとに、記録へつなげます');
-    if (activities) {
-      activities.textContent = '取り組みと関わり方を知る';
-      const desc = activities.closest('.section-head')?.querySelector('.section-text');
-      if (desc) desc.textContent = '各活動の目的、具体的な取り組み、関わり方を紹介します。詳しい記録を見たい場合は、各活動から詳細ページへ進めます。';
-    }
+    if (concept) concept.textContent = 'このページでは、各活動の背景と目指す姿、具体的な取り組み、関わり方を紹介します。力を入れているプロジェクトには専用ページがあり、実績や数字を詳しくまとめています。';
     const local = document.getElementById('local-products');
     if (local) {
       const strong = local.querySelector('.activity-side strong');
@@ -55,7 +49,7 @@
       if (boxes[1]?.querySelector('.record-links')) boxes[1].querySelector('.record-links').innerHTML = '<a href="facility_guide.html#tairanosato">平の里の案内</a><a href="news.html">お知らせ一覧を見る</a>';
     }
     const cta = document.querySelector('.final-cta-section .cta-panel p');
-    if (cta) cta.textContent = 'このページで紹介した活動は、それぞれの詳細ページに、実施日・数値・写真・記録をまとめています。気になった活動から、詳しい記録をご覧ください。';
+    if (cta) cta.textContent = 'このページで紹介した注力プロジェクトには、それぞれ専用ページがあり、実施日・数値・写真・記録をまとめています。気になったプロジェクトから、詳しい記録をご覧ください。';
   }
 
   if (file === 'about.html') {

@@ -61,10 +61,29 @@
     .path-card.dark p, .path-card.dark li { color: rgba(255,255,255,.88); }
     .path-card ul { margin: 18px 0 0 1.2em; padding: 0; }
     .path-card li { color: var(--muted); line-height: 1.85; margin-bottom: 8px; }
+    .fp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .fp-card { position: relative; display: flex; flex-direction: column; border-radius: 30px; overflow: hidden; background: #fff; border: 1px solid rgba(36,75,55,.1); box-shadow: 0 18px 52px rgba(22,50,36,.08); transition: transform .25s ease, box-shadow .25s ease; }
+    .fp-card:hover { transform: translateY(-4px); box-shadow: 0 26px 64px rgba(22,50,36,.16); }
+    .fp-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 6px; background: linear-gradient(90deg, var(--green), var(--gold)); z-index: 2; }
+    .fp-media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--paper); }
+    .fp-media img { width: 100%; height: 100%; object-fit: cover; }
+    .fp-badge { position: absolute; top: 16px; left: 16px; padding: 7px 14px; border-radius: 999px; background: rgba(22,50,36,.86); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .04em; }
+    .fp-body { padding: 26px 26px 28px; display: flex; flex-direction: column; flex: 1; }
+    .fp-label { color: var(--gold-dark); font-size: 12px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 10px; }
+    .fp-name { color: var(--green); font-size: clamp(22px, 2.6vw, 28px); line-height: 1.4; margin: 0 0 12px; letter-spacing: .03em; }
+    .fp-catch { color: var(--ink); font-weight: 800; line-height: 1.7; margin: 0 0 10px; }
+    .fp-desc { color: var(--muted); font-size: 14px; line-height: 1.95; margin: 0 0 18px; }
+    .fp-stats { display: flex; gap: 22px; flex-wrap: wrap; margin: 0 0 20px; padding-top: 16px; border-top: 1px solid rgba(36,75,55,.1); }
+    .fp-stat b { display: block; color: var(--green); font-size: 26px; line-height: 1; font-weight: 900; }
+    .fp-stat span { display: block; color: var(--muted); font-size: 11px; margin-top: 6px; line-height: 1.5; }
+    .fp-link { margin-top: auto; align-self: flex-start; color: var(--green); font-weight: 800; text-decoration: none; border-bottom: 2px solid var(--gold); padding-bottom: 2px; }
+    .fp-link:hover { color: var(--gold-dark); }
+
     @media (max-width: 980px) {
       .resolve-panel, .principle-grid, .activity-story, .detail-grid, .path-grid { grid-template-columns: 1fr; }
       .projects-lead { margin-top: -48px; }
     }
+    @media (max-width: 780px) { .fp-grid { grid-template-columns: 1fr; } }
   </style>
   <script src="common-nav.js" defer></script>
   <script src="common-footer.js" defer></script>
@@ -134,11 +153,94 @@
         </div>
       </section>
 
+      <section class="featured-projects" id="featured">
+        <div class="container">
+          <div class="section-head">
+            <div><div class="section-kicker">Featured Projects</div><h2 class="section-title">いま、力を入れているプロジェクト</h2></div>
+            <p class="section-text">阿波山雅が特に力を注ぐ4つのプロジェクトです。それぞれに専用ページがあり、背景・現場・数字を詳しくまとめています。</p>
+          </div>
+
+          <div class="fp-grid">
+            <article class="fp-card">
+              <div class="fp-media">
+                <img src="./img/foodribbon/2024-03-08_フードリボン_賛同者がリボンを付ける.jpg" alt="フードリボンプロジェクト" loading="lazy" />
+                <span class="fp-badge">2024年3月〜 継続中</span>
+              </div>
+              <div class="fp-body">
+                <div class="fp-label">Food Ribbon Project</div>
+                <h3 class="fp-name">フードリボンプロジェクト</h3>
+                <p class="fp-catch">一枚のリボンが、子どもの一食になる。</p>
+                <p class="fp-desc">山を訪れた人が購入したリボン（食券）で、木頭の子どもたちへ食事を届ける活動。平の里・奥槍戸山の家・木頭図書館前を拠点に続けています。</p>
+                <div class="fp-stats">
+                  <div class="fp-stat"><b>148</b><span>食分の支援<br>（開始1カ月時点）</span></div>
+                  <div class="fp-stat"><b>117</b><span>食を子どもへ<br>（開始1カ月時点）</span></div>
+                </div>
+                <a class="fp-link" href="project-foodribbon.html">プロジェクトの詳細を見る　→</a>
+              </div>
+            </article>
+
+            <article class="fp-card">
+              <div class="fp-media">
+                <img src="./img/trail/03_杭木運搬に参加した皆さん.png" alt="次郎笈トレイル再生プロジェクト" loading="lazy" />
+                <span class="fp-badge">日亜ふるさと振興財団 助成事業</span>
+              </div>
+              <div class="fp-body">
+                <div class="fp-label">Trail Regeneration Project</div>
+                <h3 class="fp-name">次郎笈トレイル再生プロジェクト</h3>
+                <p class="fp-catch">山を訪れる人と、一緒に道を再生した。</p>
+                <p class="fp-desc">豪雨で荒廃した次郎笈の登山道を、助成と地域連携で整備。登山者延べ45人と協働し、危険区間約400mを再生しました。</p>
+                <div class="fp-stats">
+                  <div class="fp-stat"><b>400m</b><span>危険区間を整備</span></div>
+                  <div class="fp-stat"><b>0件</b><span>標識設置後の道迷い<br>（整備前は年間約20件）</span></div>
+                </div>
+                <a class="fp-link" href="project-trail.html">プロジェクトの詳細を見る　→</a>
+              </div>
+            </article>
+
+            <article class="fp-card">
+              <div class="fp-media">
+                <img src="./img/top_kouri1.png" alt="木頭クエスト × 木頭クマまつり" loading="lazy" />
+                <span class="fp-badge">2026年3月21日 実施</span>
+              </div>
+              <div class="fp-body">
+                <div class="fp-label">Kito Quest × Kuma Festival</div>
+                <h3 class="fp-name">木頭クエスト × 木頭クマまつり</h3>
+                <p class="fp-catch">物語と謎解きで、木頭杉の歴史を体験する。</p>
+                <p class="fp-desc">阿波山雅・WoodHead・木頭図書館の共同企画。子どもたちが「冒険の書」を手に、謎解きで木頭杉の歴史や職人の仕事に触れる体験イベントです。</p>
+                <div class="fp-stats">
+                  <div class="fp-stat"><b>3者</b><span>共同企画<br>（阿波山雅・WoodHead・木頭図書館）</span></div>
+                  <div class="fp-stat"><b>周遊型</b><span>物語と謎解きで木頭文化を体験</span></div>
+                </div>
+                <a class="fp-link" href="project-kitokuma.html">プロジェクトの詳細を見る　→</a>
+              </div>
+            </article>
+
+            <article class="fp-card">
+              <div class="fp-media">
+                <img src="./img/top_g.png" alt="剣山スーパー林道 山の入口づくり" loading="lazy" />
+                <span class="fp-badge">2024・2025 2年連続参画</span>
+              </div>
+              <div class="fp-body">
+                <div class="fp-label">Tsurugi Super Ridgeway</div>
+                <h3 class="fp-name">剣山スーパー林道 山の入口づくり</h3>
+                <p class="fp-catch">林道を走る人が、山や地域と出会う入口をつくる。</p>
+                <p class="fp-desc">年間推計15,400人が通る剣山スーパー林道。奥槍戸山の家が配布拠点・関連企画の会場となり、通過する人を地域の滞在・食・体験へつなぎます。</p>
+                <div class="fp-stats">
+                  <div class="fp-stat"><b>15,400人</b><span>林道の年間通行推計</span></div>
+                  <div class="fp-stat"><b>2年連続</b><span>イベントに参画</span></div>
+                </div>
+                <a class="fp-link" href="project-ridgeway.html">プロジェクトの詳細を見る　→</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section>
         <div class="container">
           <div class="section-head">
-            <div><div class="section-kicker">Activities</div><h2 class="section-title">活動ごとに、記録へつなげます</h2></div>
-            <p class="section-text">各活動の下に、実際の活動内容と記録リンクを置きました。気になった活動から、そのまま記録や関連ページへ進めます。</p>
+            <div><div class="section-kicker">Other Activities</div><h2 class="section-title">拠点と暮らしを支える活動</h2></div>
+            <p class="section-text">注力プロジェクト以外にも、奥槍戸山の家の運営や植樹、広報、地域産品づくりなど、山の暮らしと拠点を支える活動を続けています。</p>
           </div>
 
           <div class="activity-list">
@@ -157,68 +259,8 @@
               </div>
             </article>
 
-            <article class="activity-story" id="foodribbon">
-              <aside class="activity-side"><img src="./img/top_insyoku1.png" alt="食の活動"><div class="activity-side-inner"><div class="activity-no">Activity 02</div><strong>フードリボンと食の支援</strong></div></aside>
-              <div class="activity-body">
-                <h3>一食の応援が、子どもと地域をつなぐ。</h3>
-                <p>フードリボンは、誰かの一食を地域で支える活動です。平の里や奥槍戸山の家で始まり、支える人、食べる人、お店や地域の人の間に、やさしい循環をつくってきました。</p>
-                <p>開始から1か月時点では、提供117食、支援148食という報告もあります。数字の奥には、誰かが誰かを思って一食を託した場面があります。</p>
-                <div class="scene-box"><strong>この活動で伝えたいこと</strong><p>食は、いちばん身近な共感です。「おいしかった」「助かった」「また来たい」という気持ちが、地域を支える力になります。</p></div>
-                <div class="detail-grid">
-                  <div class="detail-box"><b>具体的な活動</b><span>フードリボン活動、子どもへの食事提供、支援食数の報告、新聞掲載を通じた周知。</span></div>
-                  <div class="detail-box"><b>活動記録・関連リンク</b><span class="record-links"><a href="project-foodribbon.html">フードリボンの詳細を見る</a><a href="https://www.awasanga.com/topic%E8%A9%B3%E7%B4%B0" target="_blank" rel="noopener noreferrer">開始1か月時点の報告</a><a href="https://www.topics.or.jp/articles/-/1231668" target="_blank" rel="noopener noreferrer">徳島新聞掲載記事</a></span></div>
-                  <div class="detail-box"><b>参加・応援</b><span>食べる、支援する、活動を知人に伝える。</span></div>
-                </div>
-              </div>
-            </article>
-
-            <article class="activity-story" id="trail">
-              <aside class="activity-side"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" alt="山道の風景"><div class="activity-side-inner"><div class="activity-no">Activity 03</div><strong>次郎笈トレイル再生</strong></div></aside>
-              <div class="activity-body">
-                <h3>歩ける道を残すことは、山の記憶を残すこと。</h3>
-                <p>山道は、自然にずっと残るものではありません。人が歩き、気にかけ、整え続けることで、次の人も歩ける道になります。次郎笈トレイル再生プロジェクトは、その営みをみんなで支える活動です。</p>
-                <p>道が整い、情報が届き、関わる人が増えると、山はもう一度「行ってみたい場所」になります。</p>
-                <div class="scene-box"><strong>スギトの声</strong><p>山を守るって、手を動かすことから始まるんだ。小さな作業でも、続けば山の力になる。</p></div>
-                <div class="detail-grid">
-                  <div class="detail-box"><b>具体的な活動</b><span>次郎笈トレイル再生プロジェクト第1弾・第2弾、現地確認、整備活動、活動告知。</span></div>
-                  <div class="detail-box"><b>活動記録・関連リンク</b><span class="record-links"><a href="project-trail.html">次郎笈トレイル再生の詳細を見る</a><a href="news.html">お知らせ一覧を見る</a><small>第1弾・第2弾の告知と報告は、お知らせ一覧から確認できます。</small></span></div>
-                  <div class="detail-box"><b>参加・応援</b><span>整備活動に参加する、情報を広げる、安全に歩いて利用する。</span></div>
-                </div>
-              </div>
-            </article>
-
-            <article class="activity-story" id="rindo">
-              <aside class="activity-side"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="林道と山の風景"><div class="activity-side-inner"><div class="activity-no">Activity 04</div><strong>林道と山の楽しみ方を伝える</strong></div></aside>
-              <div class="activity-body">
-                <h3>道を知ると、山はもっと近くなる。</h3>
-                <p>剣山スーパー林道や奥槍戸周辺の道は、山の魅力に出会う大切な入口です。一方で、天候、路面状況、通行情報、安全確認が欠かせません。</p>
-                <p>阿波山雅は、林道イベントへの参加や情報発信を通じて、山を楽しむ人と地域をつなぎます。</p>
-                <div class="scene-box"><strong>この活動で伝えたいこと</strong><p>はじめての人にも届く言葉で、道と楽しみ方を伝えることが、次の来訪につながります。</p></div>
-                <div class="detail-grid">
-                  <div class="detail-box"><b>具体的な活動</b><span>剣山スーパー林道ミーティングへの参加、林道利用者への案内、施設・林道情報の整理。</span></div>
-                  <div class="detail-box"><b>活動記録・関連リンク</b><span class="record-links"><a href="project-ridgeway.html">剣山スーパー林道 山の入口づくりの詳細を見る</a><a href="https://rindonavi.com/info.html?news_id=17606704497413" target="_blank" rel="noopener noreferrer">林道ミーティング告知</a><a href="https://rindonavi.com/news.html?news_id=17252642675974" target="_blank" rel="noopener noreferrer">カップラーメンミーティング記録</a><a href="facility_guide.html">施設・山と林道ガイド</a></span></div>
-                  <div class="detail-box"><b>参加・応援</b><span>事前確認をして安全に訪れる、拠点に立ち寄る、魅力を発信する。</span></div>
-                </div>
-              </div>
-            </article>
-
-            <article class="activity-story" id="kito-quest">
-              <aside class="activity-side"><img src="./img/top_kouri1.png" alt="木とものづくり"><div class="activity-side-inner"><div class="activity-no">Activity 05</div><strong>木頭杉とものづくり</strong></div></aside>
-              <div class="activity-body">
-                <h3>木の価値を、触れられる形にする。</h3>
-                <p>木頭杉には、長い時間と人の手仕事が積み重なっています。阿波山雅は、木工やものづくり、イベント出店、学びの機会を通じて、木頭杉を「知っている人だけが知っている素材」にしないようにします。</p>
-                <p>木頭クマ祭りなどの地域イベントも、山の技や人の手仕事を外へ開く大切な機会です。</p>
-                <div class="scene-box"><strong>杉じぃの声</strong><p>木は急がん。じゃが、人が忘れるのは早いんじゃ。これからの山を考えるために、木の時間を伝えるんじゃよ。</p></div>
-                <div class="detail-grid">
-                  <div class="detail-box"><b>具体的な活動</b><span>木頭杉の価値発信、木工体験、木頭クマ祭りでの出店・登壇、木頭クエスト企画。</span></div>
-                  <div class="detail-box"><b>活動記録・関連リンク</b><span class="record-links"><a href="project-kitokuma.html">木頭クエストの詳細を見る</a><a href="news.html">お知らせ一覧を見る</a><a href="members.html">関わる組合員を見る</a><small>木頭クマ祭り、WoodHead連携、木頭クエストの記録につながります。</small></span></div>
-                  <div class="detail-box"><b>参加・応援</b><span>体験する、商品を使う、イベントに参加する。</span></div>
-                </div>
-              </div>
-            </article>
-
             <article class="activity-story" id="tree-planting">
-              <aside class="activity-side"><img src="https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=900&q=80" alt="植樹のイメージ"><div class="activity-side-inner"><div class="activity-no">Activity 06</div><strong>植樹と季節の景色づくり</strong></div></aside>
+              <aside class="activity-side"><img src="https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=900&q=80" alt="植樹のイメージ"><div class="activity-side-inner"><div class="activity-no">Activity 02</div><strong>植樹と季節の景色づくり</strong></div></aside>
               <div class="activity-body">
                 <h3>未来の誰かが見る景色を、今つくる。</h3>
                 <p>ヤマザクラの植樹は、すぐに大きな成果が見える活動ではありません。苗を植え、根づくのを待ち、季節がめぐるのを見守る活動です。</p>
@@ -233,7 +275,7 @@
             </article>
 
             <article class="activity-story" id="newsletter">
-              <aside class="activity-side"><img src="https://images.unsplash.com/photo-1474366521946-c3d4b507abf2?auto=format&fit=crop&w=900&q=80" alt="広報誌のイメージ"><div class="activity-side-inner"><div class="activity-no">Activity 07</div><strong>奥槍戸やま日和と情報発信</strong></div></aside>
+              <aside class="activity-side"><img src="https://images.unsplash.com/photo-1474366521946-c3d4b507abf2?auto=format&fit=crop&w=900&q=80" alt="広報誌のイメージ"><div class="activity-side-inner"><div class="activity-no">Activity 03</div><strong>奥槍戸やま日和と情報発信</strong></div></aside>
               <div class="activity-body">
                 <h3>活動を、届く言葉にして残す。</h3>
                 <p>活動は、伝わらなければ、知らない人にとっては存在しないのと同じです。阿波山雅は、広報誌「奥槍戸やま日和」やお知らせ、SNS、メディア掲載を通じて、山で起きていることを届けています。</p>
@@ -248,7 +290,7 @@
             </article>
 
             <article class="activity-story" id="local-products">
-              <aside class="activity-side"><img src="./img/top_yuzu1.png" alt="地域の実り"><div class="activity-side-inner"><div class="activity-no">Activity 08</div><strong>果樹と地域産品を活かす</strong></div></aside>
+              <aside class="activity-side"><img src="./img/top_yuzu1.png" alt="地域の実り"><div class="activity-side-inner"><div class="activity-no">Activity 04</div><strong>果樹と地域産品を活かす</strong></div></aside>
               <div class="activity-body">
                 <h3>地域の実りを、続く仕事に変えていく。</h3>
                 <p>山の地域には、ゆずをはじめとした実りがあります。育てる人、収穫する人、加工する人、届ける人、買う人がつながって初めて、地域の力になります。</p>
