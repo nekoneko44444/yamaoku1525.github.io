@@ -33,37 +33,41 @@
   });
 
   const projectGalleryImages = Object.freeze({
-    'okuyarito-base': Object.freeze(['./img/top_yamanoie1.png', './img/top_yamanoie2.png', './img/top_yamanoie3.png']),
-    foodribbon: Object.freeze(['./img/top_insyoku1.png', './img/top_insyoku2.png', './img/top_insyoku3.png']),
+    'okuyarito-base': Object.freeze(['./img/top_yamanoie1.png', './img/localized/dining-interior.jpg', './img/localized/meal-closeup.jpg']),
+    foodribbon: Object.freeze([
+      './img/foodribbon/2024-03-08_フードリボン_賛同者がリボンを付ける.jpg',
+      './img/foodribbon/2024-03-08_フードリボン_賛同者とリボンボード.jpg',
+      './img/foodribbon/2024-03-08_フードリボン_参加店ステッカー.jpg',
+    ]),
     trail: Object.freeze([
-      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80',
-      './img/trail2.png',
-      './img/trail3.png',
+      './img/trail/01_整備前_草に覆われた登山道.jpg',
+      './img/trail/03_杭木運搬に参加した皆さん.png',
+      './img/trail/05_登山道整備作業.jpeg',
     ]),
     rindo: Object.freeze([
-      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
-      './img/rindo2.png',
-      './img/rindo3.png',
+      './img/localized/ridgeway-landscape.jpg',
+      './img/top_g.png',
+      './img/top_yamanoie1.png',
     ]),
-    'kito-quest': Object.freeze(['./img/top_kouri1.png', './img/top_kouri2.png', './img/top_kouri3.png']),
+    'kito-quest': Object.freeze(['./img/top_kouri1.png', './img/top_yamanoie1.png', './img/localized/community-support.jpg']),
     'tree-planting': Object.freeze([
-      'https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=900&q=80',
-      './img/tree_planting2.png',
-      './img/tree_planting3.png',
+      './img/localized/tree-planting.jpg',
+      './img/top_g.png',
+      './img/top_yuzu1.png',
     ]),
     newsletter: Object.freeze([
-      'https://images.unsplash.com/photo-1474366521946-c3d4b507abf2?auto=format&fit=crop&w=900&q=80',
-      './img/newsletter2.png',
-      './img/newsletter3.png',
+      './img/localized/newsletter-writing.jpg',
+      './img/localized/news-default.jpg',
+      './img/top_yamanoie1.png',
     ]),
-    'local-products': Object.freeze(['./img/top_yuzu1.png', './img/top_yuzu2.png', './img/top_yuzu3.png']),
+    'local-products': Object.freeze(['./img/top_yuzu1.png', './img/top_kouri1.png', './img/localized/tree-planting.jpg']),
   });
 
   const characterAssets = Object.freeze({
-    nagika: Object.freeze(['./img/なぎかちゃん.png', './img/ナギカ.png', './img/nagika.png']),
-    sugito: Object.freeze(['./img/スギト.png', './img/sugito.png']),
-    sugijii: Object.freeze(['./img/杉じぃ.png', './img/杉じい.png', './img/sugijii.png']),
-    yuzuri: Object.freeze(['./img/ユズリ.png', './img/yuzuri.png']),
+    nagika: Object.freeze(['./img/なぎかちゃん.png']),
+    sugito: Object.freeze(['./img/スギト.png']),
+    sugijii: Object.freeze(['./img/杉じぃ.png']),
+    yuzuri: Object.freeze(['./img/ユズリ.png']),
   });
 
   const projectStoryEnhancements = Object.freeze({});

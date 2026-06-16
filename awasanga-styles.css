@@ -285,10 +285,10 @@ section { padding: 80px 24px; }
   width: 56px; height: 56px; border-radius: 50%; background: var(--green-soft);
   background-size: contain; background-position: center; background-repeat: no-repeat;
 }
-.char-quote.okuyaridon::before { background-image: url('placeholder_okuyaridon.svg'); background-color: white; }
-.char-quote.sugijii::before { background-image: url('placeholder_sugijii.svg'); background-color: white; }
-.char-quote.yuzuri::before { background-image: url('placeholder_yuzuri.svg'); background-color: white; }
-.char-quote.sugito::before { background-image: url('placeholder_sugito.svg'); background-color: white; }
+.char-quote.okuyaridon::before { background-image: url('./img/奥槍どん.png'); background-color: white; }
+.char-quote.sugijii::before { background-image: url('./img/杉じぃ.png'); background-color: white; }
+.char-quote.yuzuri::before { background-image: url('./img/ユズリ.png'); background-color: white; }
+.char-quote.sugito::before { background-image: url('./img/スギト.png'); background-color: white; }
 .char-quote .name { font-size: 12px; color: var(--green-deep); font-weight: 700; margin-bottom: 4px; }
 .char-quote .text { font-size: 14px; line-height: 1.75; color: var(--charcoal); }
 
