@@ -11,6 +11,9 @@ body.standard-subpage .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
+  width: 100%;
+  padding: 0;
+  color: var(--green-deep, var(--green, #244b37));
   background: rgba(255, 250, 240, .9);
   border-bottom: 1px solid rgba(36, 75, 55, .1);
   backdrop-filter: blur(14px);
@@ -33,6 +36,7 @@ body.standard-subpage .site-header .brand {
   align-items: center;
   gap: 12px;
   min-width: max-content;
+  letter-spacing: 0;
   color: var(--green-deep, var(--green, #244b37));
   text-decoration: none;
 }
@@ -40,6 +44,7 @@ body.standard-subpage .site-header .brand {
 body.standard-subpage .site-header .brand img {
   width: 80px;
   height: auto;
+  object-fit: contain;
 }
 
 body.standard-subpage .site-header .brand small {
@@ -75,7 +80,9 @@ body.standard-subpage .site-header .nav {
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 7px 16px;
+  font-family: inherit;
   font-size: 13px;
+  letter-spacing: 0;
 }
 
 body.standard-subpage .site-header .nav a {
@@ -85,6 +92,7 @@ body.standard-subpage .site-header .nav a {
   color: var(--green-deep, var(--green, #244b37));
   font-size: 13px;
   font-weight: 500;
+  line-height: 1.5;
   text-decoration: none;
   white-space: nowrap;
   opacity: .86;
@@ -190,6 +198,10 @@ body.standard-subpage .sub-hero p {
   font-size: clamp(16px, 2vw, 19px);
   line-height: 1.9;
   letter-spacing: 0;
+}
+
+body.standard-subpage .character-intro {
+  padding-top: 16px;
 }
 
 @media (max-width: 880px) {
