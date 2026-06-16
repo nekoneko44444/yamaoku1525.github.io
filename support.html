@@ -3,56 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="協同組合 阿波山雅の応援・参加・お問い合わせページ。個人サポーター、法人スポンサー、ボランティア、組合加盟、一般問い合わせ、取材依頼を1ページにまとめました。" />
-  <title>応援・お問い合わせ｜協同組合 阿波山雅</title>
-  <link rel="stylesheet" href="about-styles.css" />
+  <meta name="description" content="協同組合 阿波山雅を応援する方法をご案内します。山を訪れること、賛助会員として支えることが、山の未来につながります。" />
+  <title>応援する｜協同組合 阿波山雅</title>
+  <link rel="stylesheet" href="awasanga-top_styles.css" />
   <style>
+    :root {
+      --green: var(--green-700);
+      --deep: var(--green-900);
+      --paper: var(--white);
+    }
+    .sub-hero { position:relative; min-height:560px; display:grid; align-items:end; overflow:hidden; color:#fff; background:linear-gradient(90deg,rgba(9,28,20,.86),rgba(12,35,25,.38)),url('./img/top_yamanoie1.png') center/cover no-repeat; }
+    .sub-hero::after { content:""; position:absolute; inset:auto 0 0; height:220px; background:linear-gradient(180deg,transparent,rgba(16,41,31,.86)); pointer-events:none; }
+    .sub-hero-inner { position:relative; z-index:1; padding:160px 0 130px; }
+    .breadcrumb { display:flex; gap:10px; margin-bottom:24px; font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:13px; color:rgba(255,255,255,.76); }
+    .sub-hero h1 { max-width:820px; margin:0; font-size:clamp(42px,6vw,78px); font-weight:400; line-height:1.3; letter-spacing:.1em; }
+    .sub-hero p { max-width:700px; margin:24px 0 0; font-size:17px; line-height:2; letter-spacing:.06em; color:rgba(255,255,255,.9); }
+    .sub-hero .hero-badge { position:absolute; z-index:2; right:max(5vw,40px); bottom:80px; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:32px; margin-bottom:30px; }
+    .btn-outline { border-color:rgba(36,75,55,.28); color:var(--green); background:rgba(255,255,255,.58); }
+    .btn-dark { border-color:var(--deep); color:#fff; background:var(--deep); }
     .support-lead { position:relative; z-index:3; margin-top:-70px; }
-    .support-resolve { display:grid; grid-template-columns:1fr .9fr; gap:34px; padding:clamp(30px,5vw,58px); border-radius:38px; background:rgba(255,250,240,.96); border:1px solid rgba(36,75,55,.12); box-shadow:var(--shadow); }
-    .support-resolve h2 { margin:0; color:var(--green); font-size:clamp(34px,5vw,58px); line-height:1.2; letter-spacing:.06em; }
-    .support-resolve p { color:var(--muted); line-height:2; }
-    .support-side { padding:26px; border-radius:28px; color:#fff; background:linear-gradient(135deg, rgba(22,50,36,.96), rgba(36,75,55,.82)), url('./img/top_yamanoie1.png') center/cover no-repeat; }
-    .support-side .section-kicker { color:var(--gold); }
-    .support-side p { color:rgba(255,255,255,.9); margin:14px 0 0; }
-    .support-menu { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
-    .support-menu a { min-height:120px; display:flex; flex-direction:column; justify-content:center; padding:18px; border-radius:22px; background:#fff; border:1px solid rgba(36,75,55,.1); box-shadow:0 14px 34px rgba(22,50,36,.07); text-decoration:none; color:var(--ink); transition:.2s; }
-    .support-menu a:hover { transform:translateY(-4px); box-shadow:var(--shadow); }
-    .support-menu b { color:var(--green); font-size:16px; margin-bottom:6px; }
-    .support-menu span { color:var(--muted); font-size:12px; line-height:1.55; }
-    .engage-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:26px; }
-    .engage-card { position:relative; overflow:hidden; padding:30px; border-radius:30px; background:#fff; border:1px solid rgba(36,75,55,.1); box-shadow:0 18px 46px rgba(22,50,36,.08); }
-    .engage-card::before { content:""; position:absolute; inset:0 0 auto; height:7px; background:linear-gradient(90deg,var(--green),var(--gold)); }
-    .engage-card .label { color:var(--gold-dark); font-size:12px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; margin-bottom:12px; }
-    .engage-card h3 { margin:0 0 12px; color:var(--green); font-size:26px; line-height:1.35; }
-    .engage-card p { color:var(--muted); line-height:1.9; }
-    .engage-note { margin-top:18px; padding:16px 18px; border-radius:18px; background:var(--paper); border:1px solid rgba(36,75,55,.08); color:var(--muted); font-size:13px; line-height:1.8; }
-    .engage-note b { display:block; color:var(--green); margin-bottom:6px; }
-    .engage-action { margin-top:18px; }
-    .form-stub { margin-top:18px; min-height:120px; display:grid; place-items:center; text-align:center; border-radius:22px; border:2px dashed rgba(36,75,55,.22); background:rgba(248,242,232,.55); color:var(--muted); padding:20px; }
-    .form-stub strong { color:var(--green); display:block; margin-bottom:4px; }
-    .single-form-wrap { margin-top:26px; padding:24px; border-radius:24px; background:#fff; border:1px solid rgba(36,75,55,.1); box-shadow:0 18px 46px rgba(22,50,36,.08); }
-    .single-form-wrap p { color:var(--muted); margin:0 0 14px; }
-    .single-form-wrap iframe { width:100%; min-height:920px; border:0; border-radius:16px; background:var(--paper); }
-    .single-form-wrap .btn { margin-top:14px; }
-
-    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:26px; }
-    .contact-panel { padding:30px; border-radius:30px; background:#fff; border:1px solid rgba(36,75,55,.1); box-shadow:0 18px 46px rgba(22,50,36,.08); }
-    .contact-panel h3 { margin:0 0 12px; color:var(--green); font-size:26px; }
-    .contact-panel p { color:var(--muted); line-height:1.85; }
-    .info-list { display:grid; gap:10px; margin-top:18px; }
-    .info-row { display:grid; grid-template-columns:120px 1fr; gap:14px; padding:13px 14px; border-radius:14px; background:var(--paper); }
-    .info-row b { color:var(--green); }
-    .info-row span { color:var(--muted); }
-    @media(max-width:1100px){ .support-menu{grid-template-columns:repeat(3,1fr)} }
-    @media(max-width:900px){ .support-resolve,.engage-grid,.contact-grid{grid-template-columns:1fr}.support-lead{margin-top:-48px} }
-    @media(max-width:640px){ .support-menu{grid-template-columns:1fr}.support-resolve{border-radius:26px}.info-row{grid-template-columns:1fr} }
-</style>
+    .support-intro { max-width:920px; padding:clamp(30px,5vw,58px); border-radius:38px; background:rgba(255,250,240,.96); border:1px solid rgba(36,75,55,.12); box-shadow:var(--shadow); }
+    .support-intro h2 { margin:0; color:var(--green); font-size:clamp(34px,5vw,58px); line-height:1.3; letter-spacing:.06em; }
+    .support-intro p { max-width:720px; margin:20px 0 0; color:var(--muted); line-height:2; }
+    .support-options { padding:80px 0; }
+    .support-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:26px; }
+    .support-card { position:relative; overflow:hidden; padding:clamp(28px,4vw,42px); border-radius:30px; background:#fff; border:1px solid rgba(36,75,55,.1); box-shadow:0 18px 46px rgba(22,50,36,.08); }
+    .support-card::before { content:""; position:absolute; inset:0 0 auto; height:7px; background:linear-gradient(90deg,var(--green),var(--gold)); }
+    .support-card .label { color:var(--gold-dark); font-size:12px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; margin-bottom:12px; }
+    .support-card h3 { margin:0 0 14px; color:var(--green); font-size:clamp(25px,3vw,34px); line-height:1.4; }
+    .support-card p { color:var(--muted); line-height:1.95; }
+    .support-card .btn { margin-top:22px; }
+    .support-contact { padding:0 0 80px; }
+    .support-contact-panel { display:flex; align-items:center; justify-content:space-between; gap:28px; padding:30px; border-radius:28px; background:var(--paper); border:1px solid rgba(36,75,55,.12); }
+    .support-contact-panel h2 { margin:0 0 8px; color:var(--green); font-size:25px; }
+    .support-contact-panel p { margin:0; color:var(--muted); line-height:1.8; }
+    .final-cta-section { padding:80px 0; background:var(--deep); color:#fff; }
+    .cta-panel { padding:clamp(32px,5vw,58px); border:1px solid rgba(255,255,255,.18); background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02)); }
+    .cta-panel h2 { margin:0; font-size:clamp(32px,4vw,52px); font-weight:400; line-height:1.45; letter-spacing:.1em; }
+    .cta-panel p { max-width:700px; margin:20px 0 0; color:rgba(255,255,255,.78); line-height:2; }
+    .cta-actions { margin-top:28px; }
+    .related-links { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin-top:26px; background:rgba(255,255,255,.15); }
+    .related-link { display:flex; justify-content:space-between; padding:20px; background:var(--deep); color:rgba(255,255,255,.88); }
+    .footer { padding:34px 0 24px; color:rgba(255,255,255,.72); background:#0d2118; }
+    .footer-inner { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .footer-brand { color:#fff; font-size:20px; letter-spacing:.1em; }
+    .footer-links { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px 18px; font-size:13px; }
+    .copyright { margin:24px 0 0; font-size:11px; color:rgba(255,255,255,.48); }
+    @media(max-width:900px) {
+      .support-lead { margin-top:-48px; }
+      .support-grid { grid-template-columns:1fr; }
+      .support-contact-panel { display:block; }
+      .support-contact-panel .btn { margin-top:20px; }
+      .sub-hero .hero-badge { display:none; }
+      .section-head,.footer-inner { display:block; }
+      .related-links { grid-template-columns:1fr; }
+      .footer-links { justify-content:flex-start; margin-top:18px; }
+    }
+    @media(max-width:640px) {
+      .support-intro { border-radius:26px; }
+      .support-options { padding:58px 0; }
+    }
+  </style>
   <script src="common-nav.js" defer></script>
-  <script src="common-footer.js" defer></script>
 </head>
 <body>
   <div class="page">
-
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="index.html" aria-label="協同組合阿波山雅 ホーム">
@@ -62,56 +78,91 @@
         <nav class="nav" aria-label="メインナビゲーション" data-common-nav data-current="support"></nav>
       </div>
     </header>
+
     <main>
       <section class="sub-hero">
-        <div class="container sub-hero-inner"><div class="breadcrumb"><a href="index.html">ホーム</a><span>›</span><span>応援・お問い合わせ</span></div><div class="hero-label">Support & Contact</div><h1>あなたの関わりが、<br>山の未来を支えます。</h1><p>食べに行く、広げる、手伝う、支える、相談する。阿波山雅との関わり方を1ページにまとめました。</p></div>
-        <div class="hero-badge" aria-hidden="true"><span>できる形で<br>山の未来に<br>加わる</span></div>
+        <div class="container sub-hero-inner">
+          <div class="breadcrumb"><a href="index.html">ホーム</a><span>›</span><span>応援する</span></div>
+          <div class="hero-label">Support</div>
+          <h1>山に来ることが、<br>山の未来につながります。</h1>
+          <p>阿波山雅を応援する方法は、山を訪れることと、賛助会員として支えることです。</p>
+        </div>
+        <div class="hero-badge" aria-hidden="true"><span>訪れる<br>支える<br>つながる</span></div>
       </section>
 
       <section class="support-lead">
-        <div class="container"><div class="support-resolve"><div><div class="section-kicker">Join us</div><h2>応援は、<br>特別なことだけではありません。</h2><p>現地に来ること、SNSで紹介すること、フォームから声をかけること、協賛やボランティアで支えること。どの関わり方も、山を次へつなぐ力になります。</p><p>迷ったら、まずは一般お問い合わせからでも大丈夫です。できる形を一緒に考えます。</p></div><div class="support-side"><div class="section-kicker">ユズリの声</div><p>どのかたちも、地域を次に繋ぐための一票です。小さな関わりも、積み重なれば山の未来を動かします。</p></div></div></div>
-      </section>
-
-      <section>
-        <div class="container"><div class="section-head"><div><div class="section-kicker">Choose</div><h2 class="section-title">ご用件を選んでください</h2></div><p class="section-text">応援・参加・お問い合わせを1ページに統合しました。</p></div>
-          <div class="support-menu"><a href="#individual"><b>阿波山雅サポーター</b><span>賛助会員として見守る、広げる</span></a><a href="#corporate"><b>法人スポンサー</b><span>企業・団体として連携する</span></a><a href="#volunteer"><b>ボランティア</b><span>現場で一緒に動く</span></a><a href="#join"><b>組合加盟</b><span>事業者として参加する</span></a><a href="#general"><b>一般お問い合わせ</b><span>活動・施設・広報誌の質問</span></a><a href="#media"><b>取材・報道</b><span>撮影・素材利用の相談</span></a></div>
-        </div>
-      </section>
-
-      <section class="members-section">
-        <div class="container"><div class="section-head"><div><div class="section-kicker">Support</div><h2 class="section-title">関わり方を選ぶ</h2></div><p class="section-text">入口は複数ありますが、送信先は下部の共通フォーム1つにまとめます。迷った場合は、一般お問い合わせとして送ってください。</p></div>
-          <div class="engage-grid">
-            <article id="individual" class="engage-card"><div class="label">01 Individual</div><h3>阿波山雅サポーター（賛助会員）</h3><p>当組合では、組合員の活動をご支援くださる団体または個人による、阿波山雅サポーター（賛助会員制度）を設けています。一緒に活動したい、何か支援したいと思っていただける方は、ぜひ加入をご検討ください。</p><p>現地に来る、広報誌を読む、SNSで紹介する。まずは山のことを気にかけてくれる人が増えることが、場所を守る力になります。</p><div class="engage-note"><b>向いている方</b>活動を継続して見守りたい方、最新情報を受け取りたい方、応援メッセージを届けたい方。</div><div class="engage-action"><a class="btn btn-outline" href="#unified-form">共通フォームで送る　→</a></div></article>
-            <article id="corporate" class="engage-card"><div class="label">02 Corporate</div><h3>法人スポンサー／パートナー</h3><p>当組合では、組合活動をご支援くださる法人・団体様を募集しております。商品開発、広報協力、現場支援、財政支援など、企業・団体としての連携を相談できます。</p><div class="engage-note"><b>協賛について</b>募集要項は設けておりません。協賛内容・連携方法は個別にご相談ください。</div><div class="engage-note"><b>相談できること</b>協賛、共同企画、地域産品の活用、イベント連携、広報・取材協力など。</div><div class="engage-action"><a class="btn btn-outline" href="#unified-form">共通フォームで相談する　→</a></div></article>
-            <article id="volunteer" class="engage-card"><div class="label">03 Volunteer</div><h3>ボランティア</h3><p>トレイル整備、植樹、イベント運営、広報、フードリボンなど、現場で一緒に動く関わり方です。</p><div class="engage-note"><b>確認したいこと</b>参加できる時期、興味のある活動、山の経験、交通手段、配慮が必要なこと。</div><div class="engage-action"><a class="btn btn-outline" href="#unified-form">共通フォームで相談する　→</a></div></article>
-            <article id="join" class="engage-card"><div class="label">04 Join</div><h3>組合加盟相談</h3><p>木頭・那賀・剣山系で事業を営む方、地域で一緒に事業を育てたい方の相談窓口です。</p><div class="engage-note"><b>確認したいこと</b>事業内容、所在地、関心のある連携、これから一緒に取り組みたいテーマ。</div><div class="engage-action"><a class="btn btn-outline" href="#unified-form">共通フォームで相談する　→</a></div></article>
+        <div class="container">
+          <div class="support-intro">
+            <div class="section-kicker">Two ways to support</div>
+            <h2>まずは山へ。<br>そして、できる形で応援を。</h2>
+            <p>山の家で食事をする、景色を楽しむ、地域のことを知る。その一つひとつが、山に人が集まる場所を守る力になります。継続して活動を支えてくださる方には、賛助会員という関わり方もあります。</p>
           </div>
         </div>
       </section>
 
-      <section class="members-section" id="unified-form">
-        <div class="container"><div class="section-head"><div><div class="section-kicker">Support & Contact</div><h2 class="section-title">共通フォーム（1つだけ）</h2></div><p class="section-text">応援・参加・一般のお問い合わせ・取材依頼は、以下のGoogleフォーム1つに統合しました。</p></div>
-          <div class="single-form-wrap">
-            <p>ご用件をフォーム内で選択してお送りください。送信内容を確認後、担当よりご連絡します。</p>
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeE2FoYsCYJA88ER1WFbHEBUqsASAXJe9wdQrPd5LSiOorCfQ/viewform?embedded=true" loading="lazy" title="協同組合 阿波山雅 共通フォーム">読み込んでいます…</iframe>
-            <a class="btn btn-dark" href="https://docs.google.com/forms/d/e/1FAIpQLSeE2FoYsCYJA88ER1WFbHEBUqsASAXJe9wdQrPd5LSiOorCfQ/viewform" target="_blank" rel="noopener noreferrer">フォームを別タブで開く</a>
+      <section class="support-options">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Support</div>
+              <h2 class="section-title">ふたつの応援方法</h2>
+            </div>
+          </div>
+          <div class="support-grid">
+            <article class="support-card">
+              <div class="label">01 Visit</div>
+              <h3>山へ来る</h3>
+              <p>奥槍戸山の家をはじめ、剣山系の施設や山を訪れてください。食事や買い物、山で過ごす時間が、地域の営みを続ける力になります。</p>
+              <a class="btn btn-outline" href="facility_guide.html">施設・山と林道ガイドを見る　→</a>
+            </article>
+            <article class="support-card">
+              <div class="label">02 Membership</div>
+              <h3>賛助会員になる</h3>
+              <p>阿波山雅の活動を継続して見守り、支えてくださる個人・団体向けの賛助会員制度です。加入については、お問い合わせフォームからご連絡ください。</p>
+              <a class="btn btn-outline" href="https://docs.google.com/forms/d/e/1FAIpQLSeE2FoYsCYJA88ER1WFbHEBUqsASAXJe9wdQrPd5LSiOorCfQ/viewform" target="_blank" rel="noopener noreferrer">賛助会員について問い合わせる　→</a>
+            </article>
           </div>
         </div>
       </section>
 
-<section class="members-section">
-        <div class="container"><div class="section-head"><div><div class="section-kicker">Information</div><h2 class="section-title">連絡先・所在地</h2></div><p class="section-text">連絡先・所在地の詳細は、公開準備が整い次第掲載します。お急ぎの方はお問い合わせください。</p></div>
-          <div class="contact-grid"><div class="contact-panel" id="general"><h3>基本情報・一般お問い合わせ</h3><p>活動内容、施設案内、広報誌、応援・参加に関する一般的なご質問は、共通フォームからお問い合わせください。</p><div class="info-list"><div class="info-row"><b>所在地</b><span>公開準備中</span></div><div class="info-row"><b>電話</b><span>公開準備中</span></div><div class="info-row"><b>メール</b><span>公開準備中</span></div></div></div><div class="contact-panel" id="media"><h3>取材・撮影ガイドライン</h3><p>事前連絡をお願いします。山の家での撮影は他のお客様への配慮をお願いします。キャラクター画像の利用は、必ず利用条件をご確認ください。</p><div class="form-stub"><div><strong>Googleマップ</strong>公開準備中</div></div></div></div>
+      <section class="support-contact">
+        <div class="container">
+          <div class="support-contact-panel">
+            <div>
+              <h2>その他のお問い合わせ</h2>
+              <p>活動や施設についてのご質問は、共通のお問い合わせフォームからお送りください。</p>
+            </div>
+            <a class="btn btn-dark" href="https://docs.google.com/forms/d/e/1FAIpQLSeE2FoYsCYJA88ER1WFbHEBUqsASAXJe9wdQrPd5LSiOorCfQ/viewform" target="_blank" rel="noopener noreferrer">お問い合わせフォームを開く　→</a>
+          </div>
         </div>
       </section>
 
-      <section class="final-cta-section"><div class="container"><div class="cta-panel cta-panel-wide"><h2>迷ったら、<br>まずは一通送ってください。</h2><p>用件はフォーム内で選べます。応援、相談、取材、一般のお問い合わせをひとつの窓口で受け取り、内容に応じて確認します。</p><div class="cta-actions"><a class="btn btn-gold" href="#unified-form">共通フォームへ　→</a></div></div><div class="related-links"><a class="related-link" href="projects.html">活動・プロジェクト <span>→</span></a><a class="related-link" href="news.html">お知らせ <span>→</span></a><a class="related-link" href="about.html">阿波山雅について <span>→</span></a></div></div></section>
+      <section class="final-cta-section">
+        <div class="container">
+          <div class="cta-panel cta-panel-wide">
+            <h2>山で、お待ちしています。</h2>
+            <p>施設の営業情報や山へ向かう前の注意事項は、施設・山と林道ガイドをご確認ください。</p>
+            <div class="cta-actions"><a class="btn btn-gold" href="facility_guide.html">山へ行く準備をする　→</a></div>
+          </div>
+          <div class="related-links">
+            <a class="related-link" href="activity-report.html">活動報告 <span>→</span></a>
+            <a class="related-link" href="projects.html">活動・プロジェクト <span>→</span></a>
+            <a class="related-link" href="about.html">阿波山雅について <span>→</span></a>
+          </div>
+        </div>
+      </section>
     </main>
+
     <footer class="footer" id="contact">
       <div class="container">
         <div class="footer-inner">
           <div class="footer-brand">協同組合 阿波山雅</div>
-          <nav class="footer-links" aria-label="フッターナビゲーション" data-common-footer></nav>
+          <nav class="footer-links" aria-label="フッターナビゲーション">
+            <a href="about.html">阿波山雅について</a>
+            <a href="facility_guide.html">施設・山と林道ガイド</a>
+            <a href="projects.html">活動・プロジェクト</a>
+            <a href="activity-report.html">活動報告</a>
+          </nav>
         </div>
         <p class="copyright">© 協同組合阿波山雅（あわさんが） All Rights Reserved.</p>
       </div>
