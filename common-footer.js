@@ -3,11 +3,11 @@
 
   const items = (window.AWASANGA && window.AWASANGA.menuItems) || [
     { href: 'index.html', label: 'ホーム' },
-    { href: 'about.html', label: '阿波山雅について' },
-    { href: 'facility_guide.html', label: '施設・山と林道ガイド' },
-    { href: 'projects.html', label: '活動・プロジェクト' },
     { href: 'news.html', label: 'お知らせ' },
-    { href: 'characters.html', label: '仲間たち' },
+    { href: 'facility_guide.html', label: '施設・山と林道ガイド' },
+    { href: 'about.html', label: '阿波山雅について' },
+    { href: 'projects.html', label: '活動・プロジェクト' },
+    { href: 'characters.html', label: '山の仲間たち' },
     { href: 'support.html', label: '応援する' }
   ];
 

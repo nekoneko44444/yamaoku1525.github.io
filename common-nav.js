@@ -4,11 +4,11 @@
   const shared = window.AWASANGA || (window.AWASANGA = {});
   const menuItems = shared.menuItems || Object.freeze([
     Object.freeze({ href: 'index.html', label: 'ホーム', key: 'home' }),
-    Object.freeze({ href: 'about.html', label: '阿波山雅について', key: 'about' }),
-    Object.freeze({ href: 'facility_guide.html', label: '施設・山と林道ガイド', key: 'facility' }),
-    Object.freeze({ href: 'projects.html', label: '活動・プロジェクト', key: 'projects' }),
     Object.freeze({ href: 'news.html', label: 'お知らせ', key: 'news' }),
-    Object.freeze({ href: 'characters.html', label: '仲間たち', key: 'characters' }),
+    Object.freeze({ href: 'facility_guide.html', label: '施設・山と林道ガイド', key: 'facility' }),
+    Object.freeze({ href: 'about.html', label: '阿波山雅について', key: 'about' }),
+    Object.freeze({ href: 'projects.html', label: '活動・プロジェクト', key: 'projects' }),
+    Object.freeze({ href: 'characters.html', label: '山の仲間たち', key: 'characters' }),
     Object.freeze({ href: 'support.html', label: '応援する', key: 'support' }),
   ]);
 
