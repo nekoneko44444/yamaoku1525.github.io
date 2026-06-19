@@ -260,3 +260,25 @@ body.standard-subpage .character-intro {
     font-size: clamp(34px, 10vw, 48px);
   }
 }
+@media (max-width: 680px) {
+  body.standard-subpage main img,
+  body.standard-subpage section img,
+  body.standard-subpage .mission-photo-grid,
+  body.standard-subpage .member-gallery,
+  body.standard-subpage .character-image,
+  body.standard-subpage .character-visual,
+  body.standard-subpage .fp-media,
+  body.standard-subpage .activity-side > img,
+  body.standard-subpage .member-photo,
+  body.standard-subpage .quote-icon {
+    display: none !important;
+  }
+
+  body.standard-subpage .page-header,
+  body.standard-subpage .sub-hero,
+  body.standard-subpage .cta-panel,
+  body.standard-subpage .projects-lead-card,
+  body.standard-subpage .path-card.dark {
+    background-image: linear-gradient(90deg, rgba(22, 50, 36, .92), rgba(36, 75, 55, .78)) !important;
+  }
+}

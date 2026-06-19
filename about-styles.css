@@ -665,3 +665,26 @@
     padding: 72px 20px 96px;
   }
 }
+@media (max-width: 680px) {
+  main img,
+  .mission-photo-grid,
+  .member-gallery,
+  .character-image,
+  .ba-grid,
+  .action-grid,
+  .photo-grid,
+  .visual-grid,
+  .image-grid,
+  .lead-visual,
+  .event-visual,
+  .hero-visual,
+  .story-visual {
+    display: none !important;
+  }
+
+  .sub-hero,
+  .page-header,
+  .cta-panel {
+    background-image: linear-gradient(90deg, rgba(22, 50, 36, .92), rgba(36, 75, 55, .78)) !important;
+  }
+}
