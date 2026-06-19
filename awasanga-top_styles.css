@@ -762,6 +762,21 @@
         grid-template-columns: 1fr;
       }
 
+      .intro-photos,
+      .activity-photo,
+      .lodge-photo,
+      .lodge-images {
+        display: none;
+      }
+
+      .activities {
+        background: linear-gradient(180deg, rgba(16, 41, 31, 0.96), rgba(16, 41, 31, 0.98));
+      }
+
+      .support-cta {
+        background: linear-gradient(90deg, rgba(16, 41, 31, 0.9), rgba(16, 41, 31, 0.96));
+      }
+
       .intro-photos img:nth-child(2) {
         transform: none;
       }
