@@ -77,15 +77,23 @@
       .nav {
         justify-content: flex-start !important;
         width: 100% !important;
-        gap: 12px 26px !important;
+        flex-wrap: nowrap !important;
+        gap: 0 22px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        padding-bottom: 2px !important;
       }
+      .nav::-webkit-scrollbar { display: none !important; }
+      .site-header .nav a { flex: 0 0 auto !important; }
     }
     @media (max-width: 680px) {
       .site-header { padding: 18px 0 14px !important; }
       .brand img { width: 70px !important; }
       .brand strong { font-size: 30px !important; }
       .nav {
-        gap: 12px 24px !important;
+        gap: 0 20px !important;
         font-size: 15px !important;
         line-height: 1.28 !important;
       }
@@ -105,6 +113,7 @@
       }
     }
   </style>
+  <script src="common-nav.js" defer></script>
   <script src="common-footer.js" defer></script>
 </head>
 <body>
@@ -119,15 +128,7 @@
             <span>あわさんが</span>
           </div>
         </a>
-        <nav class="nav" aria-label="メインナビゲーション">
-          <a class="is-active" href="index.html">ホーム</a>
-          <a href="about.html">阿波山雅について</a>
-          <a href="facility_guide.html">施設・拠点</a>
-          <a href="facility_guide.html#trail">山と林道ガイド</a>
-          <a href="projects.html">活動・プロジェクト</a>
-          <a href="support.html">応援する</a>
-          <a href="support.html#contact">お問い合わせ</a>
-        </nav>
+        <nav class="nav" aria-label="メインナビゲーション" data-common-nav data-current="home"></nav>
       </div>
     </header>
 

@@ -212,7 +212,26 @@ body.standard-subpage .character-intro {
   }
 
   body.standard-subpage .site-header .nav {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
     justify-content: flex-start;
+    gap: 0 18px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  body.standard-subpage .site-header .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.standard-subpage .site-header .nav a {
+    flex: 0 0 auto;
   }
 }
 
