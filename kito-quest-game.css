@@ -1,0 +1,227 @@
+.kito-quest {
+  margin-top: 30px;
+  border: 1px solid rgba(255, 253, 248, .28);
+  border-radius: 20px;
+  background: rgba(255, 253, 248, .96);
+  color: var(--charcoal);
+  box-shadow: 0 26px 60px rgba(8, 25, 16, .32);
+  overflow: hidden;
+}
+
+.kito-quest-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: end;
+  padding: 26px;
+  background:
+    linear-gradient(135deg, rgba(45, 90, 61, .92), rgba(31, 51, 39, .94)),
+    url("./img/top_yuzu1.png") center / cover no-repeat;
+  color: #fffdf8;
+}
+
+.kito-quest-kicker {
+  color: var(--yuzu);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  margin-bottom: 8px;
+}
+
+.kito-quest-head h2 {
+  margin: 0;
+  color: #fffdf8;
+  font-size: clamp(26px, 4vw, 42px);
+  line-height: 1.25;
+}
+
+.kito-quest-head p {
+  max-width: 760px;
+  margin-top: 12px;
+  color: rgba(255, 253, 248, .86);
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.kito-quest-counter {
+  min-width: 96px;
+  padding: 10px 12px;
+  border: 1px solid rgba(232, 184, 58, .6);
+  border-radius: 999px;
+  background: rgba(232, 184, 58, .16);
+  color: #fffdf8;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.kito-quest-body {
+  display: grid;
+  grid-template-columns: minmax(230px, .78fr) minmax(0, 1.22fr);
+  gap: 22px;
+  padding: 26px;
+}
+
+.kito-map {
+  display: grid;
+  gap: 10px;
+}
+
+.kito-stage-tab {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(45, 90, 61, .16);
+  border-radius: 12px;
+  background: var(--ivory);
+  color: var(--green-deep);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.kito-stage-tab.is-active {
+  background: var(--green-deep);
+  color: white;
+}
+
+.kito-stage-card {
+  border: 1px solid rgba(45, 90, 61, .14);
+  border-radius: 16px;
+  background: #fffdf8;
+  padding: 22px;
+}
+
+.kito-stage-meta {
+  color: var(--green-deep);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  margin-bottom: 8px;
+}
+
+.kito-stage-card h3 {
+  color: var(--green-deep);
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.kito-story {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--ivory);
+  color: var(--charcoal);
+  font-size: 14px;
+  line-height: 1.85;
+  margin-bottom: 16px;
+}
+
+.kito-question {
+  color: var(--charcoal);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.kito-options {
+  display: grid;
+  gap: 10px;
+}
+
+.kito-option {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid rgba(45, 90, 61, .18);
+  border-radius: 12px;
+  background: white;
+  color: var(--charcoal);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.kito-option:hover,
+.kito-option:focus-visible {
+  border-color: var(--green-soft);
+  box-shadow: 0 10px 24px rgba(45, 90, 61, .12);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.kito-option.is-correct {
+  border-color: var(--green-deep);
+  background: rgba(123, 166, 138, .18);
+}
+
+.kito-option.is-wrong {
+  border-color: #b86b5a;
+  background: rgba(161, 75, 58, .12);
+}
+
+.kito-feedback {
+  display: none;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(232, 184, 58, .18);
+  color: var(--dark);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.kito-feedback.is-visible {
+  display: block;
+}
+
+.kito-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.kito-clear {
+  display: none;
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--green-deep);
+  color: white;
+}
+
+.kito-clear.is-visible {
+  display: block;
+}
+
+.kito-clear strong {
+  display: block;
+  color: var(--yuzu);
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.kito-clear p {
+  color: rgba(255, 255, 255, .9);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+@media (max-width: 860px) {
+  .kito-quest-head,
+  .kito-quest-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .kito-quest-head,
+  .kito-quest-body,
+  .kito-stage-card {
+    padding: 20px;
+  }
+}
