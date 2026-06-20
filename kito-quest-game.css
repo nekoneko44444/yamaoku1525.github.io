@@ -310,3 +310,85 @@
     min-height: 240px;
   }
 }
+
+/* Picture-book pages use the supplied artwork as the primary story text. */
+.kito-book-body {
+  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.kito-picture-book {
+  display: block;
+  padding: 16px;
+  background: #fff9ec;
+}
+
+.kito-page-figure {
+  margin: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(45, 90, 61, .14);
+  background: #1f3327;
+  box-shadow: 0 18px 36px rgba(31, 51, 39, .16);
+}
+
+.kito-page-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.kito-page-panel {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 253, 248, .96);
+  border: 1px solid rgba(45, 90, 61, .12);
+}
+
+.kito-page-panel .kito-story {
+  margin-bottom: 12px;
+}
+
+.kito-page-panel .kito-question {
+  margin-top: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(232, 184, 58, .16);
+}
+
+.kito-quiz-body {
+  border-top: 1px solid rgba(45, 90, 61, .12);
+}
+
+.kito-quiz-card {
+  display: grid;
+  gap: 14px;
+}
+
+.kito-quiz-figure {
+  margin: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(45, 90, 61, .14);
+  background: var(--ivory);
+}
+
+.kito-quiz-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 960px) {
+  .kito-book-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .kito-picture-book,
+  .kito-page-panel {
+    padding: 12px;
+  }
+}
