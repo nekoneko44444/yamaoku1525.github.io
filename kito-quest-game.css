@@ -225,3 +225,88 @@
     padding: 20px;
   }
 }
+
+/* Storybook layout for Kito Quest */
+.kito-book-body {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+.kito-picture-book {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(320px, .88fr);
+  gap: 24px;
+  align-items: stretch;
+  padding: 18px;
+  background: #fff9ec;
+}
+
+.kito-illustration {
+  position: relative;
+  min-height: 360px;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--ivory);
+  border: 1px solid rgba(45, 90, 61, .12);
+}
+
+.kito-illustration img {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  object-fit: cover;
+  display: block;
+}
+
+.kito-illustration figcaption {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  max-width: calc(100% - 28px);
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(31, 51, 39, .84);
+  color: #fffdf8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.kito-page-text {
+  display: grid;
+  align-content: center;
+  padding: 10px 8px 10px 0;
+}
+
+.kito-dialogue {
+  border-left: 4px solid var(--yuzu);
+}
+
+.kito-picture-book .kito-question {
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(232, 184, 58, .16);
+  color: var(--dark);
+}
+
+@media (max-width: 960px) {
+  .kito-book-body,
+  .kito-picture-book {
+    grid-template-columns: 1fr;
+  }
+
+  .kito-page-text {
+    padding: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .kito-picture-book {
+    padding: 14px;
+  }
+
+  .kito-illustration,
+  .kito-illustration img {
+    min-height: 240px;
+  }
+}
