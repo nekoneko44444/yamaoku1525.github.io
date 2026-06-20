@@ -29,8 +29,26 @@
     const el = document.querySelector(selector);
     if (el) el.textContent = text;
   }
+  function loadCharacterPlayPolish() {
+    if (document.getElementById('character-play-polish-style')) return;
+
+    const link = document.createElement('link');
+    link.id = 'character-play-polish-style';
+    link.rel = 'stylesheet';
+    link.href = 'character-play-polish.css';
+    document.head.append(link);
+
+    const script = document.createElement('script');
+    script.src = 'character-play-polish.js';
+    script.defer = true;
+    document.body.append(script);
+  }
 
   const file = location.pathname.split('/').pop();
+  if (file === 'characters.html') {
+    loadCharacterPlayPolish();
+  }
+
   if (file === 'projects.html') {
     setText('.sub-hero p', 'ここは、阿波山雅が「何を、なぜ行うのか」を知るページです。活動の目的、具体的な取り組み、関わり方を紹介します。力を入れているプロジェクトは、専用ページで実績や数字を確認できます。');
     const concept = exact('.plain-intro p', 'だからこのページでは、活動の説明だけで終わらせず、実際に何をしているのか、どの記録を見ればよいのか、次にどう関われるのかまで並べます。');
