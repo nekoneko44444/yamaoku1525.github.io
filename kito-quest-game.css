@@ -400,3 +400,22 @@
 .kito-page-panel .kito-question[hidden] {
   display: none;
 }
+
+.kito-reveal-answer {
+  text-align: center;
+  background: var(--green-deep);
+  color: white;
+}
+
+.kito-reveal-answer:hover,
+.kito-reveal-answer:focus-visible {
+  border-color: var(--green-deep);
+  background: var(--green-deep);
+  color: white;
+}
+
+.kito-reveal-answer:disabled {
+  cursor: default;
+  opacity: .72;
+  transform: none;
+}

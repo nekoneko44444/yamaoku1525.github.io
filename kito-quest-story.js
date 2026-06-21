@@ -160,6 +160,7 @@
             <p class="kito-story" data-kito-text></p>
             <p class="kito-question" data-kito-question></p>
             <div class="kito-options" data-kito-options></div>
+            <div class="kito-feedback" data-kito-feedback></div>
             <p class="kito-question" data-kito-mission></p>
             <div class="kito-actions">
               <button class="btn btn-outline" type="button" data-kito-prev>前のページ</button>
@@ -184,6 +185,7 @@
     const text = section.querySelector('[data-kito-text]');
     const question = section.querySelector('[data-kito-question]');
     const options = section.querySelector('[data-kito-options]');
+    const feedback = section.querySelector('[data-kito-feedback]');
     const mission = section.querySelector('[data-kito-mission]');
     const prev = section.querySelector('[data-kito-prev]');
     const next = section.querySelector('[data-kito-next]');
@@ -211,28 +213,25 @@
       image.alt = page.imageAlt;
       title.textContent = page.title;
       text.textContent = page.text;
-      mission.textContent = page.kind === 'quiz' ? page.note : page.mission;
+      const isRevealQuiz = page.kind === 'quiz' && page.choices.length > 0;
+      mission.textContent = isRevealQuiz ? '考えたら「答えを見る」を押して確認しよう。' : page.kind === 'quiz' ? page.note : page.mission;
       question.textContent = page.kind === 'quiz' ? page.question : '';
       question.hidden = page.kind !== 'quiz';
       options.replaceChildren();
+      feedback.classList.remove('is-visible');
+      feedback.textContent = '';
 
-      if (page.kind === 'quiz') {
-        page.choices.forEach((choice) => {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'kito-option';
-          button.textContent = choice;
-          button.dataset.answer = choice;
-          button.addEventListener('click', () => {
-            const correct = button.dataset.answer === page.answer;
-            Array.from(options.children).forEach((option) => {
-              option.disabled = true;
-              option.classList.toggle('is-correct', option.dataset.answer === page.answer);
-            });
-            if (!correct) button.classList.add('is-wrong');
-          });
-          options.append(button);
+      if (isRevealQuiz) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'kito-option kito-reveal-answer';
+        button.textContent = '答えを見る';
+        button.addEventListener('click', () => {
+          button.disabled = true;
+          feedback.textContent = `答え：${page.answer}。${page.note}`;
+          feedback.classList.add('is-visible');
         });
+        options.append(button);
       }
 
       prev.disabled = pageIndex === 0;
