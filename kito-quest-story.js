@@ -51,7 +51,6 @@
         question: 'この「赤い部分」の名前は何でしょう？',
         choices: ['あかみ', 'しろみ', 'あまみ'],
         answer: 'あかみ',
-        answerDisplay: 'こたえ：あかみ',
         note: '赤みは、杉じぃの記憶の芯につながる大切な言葉です。'
       },
       {
@@ -73,7 +72,6 @@
         question: '激しい川を渡るために使われた道具の名前は？',
         choices: ['[か]・[い]', '[さ]・[お]', '[い]・[か]'],
         answer: '[か]・[い]',
-        answerDisplay: 'こたえ：[か]・[い]',
         note: '「かい」は水をかいて進む道具。木頭杉を運んだ記憶につながります。'
       },
       {
@@ -95,7 +93,6 @@
         question: '木頭杉が胸に秘めていた「一番大切な気持ち」は何でしょう？',
         choices: ['かおり', 'ほこり', 'ねむり'],
         answer: 'ほこり',
-        answerDisplay: 'こたえ：ほこり',
         note: '大阪城や下鴨神社にもつながる、木頭杉の千年の記憶です。'
       },
       {
@@ -151,7 +148,6 @@
             <p class="kito-story" data-kito-text></p>
             <p class="kito-question" data-kito-question></p>
             <div class="kito-options" data-kito-options></div>
-            <div class="kito-answer-card" data-kito-answer></div>
             <p class="kito-question" data-kito-mission></p>
             <div class="kito-actions">
               <button class="btn btn-outline" type="button" data-kito-prev>前のページ</button>
@@ -176,7 +172,6 @@
     const text = section.querySelector('[data-kito-text]');
     const question = section.querySelector('[data-kito-question]');
     const options = section.querySelector('[data-kito-options]');
-    const answer = section.querySelector('[data-kito-answer]');
     const mission = section.querySelector('[data-kito-mission]');
     const prev = section.querySelector('[data-kito-prev]');
     const next = section.querySelector('[data-kito-next]');
@@ -207,8 +202,6 @@
       mission.textContent = page.kind === 'quiz' ? page.note : page.mission;
       question.textContent = page.kind === 'quiz' ? page.question : '';
       question.hidden = page.kind !== 'quiz';
-      answer.textContent = page.kind === 'quiz' ? page.answerDisplay : '';
-      answer.hidden = page.kind !== 'quiz';
       options.replaceChildren();
 
       if (page.kind === 'quiz') {

@@ -397,19 +397,6 @@
   margin: 12px 0;
 }
 
-.kito-answer-card {
-  margin: 12px 0;
-  padding: 13px 15px;
-  border-radius: 12px;
-  border: 1px solid rgba(232, 184, 58, .46);
-  background: rgba(232, 184, 58, .18);
-  color: var(--green-deep);
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 1.7;
-}
-
-.kito-answer-card[hidden],
 .kito-page-panel .kito-question[hidden] {
   display: none;
 }
