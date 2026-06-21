@@ -17,6 +17,34 @@
   padding: 32px;
   line-height: 2;
 }
+.intro-jump-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.intro-jump-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: 1px solid var(--green-soft);
+  border-radius: 999px;
+  background: var(--ivory);
+  color: var(--green-deep);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+}
+.intro-jump-link:hover,
+.intro-jump-link:focus-visible {
+  background: var(--green-deep);
+  color: white;
+  outline: none;
+}
+#yamano-nakama {
+  scroll-margin-top: 92px;
+}
 .character-grid {
   display: grid;
   gap: 28px;
@@ -310,6 +338,9 @@
       <p>阿波山雅には、山の活動を案内してくれる仲間たちがいます。</p>
       <p>奥槍戸山の家を支える、やさしく芯のある好青年・奥槍どん。山の元気を届ける妹・なぎかちゃん。木頭杉の長老・杉じぃ。知恵を次へ繋ぐ少女・ユズリ。まっすぐな見習いマイスター・スギト。</p>
       <p>それぞれのキャラクターは、阿波山雅が大切にしている価値を表しています。おもてなし、元気、山の記憶、知恵の継承、手を動かす実践。このページでは、阿波山雅の活動をともに伝えていく仲間たちを紹介します。</p>
+      <div class="intro-jump-links" aria-label="ページ内リンク">
+        <a class="intro-jump-link" href="#yamano-nakama">山の仲間たち紹介へ</a>
+      </div>
     </div>
   </div>
 </section>
@@ -362,10 +393,10 @@
   </div>
 </section>
 
-<section style="background:white;">
+<section id="yamano-nakama" style="background:white;">
   <div class="container">
-    <h2 class="section-title">関係性</h2>
-    <p class="section-subtitle">5人の役割を、阿波山雅の活動とつなげて整理します。</p>
+    <h2 class="section-title">山の仲間たち紹介</h2>
+    <p class="section-subtitle">5人の仲間が、山で大切にしていることを紹介します。</p>
     <div class="relation-map">
       <div class="relation-steps">
         <div class="relation-step"><strong>迎える</strong>奥槍どん<br><small>食・拠点・安心</small></div>
