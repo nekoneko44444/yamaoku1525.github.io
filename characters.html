@@ -66,6 +66,7 @@
   justify-content: center;
 }
 .character-visual img {
+  display: block !important;
   width: 100%;
   max-height: 320px;
   object-fit: contain;
@@ -89,6 +90,25 @@
   font-weight: 700;
   color: var(--charcoal);
   margin-bottom: 14px;
+}
+.character-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 9px 13px;
+  border: 1px solid rgba(45, 90, 61, .16);
+  border-radius: 999px;
+  background: var(--ivory);
+  color: var(--charcoal);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.character-role-pill strong {
+  color: var(--green-deep);
+}
+.character-role-pill span {
+  color: var(--gray);
 }
 .character-body p {
   font-size: 14px;
@@ -188,6 +208,7 @@
 }
 .mission-card img,
 .result-card img {
+  display: block !important;
   width: 112px;
   height: 112px;
   object-fit: contain;
@@ -305,16 +326,56 @@
   }
 }
 /* スマホでもキャラクターのイラストを表示する（共通CSSのモバイル画像非表示を上書き） */
-@media (max-width: 680px) {
-  body.standard-subpage .character-visual {
-    display: flex !important;
+@media (max-width: 560px) {
+  .character-card {
+    border-radius: 14px;
+  }
+  .character-visual {
+    padding: 18px 18px 10px;
+  }
+  .character-visual img {
+    max-height: 240px;
+  }
+  .character-body {
     padding: 20px;
   }
-  body.standard-subpage .character-visual img {
-    display: block !important;
+  .character-role-pill {
+    display: flex;
+    justify-content: center;
     width: 100%;
-    max-height: 240px;
-    object-fit: contain;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .profile-table {
+    grid-template-columns: 82px 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  body.standard-subpage #yamano-nakama .character-visual,
+  #yamano-nakama .character-visual {
+    display: flex !important;
+  }
+  body.standard-subpage #character-play .quest-badge img,
+  body.standard-subpage #character-play .quest-mission-body img,
+  body.standard-subpage #character-play .quest-answer img,
+  body.standard-subpage #character-play .quest-result-main img,
+  body.standard-subpage #character-play .kito-page-figure img,
+  body.standard-subpage #character-play .kito-illustration img,
+  body.standard-subpage #character-play .kito-quiz-figure img,
+  body.standard-subpage #yamano-nakama .character-visual img,
+  #character-play .quest-badge img,
+  #character-play .quest-mission-body img,
+  #character-play .quest-answer img,
+  #character-play .quest-result-main img,
+  #character-play .kito-page-figure img,
+  #character-play .kito-illustration img,
+  #character-play .kito-quiz-figure img,
+  #yamano-nakama .character-visual img {
+    display: block !important;
+  }
+}
+
   }
 }
 </style>
@@ -409,21 +470,8 @@
 <section id="yamano-nakama" style="background:white;">
   <div class="container">
     <h2 class="section-title">山の仲間たち紹介</h2>
-    <p class="section-subtitle">5人の仲間が、山で大切にしていることを紹介します。</p>
-    <div class="relation-map">
-      <div class="relation-steps">
-        <div class="relation-step"><strong>迎える</strong>奥槍どん<br><small>食・拠点・安心</small></div>
-        <div class="relation-step"><strong>元気にする</strong>なぎかちゃん<br><small>来訪者・子ども・イベント</small></div>
-        <div class="relation-step"><strong>記憶を語る</strong>杉じぃ<br><small>木頭杉・山の歴史</small></div>
-        <div class="relation-step"><strong>知恵にする</strong>ユズリ<br><small>記録・発信・継承</small></div>
-        <div class="relation-step"><strong>形にする</strong>スギト<br><small>ものづくり・現場活動</small></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container character-grid">
+    <p class="section-subtitle">5人の仲間が、山で大切にしていることを紹介します。役割はそれぞれの紹介カードにまとめました。</p>
+    <div class="character-grid">
 
     <article class="character-card" id="okuyaridon">
       <div class="character-visual"><img src="./img/奥槍どん.png" alt="奥槍どん"></div>
@@ -431,6 +479,7 @@
         <div class="eyebrow">奥槍戸山の家を支える兄</div>
         <h2>奥槍どん</h2>
         <div class="character-copy">奥槍戸山の家を支える、やさしく芯のある若きあるじ。</div>
+        <div class="character-role-pill"><strong>迎える</strong><span>食・拠点・安心</span></div>
         <p>奥槍どんは、奥槍戸山の家を支える好青年です。やさしい口調で、山を訪れる人をあたたかく迎えてくれます。けれど、ただ穏やかなだけではありません。</p>
         <p>奥槍戸山の家を守ること。山に来てくれた人に、ほっとする時間を届けること。地域の食や人のつながりを、次の世代へつないでいくこと。その一つひとつに、まっすぐな思いを持っています。</p>
         <p>妹のなぎかちゃんに振り回されることもありますが、いつも少し離れたところから、やさしく見守っています。</p>
@@ -450,6 +499,7 @@
         <div class="eyebrow">奥槍どんの妹</div>
         <h2>なぎかちゃん</h2>
         <div class="character-copy">山の元気を届ける、奥槍どんの妹。</div>
+        <div class="character-role-pill"><strong>元気にする</strong><span>来訪者・子ども・イベント</span></div>
         <p>なぎかちゃんは、奥槍どんの妹で、元気いっぱいな女の子です。奥槍戸山の家のメニュー「おんなぎカレー」から生まれたキャラクターで、山に来てくれた人を明るく迎えるのが大好きです。</p>
         <p>初めて来た人にも、子どもたちにも、すぐに声をかけて、山の楽しさや奥槍戸山の家の魅力を伝えてくれます。少し勢いがありすぎて、兄の奥槍どんに心配されることもありますが、その明るさは、まわりの人を自然と笑顔にしてくれます。</p>
         <dl class="profile-table">
@@ -468,6 +518,7 @@
         <div class="eyebrow">木頭杉の長老</div>
         <h2>杉じぃ</h2>
         <div class="character-copy">千年の記憶を持つ、木頭杉の長老。</div>
+        <div class="character-role-pill"><strong>記憶を語る</strong><span>木頭杉・山の歴史</span></div>
         <p>杉じぃは、木頭杉の森に長い長い時間を生きてきた長老です。山のこと、木のこと、昔の暮らしのことをよく知っています。</p>
         <p>いつもは陽気に笑っていますが、山の話になると少しだけ真剣になります。木をただの材料として見るのではなく、山の時間そのものとして見ることを大切にしています。</p>
         <dl class="profile-table">
@@ -486,6 +537,7 @@
         <div class="eyebrow">知恵を次へ繋ぐ案内人</div>
         <h2>ユズリ</h2>
         <div class="character-copy">知恵を、次へ繋ぐ少女。</div>
+        <div class="character-role-pill"><strong>知恵にする</strong><span>記録・発信・継承</span></div>
         <p>ユズリは、山の資料や地域の記録を読むのが大好きな、冷静で博識な女の子です。地域にある資源をどうすれば未来へ残せるのか、いつも考えています。</p>
         <p>記録するだけでなく、伝わる形に整えることを大切にしています。阿波山雅の活動では、情報発信、記録、学び、地域資源を未来へ渡すための案内役です。</p>
         <dl class="profile-table">
@@ -504,6 +556,7 @@
         <div class="eyebrow">見習いマイスター</div>
         <h2>スギト</h2>
         <div class="character-copy">赤身でできた、まっすぐな見習いマイスター。</div>
+        <div class="character-role-pill"><strong>形にする</strong><span>ものづくり・現場活動</span></div>
         <p>スギトは、木のぬくもりを誰よりも信じている、まっすぐな見習いマイスターです。考えるより先に、まず手を動かすタイプです。</p>
         <p>木に触れること。道を整えること。小屋を支えること。イベントで人を迎えること。その一つひとつが、山の未来をつくる仕事になると信じています。</p>
         <dl class="profile-table">

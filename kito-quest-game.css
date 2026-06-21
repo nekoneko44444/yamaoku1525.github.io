@@ -255,7 +255,7 @@
   height: 100%;
   min-height: 360px;
   object-fit: cover;
-  display: block;
+  display: block !important;
 }
 
 .kito-illustration figcaption {
@@ -333,7 +333,7 @@
 }
 
 .kito-page-figure img {
-  display: block;
+  display: block !important;
   width: 100%;
   height: auto;
 }
@@ -375,7 +375,7 @@
 }
 
 .kito-quiz-figure img {
-  display: block;
+  display: block !important;
   width: 100%;
   height: auto;
 }
@@ -418,4 +418,119 @@
   cursor: default;
   opacity: .72;
   transform: none;
+}
+
+/* Mobile balance for the illustrated Kito Quest book */
+@media (max-width: 720px) {
+  .kito-quest {
+    margin-top: 22px;
+    border-radius: 14px;
+  }
+
+  .kito-quest-head {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .kito-quest-head h2 {
+    font-size: 26px;
+  }
+
+  .kito-quest-head p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .kito-quest-counter {
+    width: fit-content;
+    min-width: 0;
+  }
+
+  .kito-book-body {
+    display: block;
+    padding: 14px;
+  }
+
+  .kito-map {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 0 10px;
+    margin-bottom: 12px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .kito-stage-tab {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 220px;
+    min-width: 128px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.45;
+    scroll-snap-align: start;
+  }
+
+  .kito-stage-card,
+  .kito-picture-book,
+  .kito-page-panel {
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  .kito-page-figure {
+    border-radius: 10px;
+    box-shadow: 0 12px 24px rgba(31, 51, 39, .14);
+  }
+
+  .kito-page-panel {
+    margin-top: 12px;
+  }
+
+  .kito-stage-card h3 {
+    font-size: 21px;
+  }
+
+  .kito-story,
+  .kito-question,
+  .kito-feedback,
+  .kito-clear p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .kito-actions .btn {
+    flex: 1 1 130px;
+  }
+}
+
+@media (max-width: 380px) {
+  .kito-quest-head,
+  .kito-book-body {
+    padding: 12px;
+  }
+
+  .kito-stage-tab {
+    min-width: 112px;
+    max-width: 190px;
+  }
+}
+
+@media (max-width: 720px) {
+  .kito-book-body {
+    padding: 10px;
+  }
+
+  .kito-picture-book {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 720px) {
+  .kito-quest {
+    margin-left: -10px;
+    margin-right: -10px;
+  }
 }
