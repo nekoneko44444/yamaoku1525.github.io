@@ -21,6 +21,7 @@
       </span>
     </a>
     <nav class="nav" aria-label="ページ内ナビゲーション">
+      <a href="#play">木札あそび</a>
       <a href="#works">できること</a>
       <a href="#gallery">作品</a>
       <a href="#about">小屋について</a>
@@ -36,7 +37,7 @@
           木頭杉や山の家まわりの物語を、キーホルダー、しおり、参加証、記念品などの小さなグッズにして届けます。
         </p>
         <div class="hero-actions">
-          <a class="button primary" href="#gallery">作品を見る</a>
+          <a class="button primary" href="#play">木札で遊ぶ</a>
           <a class="button secondary" href="#works">できること</a>
         </div>
       </div>
@@ -51,6 +52,38 @@
       <p>
         ただのおみやげではなく、そこへ行ったこと、そこで出会ったこと、好きな場所を少し支えたい気持ちまで持ち帰れるものを作ります。
       </p>
+    </section>
+
+    <section class="section play-section" id="play">
+      <div class="section-head">
+        <p class="eyebrow">Try It</p>
+        <h2>木札おためし工房</h2>
+      </div>
+      <div class="tag-maker" aria-label="木札プレビュー作成">
+        <div class="maker-panel">
+          <label class="maker-label" for="tag-input">木札に入れる文字</label>
+          <input id="tag-input" class="tag-input" type="text" maxlength="14" value="奥槍戸の思い出" />
+          <p class="maker-hint">14文字まで。実際の制作を想像するための小さな遊びです。</p>
+
+          <div class="maker-label">モチーフ</div>
+          <div class="motif-buttons" role="group" aria-label="木札のモチーフを選ぶ">
+            <button class="motif-button is-active" type="button" data-motif="山">山</button>
+            <button class="motif-button" type="button" data-motif="木">木</button>
+            <button class="motif-button" type="button" data-motif="ゆず">ゆず</button>
+          </div>
+
+          <button class="button primary maker-button" id="make-tag" type="button">木札を作る</button>
+          <p class="maker-result" id="maker-result" aria-live="polite">木の香りがしそうな木札ができました。</p>
+        </div>
+
+        <div class="tag-preview" aria-label="木札プレビュー">
+          <div class="tag-hole" aria-hidden="true"></div>
+          <div class="tag-grain" aria-hidden="true"></div>
+          <span class="tag-motif" id="tag-motif" aria-hidden="true">山</span>
+          <strong id="tag-name">奥槍戸の思い出</strong>
+          <small>ねこのモノづくり小屋</small>
+        </div>
+      </div>
     </section>
 
     <section class="section" id="works">
@@ -112,5 +145,47 @@
   <footer class="footer">
     <small>© ねこのモノづくり小屋</small>
   </footer>
+
+  <script>
+    (function () {
+      var input = document.getElementById('tag-input');
+      var previewName = document.getElementById('tag-name');
+      var previewMotif = document.getElementById('tag-motif');
+      var result = document.getElementById('maker-result');
+      var makeButton = document.getElementById('make-tag');
+      var motifButtons = Array.prototype.slice.call(document.querySelectorAll('.motif-button'));
+      var messages = [
+        '木の香りがしそうな木札ができました。',
+        '山歩きのあとに持ち帰りたくなる仕上がりです。',
+        '小さな記念品にちょうどいい雰囲気です。',
+        'イベントの参加証にもよさそうです。'
+      ];
+
+      function updatePreview() {
+        var value = input.value.trim() || '奥槍戸の思い出';
+        previewName.textContent = value;
+      }
+
+      input.addEventListener('input', updatePreview);
+
+      motifButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          motifButtons.forEach(function (item) { item.classList.remove('is-active'); });
+          button.classList.add('is-active');
+          previewMotif.textContent = button.dataset.motif;
+        });
+      });
+
+      makeButton.addEventListener('click', function () {
+        updatePreview();
+        var message = messages[Math.floor(Math.random() * messages.length)];
+        result.textContent = message;
+        makeButton.classList.remove('is-popped');
+        window.requestAnimationFrame(function () {
+          makeButton.classList.add('is-popped');
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
