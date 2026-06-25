@@ -192,11 +192,17 @@ h1 {
 
 .photo-main,
 .photo-sub,
+.profile-photo,
 .label-card {
   position: absolute;
   border: 4px solid var(--ink);
-  border-radius: 8px;
   box-shadow: var(--shadow);
+}
+
+.photo-main,
+.photo-sub,
+.label-card {
+  border-radius: 8px;
 }
 
 .photo-main {
@@ -214,6 +220,17 @@ h1 {
   height: 210px;
   object-fit: cover;
   transform: rotate(-4deg);
+}
+
+.profile-photo {
+  left: 16px;
+  top: 28px;
+  width: 116px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  background: var(--paper);
+  transform: rotate(-7deg);
 }
 
 .label-card {
@@ -442,6 +459,12 @@ h1 {
   .photo-sub {
     width: 62%;
     height: 160px;
+  }
+
+  .profile-photo {
+    left: 4px;
+    top: 184px;
+    width: 92px;
   }
 
   .label-card {
