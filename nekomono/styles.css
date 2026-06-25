@@ -3,7 +3,6 @@
   --muted: #78675c;
   --cream: #fff7dc;
   --paper: #fffdf3;
-  --wood: #d89b54;
   --green: #7fcf8d;
   --yellow: #ffd95a;
   --pink: #ff9ab5;
@@ -192,17 +191,11 @@ h1 {
 
 .photo-main,
 .photo-sub,
-.profile-photo,
 .label-card {
   position: absolute;
   border: 4px solid var(--ink);
-  box-shadow: var(--shadow);
-}
-
-.photo-main,
-.photo-sub,
-.label-card {
   border-radius: 8px;
+  box-shadow: var(--shadow);
 }
 
 .photo-main {
@@ -220,17 +213,6 @@ h1 {
   height: 210px;
   object-fit: cover;
   transform: rotate(-4deg);
-}
-
-.profile-photo {
-  left: 16px;
-  top: 28px;
-  width: 116px;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 50%;
-  background: var(--paper);
-  transform: rotate(-7deg);
 }
 
 .label-card {
@@ -252,8 +234,7 @@ h1 {
 }
 
 .intro p,
-.about-band p,
-.contact-panel p {
+.about-band p {
   margin: 0;
   color: var(--muted);
   font-size: clamp(16px, 1.8vw, 19px);
@@ -271,8 +252,7 @@ h1 {
 }
 
 .section-head h2,
-.about-band h2,
-.contact-panel h2 {
+.about-band h2 {
   margin-bottom: 0;
   font-size: clamp(30px, 4vw, 52px);
   line-height: 1.18;
@@ -371,25 +351,6 @@ h1 {
   box-shadow: 8px 8px 0 rgba(59, 43, 35, 0.2);
 }
 
-.contact {
-  padding-top: 20px;
-}
-
-.contact-panel {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: clamp(26px, 5vw, 46px);
-  background: var(--paper);
-  border: 3px solid var(--ink);
-  border-radius: 8px;
-  box-shadow: 8px 8px 0 var(--pink);
-  text-align: center;
-}
-
-.contact-panel h2 {
-  margin-bottom: 18px;
-}
-
 .footer {
   display: flex;
   flex-wrap: wrap;
@@ -398,10 +359,6 @@ h1 {
   padding: 28px clamp(18px, 6vw, 80px) 34px;
   color: #fff;
   background: var(--ink);
-}
-
-.footer a {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
 }
 
 @media (max-width: 900px) {
@@ -459,12 +416,6 @@ h1 {
   .photo-sub {
     width: 62%;
     height: 160px;
-  }
-
-  .profile-photo {
-    left: 4px;
-    top: 184px;
-    width: 92px;
   }
 
   .label-card {
