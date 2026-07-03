@@ -533,11 +533,11 @@ h1 {
   font-weight: 900;
 }
 
-.idea-chip:nth-of-type(2) {
+.idea-chip:nth-child(3) {
   background: #fff1a7;
 }
 
-.idea-chip:nth-of-type(3) {
+.idea-chip:nth-child(5) {
   background: #ffdce5;
 }
 
