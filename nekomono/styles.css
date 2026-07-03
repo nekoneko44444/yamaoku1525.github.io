@@ -169,6 +169,39 @@ h1 {
   line-height: 1.9;
 }
 
+.hero-charms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 620px;
+  margin: 24px 0 0;
+}
+
+.hero-charms span {
+  display: inline-grid;
+  min-height: 36px;
+  padding: 8px 12px;
+  place-items: center;
+  background: #fff;
+  border: 2px dashed rgba(59, 43, 35, 0.36);
+  border-radius: 8px;
+  color: #5f422e;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.hero-charms span:nth-child(2) {
+  background: #e7f8ff;
+}
+
+.hero-charms span:nth-child(3) {
+  background: #fff1a7;
+}
+
+.hero-charms span:nth-child(4) {
+  background: #ffdce5;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -201,7 +234,8 @@ h1 {
 
 .photo-main,
 .photo-sub,
-.label-card {
+.label-card,
+.floating-badge {
   position: absolute;
   border: 4px solid var(--ink);
   border-radius: 8px;
@@ -237,6 +271,47 @@ h1 {
   line-height: 1.35;
 }
 
+.floating-badge {
+  z-index: 3;
+  display: grid;
+  min-width: 88px;
+  min-height: 44px;
+  padding: 8px 12px;
+  place-items: center;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 900;
+  animation: badge-float 4.6s ease-in-out infinite;
+}
+
+.badge-wood {
+  top: 6px;
+  left: 20px;
+  background: #ffe2a8;
+  transform: rotate(-5deg);
+}
+
+.badge-yuzu {
+  top: 154px;
+  right: -2px;
+  background: #fff1a7;
+  animation-delay: 900ms;
+  transform: rotate(5deg);
+}
+
+.badge-trail {
+  left: 32px;
+  bottom: 0;
+  background: #c9f4cf;
+  animation-delay: 1.8s;
+  transform: rotate(4deg);
+}
+
+@keyframes badge-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -10px; }
+}
+
 .intro {
   margin: 0 auto;
   max-width: 980px;
@@ -266,6 +341,215 @@ h1 {
   margin-bottom: 0;
   font-size: clamp(30px, 4vw, 52px);
   line-height: 1.18;
+}
+
+.surprise-section {
+  padding-top: 30px;
+}
+
+.gacha-box {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(300px, 1fr);
+  gap: 22px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.gacha-machine,
+.gacha-panel {
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 rgba(59, 43, 35, 0.18);
+}
+
+.gacha-machine {
+  position: relative;
+  display: grid;
+  min-height: 330px;
+  padding: 28px;
+  overflow: hidden;
+  place-items: center;
+  background:
+    linear-gradient(180deg, #ffbed0 0 44%, #ffd95a 44% 100%);
+}
+
+.gacha-machine::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  height: 26px;
+  background: repeating-linear-gradient(90deg, #fff 0 26px, #8fd4ff 26px 52px);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+}
+
+.machine-window {
+  position: relative;
+  display: grid;
+  width: min(230px, 70vw);
+  aspect-ratio: 1;
+  margin-top: 24px;
+  place-items: center;
+  background: rgba(255, 253, 243, 0.9);
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 10px rgba(143, 212, 255, 0.46);
+}
+
+.capsule {
+  position: absolute;
+  display: grid;
+  width: 74px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  font-weight: 900;
+  animation: capsule-bob 3.4s ease-in-out infinite;
+}
+
+.capsule-one {
+  top: 36px;
+  left: 32px;
+  background: #c9f4cf;
+}
+
+.capsule-two {
+  right: 34px;
+  top: 66px;
+  background: #ffdce5;
+  animation-delay: 700ms;
+}
+
+.capsule-three {
+  bottom: 34px;
+  left: 78px;
+  background: #fff1a7;
+  animation-delay: 1.4s;
+}
+
+.machine-slot {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  width: 150px;
+  height: 42px;
+  background: var(--ink);
+  border: 4px solid #fff7dc;
+  border-radius: 8px;
+  transform: translateX(-50%);
+}
+
+.machine-handle {
+  position: absolute;
+  right: 34px;
+  bottom: 82px;
+  width: 34px;
+  height: 92px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 5px 5px 0 rgba(59, 43, 35, 0.18);
+}
+
+.machine-handle::after {
+  content: "";
+  position: absolute;
+  bottom: -17px;
+  left: 50%;
+  width: 52px;
+  aspect-ratio: 1;
+  background: var(--blue);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes capsule-bob {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -10px; rotate: 4deg; }
+}
+
+.gacha-panel {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: clamp(22px, 4vw, 34px);
+  background: var(--paper);
+}
+
+.gacha-copy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.8;
+}
+
+.gacha-button {
+  width: min(100%, 320px);
+  cursor: pointer;
+}
+
+.idea-output {
+  display: grid;
+  gap: 14px;
+  min-height: 154px;
+  padding: 18px;
+  background: #fff;
+  border: 3px dashed rgba(59, 43, 35, 0.32);
+  border-radius: 8px;
+}
+
+.idea-output.is-drawn {
+  animation: idea-draw 420ms ease;
+}
+
+@keyframes idea-draw {
+  0% { transform: translateY(0) rotate(0deg); }
+  35% { transform: translateY(-8px) rotate(-1deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.idea-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.idea-chip {
+  display: inline-grid;
+  min-height: 38px;
+  padding: 8px 12px;
+  place-items: center;
+  background: #e7f8ff;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.idea-chip:nth-of-type(2) {
+  background: #fff1a7;
+}
+
+.idea-chip:nth-of-type(3) {
+  background: #ffdce5;
+}
+
+.idea-plus {
+  font-weight: 900;
+}
+
+.idea-output p {
+  margin: 0;
+  color: #5e4a40;
+  font-weight: 800;
+  line-height: 1.75;
 }
 
 .play-section {
@@ -386,6 +670,17 @@ h1 {
   border: 0;
   border-bottom: 3px solid rgba(59, 43, 35, 0.2);
   border-radius: 50%;
+}
+
+.tag-preview.is-finished {
+  animation: tag-finish 520ms ease;
+}
+
+@keyframes tag-finish {
+  0% { transform: rotate(0deg) scale(1); }
+  35% { transform: rotate(-1.4deg) scale(1.02); }
+  70% { transform: rotate(1deg) scale(1.01); }
+  100% { transform: rotate(0deg) scale(1); }
 }
 
 .tag-hole {
@@ -553,7 +848,8 @@ h1 {
   .site-header,
   .hero,
   .about-band,
-  .tag-maker {
+  .tag-maker,
+  .gacha-box {
     grid-template-columns: 1fr;
   }
 
@@ -568,6 +864,10 @@ h1 {
 
   .hero-visual {
     min-height: 430px;
+  }
+
+  .gacha-machine {
+    min-height: 300px;
   }
 
   .work-grid,
@@ -613,7 +913,53 @@ h1 {
     font-size: 19px;
   }
 
+  .floating-badge {
+    min-width: 76px;
+    min-height: 38px;
+    border-width: 3px;
+    font-size: 13px;
+  }
+
+  .badge-yuzu {
+    top: 104px;
+  }
+
+  .badge-trail {
+    left: 10px;
+  }
+
+  .gacha-machine {
+    min-height: 270px;
+    padding: 18px;
+  }
+
+  .machine-window {
+    width: 205px;
+  }
+
+  .machine-handle {
+    right: 20px;
+  }
+
+  .idea-output {
+    min-height: 180px;
+  }
+
   .tag-preview {
     min-height: 280px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }
