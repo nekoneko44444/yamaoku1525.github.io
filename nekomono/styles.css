@@ -562,6 +562,32 @@ h1 {
   line-height: 1.8;
 }
 
+.parts-tray {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.part-card {
+  display: grid;
+  min-height: 108px;
+  padding: 8px;
+  place-items: center;
+  background: #fff;
+  border: 2px dashed rgba(59, 43, 35, 0.28);
+  border-radius: 8px;
+  color: #5e4a40;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.part-card img {
+  width: 62px;
+  height: 58px;
+  object-fit: contain;
+}
+
 .gacha-button {
   width: min(100%, 320px);
   cursor: pointer;
@@ -595,15 +621,23 @@ h1 {
 }
 
 .idea-chip {
-  display: inline-grid;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   min-height: 38px;
   padding: 8px 12px;
-  place-items: center;
   background: #e7f8ff;
   border: 2px solid var(--ink);
   border-radius: 8px;
   font-size: 14px;
   font-weight: 900;
+}
+
+.idea-chip-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .idea-chip:nth-child(3) {
@@ -695,8 +729,12 @@ h1 {
 }
 
 .motif-button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-width: 68px;
-  min-height: 40px;
+  min-height: 72px;
   padding: 8px 12px;
   color: var(--ink);
   background: #fff;
@@ -706,6 +744,12 @@ h1 {
   cursor: pointer;
   font: inherit;
   font-weight: 900;
+}
+
+.motif-button img {
+  width: 40px;
+  height: 36px;
+  object-fit: contain;
 }
 
 .motif-button.is-active {
@@ -1032,6 +1076,10 @@ h1 {
 
   .idea-output {
     min-height: 180px;
+  }
+
+  .parts-tray {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .tag-preview {

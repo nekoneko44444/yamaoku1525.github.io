@@ -85,14 +85,41 @@
           <p class="gacha-copy">
             何を作るか迷ったら、素材・形・場面をひとつずつ引いてみる。小さなグッズの種が、ぽんっと出てきます。
           </p>
+          <div class="parts-tray" aria-label="小さな素材パーツ">
+            <span class="part-card">
+              <img src="./img/part-yuzu.png" alt="" aria-hidden="true" />
+              <span>ゆず</span>
+            </span>
+            <span class="part-card">
+              <img src="./img/part-wood.png" alt="" aria-hidden="true" />
+              <span>木</span>
+            </span>
+            <span class="part-card">
+              <img src="./img/part-wood-tag.png" alt="" aria-hidden="true" />
+              <span>木札</span>
+            </span>
+            <span class="part-card">
+              <img src="./img/part-mountain.png" alt="" aria-hidden="true" />
+              <span>山</span>
+            </span>
+          </div>
           <button class="button primary gacha-button" id="draw-idea" type="button">今日の小さな物語を引く</button>
           <div class="idea-output" id="idea-output" aria-live="polite">
             <div class="idea-row">
-              <span class="idea-chip" id="idea-material">木頭杉</span>
+              <span class="idea-chip" id="idea-material">
+                <img class="idea-chip-icon" src="./img/part-wood.png" alt="" aria-hidden="true" />
+                <span class="idea-chip-text">木頭杉</span>
+              </span>
               <span class="idea-plus" aria-hidden="true">+</span>
-              <span class="idea-chip" id="idea-shape">しおり</span>
+              <span class="idea-chip" id="idea-shape">
+                <img class="idea-chip-icon" src="./img/part-wood-tag.png" alt="" aria-hidden="true" />
+                <span class="idea-chip-text">しおり</span>
+              </span>
               <span class="idea-plus" aria-hidden="true">+</span>
-              <span class="idea-chip" id="idea-scene">山の家の記念</span>
+              <span class="idea-chip" id="idea-scene">
+                <img class="idea-chip-icon" src="./img/part-mountain.png" alt="" aria-hidden="true" />
+                <span class="idea-chip-text">山の家の記念</span>
+              </span>
             </div>
             <p id="idea-copy">山歩きのあとに、ページを開くたび思い出せる小さな記念品。</p>
           </div>
@@ -117,9 +144,18 @@
 
           <div class="maker-label">モチーフ</div>
           <div class="motif-buttons" role="group" aria-label="木札のモチーフを選ぶ">
-            <button class="motif-button is-active" type="button" data-motif="山">山</button>
-            <button class="motif-button" type="button" data-motif="木">木</button>
-            <button class="motif-button" type="button" data-motif="ゆず">ゆず</button>
+            <button class="motif-button is-active" type="button" data-motif="山">
+              <img src="./img/part-mountain.png" alt="" aria-hidden="true" />
+              <span>山</span>
+            </button>
+            <button class="motif-button" type="button" data-motif="木">
+              <img src="./img/part-wood.png" alt="" aria-hidden="true" />
+              <span>木</span>
+            </button>
+            <button class="motif-button" type="button" data-motif="ゆず">
+              <img src="./img/part-yuzu.png" alt="" aria-hidden="true" />
+              <span>ゆず</span>
+            </button>
           </div>
 
           <button class="button primary maker-button" id="make-tag" type="button">木札を作る</button>
@@ -217,12 +253,18 @@
         '小さな記念品にちょうどいい雰囲気です。',
         'イベントの参加証にもよさそうです。'
       ];
+      var partIcons = {
+        mountain: './img/part-mountain.png',
+        tag: './img/part-wood-tag.png',
+        wood: './img/part-wood.png',
+        yuzu: './img/part-yuzu.png'
+      };
       var ideaSeeds = [
-        ['木頭杉', 'しおり', '山の家の記念', '山歩きのあとに、ページを開くたび思い出せる小さな記念品。'],
-        ['ゆず色の糸', '刺しゅうワッペン', 'イベント出展', '帽子やバッグに付けて、会場の空気をそのまま連れて帰れるワンポイント。'],
-        ['小さな木片', '参加証チャーム', '体験ツアー', '体験が終わったあとも、今日の一歩を手元に残せるチャーム。'],
-        ['山の写真', 'ミニカード', 'おみやげセット', '誰かに渡すとき、場所の物語も一緒に話したくなるカード。'],
-        ['布バッグ', 'ワンポイント名入れ', '日常づかい', '毎日の買い物にも、好きな山の気配を少しだけ連れていけるグッズ。']
+        ['木頭杉', 'しおり', '山の家の記念', '山歩きのあとに、ページを開くたび思い出せる小さな記念品。', 'wood', 'tag', 'mountain'],
+        ['ゆず色の糸', '刺しゅうワッペン', 'イベント出展', '帽子やバッグに付けて、会場の空気をそのまま連れて帰れるワンポイント。', 'yuzu', 'tag', 'mountain'],
+        ['小さな木片', '参加証チャーム', '体験ツアー', '体験が終わったあとも、今日の一歩を手元に残せるチャーム。', 'wood', 'tag', 'mountain'],
+        ['山の写真', 'ミニカード', 'おみやげセット', '誰かに渡すとき、場所の物語も一緒に話したくなるカード。', 'mountain', 'tag', 'yuzu'],
+        ['布バッグ', 'ワンポイント名入れ', '日常づかい', '毎日の買い物にも、好きな山の気配を少しだけ連れていけるグッズ。', 'tag', 'wood', 'yuzu']
       ];
       var ideaIndex = 0;
 
@@ -238,6 +280,13 @@
         });
       }
 
+      function setIdeaChip(element, text, iconKey) {
+        var icon = element.querySelector('.idea-chip-icon');
+        var label = element.querySelector('.idea-chip-text');
+        icon.src = partIcons[iconKey];
+        label.textContent = text;
+      }
+
       input.addEventListener('input', updatePreview);
 
       motifButtons.forEach(function (button) {
@@ -251,9 +300,9 @@
       drawButton.addEventListener('click', function () {
         ideaIndex = (ideaIndex + 1 + Math.floor(Math.random() * (ideaSeeds.length - 1))) % ideaSeeds.length;
         var seed = ideaSeeds[ideaIndex];
-        ideaMaterial.textContent = seed[0];
-        ideaShape.textContent = seed[1];
-        ideaScene.textContent = seed[2];
+        setIdeaChip(ideaMaterial, seed[0], seed[4]);
+        setIdeaChip(ideaShape, seed[1], seed[5]);
+        setIdeaChip(ideaScene, seed[2], seed[6]);
         ideaCopy.textContent = seed[3];
         restartClass(ideaOutput, 'is-drawn');
         restartClass(drawButton, 'is-popped');
