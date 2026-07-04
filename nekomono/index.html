@@ -144,15 +144,15 @@
 
           <div class="maker-label">モチーフ</div>
           <div class="motif-buttons" role="group" aria-label="木札のモチーフを選ぶ">
-            <button class="motif-button is-active" type="button" data-motif="山">
+            <button class="motif-button is-active" type="button" data-motif="山" data-icon="mountain">
               <img src="./img/part-mountain.png" alt="" aria-hidden="true" />
               <span>山</span>
             </button>
-            <button class="motif-button" type="button" data-motif="木">
+            <button class="motif-button" type="button" data-motif="木" data-icon="wood">
               <img src="./img/part-wood.png" alt="" aria-hidden="true" />
               <span>木</span>
             </button>
-            <button class="motif-button" type="button" data-motif="ゆず">
+            <button class="motif-button" type="button" data-motif="ゆず" data-icon="yuzu">
               <img src="./img/part-yuzu.png" alt="" aria-hidden="true" />
               <span>ゆず</span>
             </button>
@@ -165,7 +165,10 @@
         <div class="tag-preview" aria-label="木札プレビュー">
           <div class="tag-hole" aria-hidden="true"></div>
           <div class="tag-grain" aria-hidden="true"></div>
-          <span class="tag-motif" id="tag-motif" aria-hidden="true">山</span>
+          <span class="tag-motif" aria-hidden="true">
+            <img id="tag-motif-image" src="./img/part-mountain.png" alt="" />
+            <span id="tag-motif-label">山</span>
+          </span>
           <strong id="tag-name">奥槍戸の思い出</strong>
           <small>ねこのモノづくり小屋</small>
         </div>
@@ -236,7 +239,8 @@
     (function () {
       var input = document.getElementById('tag-input');
       var previewName = document.getElementById('tag-name');
-      var previewMotif = document.getElementById('tag-motif');
+      var previewMotifImage = document.getElementById('tag-motif-image');
+      var previewMotifLabel = document.getElementById('tag-motif-label');
       var result = document.getElementById('maker-result');
       var makeButton = document.getElementById('make-tag');
       var tagPreview = document.querySelector('.tag-preview');
@@ -293,7 +297,8 @@
         button.addEventListener('click', function () {
           motifButtons.forEach(function (item) { item.classList.remove('is-active'); });
           button.classList.add('is-active');
-          previewMotif.textContent = button.dataset.motif;
+          previewMotifImage.src = partIcons[button.dataset.icon];
+          previewMotifLabel.textContent = button.dataset.motif;
         });
       });
 

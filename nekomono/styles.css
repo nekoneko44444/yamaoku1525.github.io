@@ -774,8 +774,11 @@ h1 {
   place-items: center;
   overflow: hidden;
   background:
+    radial-gradient(circle at 28% 20%, rgba(255, 246, 174, 0.8) 0 8%, transparent 18%),
+    radial-gradient(circle at 76% 72%, rgba(126, 207, 142, 0.22) 0 9%, transparent 22%),
     linear-gradient(90deg, rgba(92, 54, 22, 0.12), transparent 22%, rgba(92, 54, 22, 0.1) 44%, transparent 68%),
     linear-gradient(135deg, #e7b66c, #ffd98a 42%, #cd8843);
+  box-shadow: inset 0 0 0 7px rgba(255, 242, 189, 0.24);
 }
 
 .tag-preview::before,
@@ -832,15 +835,63 @@ h1 {
 .tag-motif {
   position: relative;
   z-index: 1;
-  display: grid;
-  width: 64px;
-  aspect-ratio: 1;
-  margin-bottom: 14px;
+  display: inline-grid;
+  width: 108px;
+  min-height: 110px;
+  margin-bottom: 8px;
   place-items: center;
+  color: var(--ink);
+  background:
+    radial-gradient(circle, #fff9df 0 58%, rgba(255, 211, 89, 0.78) 59% 72%, transparent 73%),
+    linear-gradient(135deg, #fff2b8, #f7bf4d);
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 8px 0 rgba(59, 43, 35, 0.2), inset 0 -7px 0 rgba(141, 84, 35, 0.12);
+  transform: rotate(-2deg);
+}
+
+.tag-motif::before,
+.tag-motif::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  aspect-ratio: 1;
+  background: var(--pink);
+  border: 2px solid var(--ink);
+  border-radius: 5px;
+  transform: rotate(18deg);
+}
+
+.tag-motif::before {
+  top: 10px;
+  left: -8px;
+}
+
+.tag-motif::after {
+  right: -10px;
+  bottom: 20px;
+  background: var(--green);
+}
+
+.tag-motif img {
+  position: relative;
+  z-index: 1;
+  width: 72px;
+  height: 58px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 0 rgba(59, 43, 35, 0.18));
+}
+
+.tag-motif span {
+  position: relative;
+  z-index: 1;
+  min-width: 52px;
+  margin-top: -10px;
+  padding: 3px 10px 4px;
   color: #fff7df;
-  background: rgba(59, 43, 35, 0.82);
-  border-radius: 50%;
-  font-size: 23px;
+  background: rgba(59, 43, 35, 0.9);
+  border-radius: 999px;
+  font-size: 16px;
   font-weight: 900;
 }
 
