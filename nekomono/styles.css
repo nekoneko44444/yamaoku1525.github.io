@@ -595,12 +595,17 @@ h1 {
 
 .idea-output {
   display: grid;
-  gap: 14px;
-  min-height: 154px;
+  grid-template-columns: minmax(140px, 0.65fr) minmax(0, 1.55fr);
+  gap: 18px;
+  min-height: 230px;
   padding: 18px;
-  background: #fff;
-  border: 3px dashed rgba(59, 43, 35, 0.32);
+  align-items: center;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 214, 89, 0.18) 0 13%, transparent 28%),
+    linear-gradient(135deg, #fffef7, #fff8df);
+  border: 3px solid var(--ink);
   border-radius: 8px;
+  box-shadow: 6px 6px 0 rgba(59, 43, 35, 0.14);
 }
 
 .idea-output.is-drawn {
@@ -611,6 +616,50 @@ h1 {
   0% { transform: translateY(0) rotate(0deg); }
   35% { transform: translateY(-8px) rotate(-1deg); }
   100% { transform: translateY(0) rotate(0deg); }
+}
+
+.idea-result-visual {
+  display: grid;
+  min-height: 188px;
+  place-items: center;
+  background:
+    radial-gradient(circle, #fff7cf 0 54%, transparent 55%),
+    repeating-linear-gradient(0deg, transparent 0 18px, rgba(255, 214, 89, 0.18) 19px 20px),
+    repeating-linear-gradient(90deg, transparent 0 18px, rgba(255, 214, 89, 0.18) 19px 20px);
+  border: 2px dashed rgba(59, 43, 35, 0.26);
+  border-radius: 8px;
+}
+
+.idea-result-visual img {
+  width: min(100%, 170px);
+  max-height: 180px;
+  object-fit: contain;
+  filter: drop-shadow(0 9px 0 rgba(59, 43, 35, 0.12));
+}
+
+.idea-result-body {
+  display: grid;
+  gap: 10px;
+}
+
+.idea-label {
+  width: fit-content;
+  margin: 0;
+  padding: 4px 10px;
+  color: #6b3d16;
+  background: #fff1a7;
+  border: 2px solid rgba(59, 43, 35, 0.28);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.idea-output h3 {
+  margin: 0;
+  font-size: clamp(21px, 2.2vw, 28px);
+  line-height: 1.25;
 }
 
 .idea-row {
@@ -649,14 +698,23 @@ h1 {
 }
 
 .idea-plus {
-  font-weight: 900;
+  display: none;
 }
 
-.idea-output p {
+#idea-copy {
   margin: 0;
   color: #5e4a40;
   font-weight: 800;
   line-height: 1.75;
+}
+
+.idea-link {
+  width: fit-content;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
 }
 
 .play-section {
@@ -1120,6 +1178,10 @@ h1 {
   .tag-workshop-illustration {
     transform: none;
   }
+
+  .idea-output {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 560px) {
@@ -1188,7 +1250,15 @@ h1 {
   }
 
   .idea-output {
-    min-height: 180px;
+    min-height: 0;
+  }
+
+  .idea-result-visual {
+    min-height: 170px;
+  }
+
+  .idea-result-visual img {
+    max-height: 170px;
   }
 
   .parts-tray {
