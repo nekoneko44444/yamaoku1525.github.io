@@ -26,7 +26,7 @@
   }
   body::before {
     content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background: url("pakitto-assets/pakitto-bg-waribashi-pile-cat-v2.webp") center center / cover no-repeat;
+    background: url("pakitto-assets/pakitto-bg-waribashi-pile-maneki-v3.webp") center center / cover no-repeat;
     transform: scale(1.01);
   }
   body::after {
@@ -249,7 +249,7 @@
     <button id="startBtn">割り箸を持つ</button>
   </section>
 </div>
-<img id="catGuide" class="cat-guide hidden" src="../game-assets/cat-crafter-neutral.webp" alt="割り箸割りを見守る猫耳の小屋番">
+<img id="catGuide" class="cat-guide hidden" src="../game-assets/maneki-crafter-neutral-v3.webp" alt="割り箸割りを見守る折れ耳の招き猫">
 
 <aside id="runHud" class="run-hud hidden" aria-live="polite">
   <section class="detail-panel"><div class="latest-line"><div class="latest-copy"><small>ひとつ前</small><strong id="liveRank">まだ記録なし</strong><span class="latest-type" id="liveType">今回の点数と比べられます</span></div><div class="latest-score"><span id="liveScore">--</span><small>点</small></div></div><div class="live-power" id="livePower"></div><div class="latest-metrics" id="liveMetrics"></div></section>
@@ -607,7 +607,7 @@
   }
   function finishRound(){
     state="cooldown";const q=lastJudge;
-    document.getElementById("catGuide").src=q.score>=70?"../game-assets/cat-crafter-happy.webp":"../game-assets/cat-crafter-flustered.webp";
+    document.getElementById("catGuide").src=q.score>=70?"../game-assets/maneki-crafter-happy-v3.webp":"../game-assets/maneki-crafter-troubled-v3.webp";
     const record={score:q.score,rank:q.rank,name:q.varietyName,pattern:q.hasPattern?"いちご柄":"無地",color:q.ink,comment:q.comment,metrics:q.metrics,powerL:q.powerL,powerR:q.powerR,time:Date.now()};
     const previous=history[0]||null;history.unshift(record);history=history.slice(0,10);localStorage.setItem("pakitto-history",JSON.stringify(history));renderHud(previous);showScoreFlash(q);clearTimeout(scoreSettleTimer);scoreSettleTimer=setTimeout(()=>renderCurrentDetail(record),360);
     document.getElementById("objectLabel").textContent="次の割り箸を準備中…";setTimeout(newPair,60);

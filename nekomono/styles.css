@@ -1193,7 +1193,7 @@ h1 {
 }
 
 .game-portal--pakitto .game-portal-visual img {
-  object-position: center 88%;
+  object-position: center;
 }
 
 .game-portal-copy {
