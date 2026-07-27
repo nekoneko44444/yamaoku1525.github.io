@@ -1119,10 +1119,6 @@ h1 {
   box-shadow: 7px 7px 0 rgba(59, 43, 35, 0.16);
 }
 
-.work-piece--wide {
-  grid-column: span 8;
-}
-
 .work-piece img {
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -1160,6 +1156,12 @@ h1 {
 @media (hover: hover) and (pointer: fine) {
   .work-piece:hover img {
     transform: scale(1.025);
+  }
+}
+
+@media (min-width: 901px) {
+  .work-piece:last-child {
+    grid-column: 5 / span 4;
   }
 }
 
@@ -1244,8 +1246,7 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .work-piece,
-  .work-piece--wide {
+  .work-piece {
     grid-column: span 6;
   }
 
@@ -1268,8 +1269,7 @@ h1 {
     gap: 16px;
   }
 
-  .work-piece,
-  .work-piece--wide {
+  .work-piece {
     grid-column: 1 / -1;
   }
 
