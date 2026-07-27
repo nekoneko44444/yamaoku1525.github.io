@@ -72,11 +72,6 @@
     backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); overflow: hidden;
   }
   .title-card { padding: 25px 24px 22px; align-self: flex-end; margin-bottom: min(5vh, 44px); }
-  .title-mascot {
-    position: absolute; z-index: 2; right: clamp(18px, 8vw, 128px); bottom: clamp(12px, 4vh, 46px);
-    width: clamp(170px, 22vw, 300px); max-height: 66vh; object-fit: contain;
-    filter: drop-shadow(0 18px 26px rgba(51, 43, 39, .2)); pointer-events: none;
-  }
   .cat-guide {
     position: fixed; z-index: 7; right: clamp(5px, 2vw, 22px);
     bottom: max(132px, calc(116px + env(safe-area-inset-bottom)));
@@ -206,7 +201,7 @@
   .score-flash.show { animation:flashResult .34s cubic-bezier(.2,.82,.25,1) both; }
   @keyframes scorePop { 0%{transform:scale(.72);opacity:.3}100%{transform:scale(1);opacity:1} }
   @keyframes flashResult { 0%{opacity:0;transform:translate(-50%,-44%) scale(.72)}18%{opacity:.94;transform:translate(-50%,-50%) scale(1.03)}52%{opacity:.9;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-56%) scale(.98)} }
-  @media(max-width:560px){ .run-hud{grid-template-columns:38% 1fr;gap:5px;left:6px;right:6px}.detail-panel,.history-panel{padding:6px 6px;border-radius:12px}.latest-copy strong{font-size:11px}.latest-score{font-size:24px;min-width:39px}.metric-mini{grid-template-columns:31px 1fr 18px;gap:2px}.history-list{grid-template-columns:repeat(4,1fr);gap:3px}.history-chip{padding:3px 1px}.history-chip small{font-size:5px}.history-chip b{font-size:9px}.latest-type{font-size:6px}.score-flash{top:40%;width:min(286px,calc(100vw - 24px));padding:11px 12px 12px}.settled-detail{left:6px;right:6px;bottom:154px;width:auto;min-width:0;padding:7px 9px 8px}.settled-detail .latest-copy strong{font-size:12px}.settled-detail .latest-score{min-width:44px;font-size:29px}.settled-detail .latest-metrics{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px}.settled-detail .metric-mini{grid-template-columns:40px 1fr 20px;gap:3px;font-size:7px}.title-mascot{right:-8px;bottom:2px;width:142px}.cat-guide{right:-4px;bottom:158px;width:78px} }
+  @media(max-width:560px){ .run-hud{grid-template-columns:38% 1fr;gap:5px;left:6px;right:6px}.detail-panel,.history-panel{padding:6px 6px;border-radius:12px}.latest-copy strong{font-size:11px}.latest-score{font-size:24px;min-width:39px}.metric-mini{grid-template-columns:31px 1fr 18px;gap:2px}.history-list{grid-template-columns:repeat(4,1fr);gap:3px}.history-chip{padding:3px 1px}.history-chip small{font-size:5px}.history-chip b{font-size:9px}.latest-type{font-size:6px}.score-flash{top:40%;width:min(286px,calc(100vw - 24px));padding:11px 12px 12px}.settled-detail{left:6px;right:6px;bottom:154px;width:auto;min-width:0;padding:7px 9px 8px}.settled-detail .latest-copy strong{font-size:12px}.settled-detail .latest-score{min-width:44px;font-size:29px}.settled-detail .latest-metrics{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px}.settled-detail .metric-mini{grid-template-columns:40px 1fr 20px;gap:3px;font-size:7px}.cat-guide{right:-4px;bottom:158px;width:78px} }
   @media (min-width: 760px) {
     body::before { background-position: center 45%; }
     .title-card { margin-left: max(24px, 8vw); margin-right: auto; align-self: center; }
@@ -243,7 +238,6 @@
 <div id="historyDetail" class="history-detail hidden" role="dialog" aria-modal="true" aria-label="履歴の詳細"><section class="history-detail-card detail-panel"><button id="historyDetailClose" class="history-detail-close" aria-label="閉じる">×</button><div id="historyDetailBody"></div></section></div>
 
 <div class="overlay" id="title">
-  <img class="title-mascot" src="../game-assets/cat-crafter-neutral.webp" alt="割り箸割りを見守る猫耳の小屋番">
   <section class="card title-card">
     <span class="eyebrow">ゆるいファミレス修行</span>
     <h1>パキット。</h1>

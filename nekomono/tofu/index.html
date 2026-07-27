@@ -45,11 +45,6 @@
       padding:max(28px,env(safe-area-inset-top)) 7vw max(28px,env(safe-area-inset-bottom));
     }
     .titleCopy { width:min(440px,54vw); }
-    .titleMascot {
-      position:absolute; right:clamp(24px,7vw,110px); bottom:clamp(12px,3vh,38px);
-      width:clamp(170px,21vw,290px); max-height:68vh; object-fit:contain;
-      filter:drop-shadow(0 18px 24px rgba(56,74,66,.2)); pointer-events:none;
-    }
     .eyebrow {
       display:inline-flex; align-items:center; gap:8px;
       color:var(--ink-soft); font-size:12px; letter-spacing:.18em;
@@ -191,7 +186,6 @@
           url("./assets/title-rainy-cafe-cat-v2.webp") 64% center / cover no-repeat;
       }
       .titleCopy { width:100%; }
-      .titleMascot { right:-10px; bottom:-14px; width:145px; opacity:.95; }
       h1 { font-size:42px; }
       .titleLead { max-width:310px; font-size:12px; line-height:1.7; }
       .rules { max-width:310px; }
@@ -238,7 +232,6 @@
       </div>
       <button class="primary" id="startBtn">のんびり始める</button>
     </div>
-    <img class="titleMascot" src="../game-assets/cat-crafter-neutral.webp" alt="豆腐切りを見守る猫耳の小屋番">
   </section>
 
   <div class="topHud hidden" id="topHud">
