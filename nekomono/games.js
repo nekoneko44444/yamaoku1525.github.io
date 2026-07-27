@@ -64,7 +64,9 @@
   function safeLoadBest() {
     try {
       ["tofu", "chopsticks"].forEach(function (key) {
-        var value = Number(window.localStorage.getItem("nekomono-best-" + key));
+        var stored = window.localStorage.getItem("nekomono-best-" + key);
+        if (stored === null) return;
+        var value = Number(stored);
         if (value >= 0 && value <= 100) bests[key] = value;
       });
     } catch (error) {
