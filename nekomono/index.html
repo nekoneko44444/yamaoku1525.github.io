@@ -9,7 +9,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://nekoneko44444.github.io/yamaoku1525.github.io/nekomono/img/nekomono-koya-illustration.jpg" />
   <title>ねこのモノづくり小屋 | 山や地域の物語を、持ち帰れる形に。</title>
-  <link rel="stylesheet" href="./styles.css?v=20260727-works2" />
+  <link rel="stylesheet" href="./styles.css?v=20260728-games1" />
 </head>
 <body>
   <header class="site-header" aria-label="サイトヘッダー">
@@ -70,77 +70,43 @@
       </figure>
     </section>
 
-    <section class="section game-lab" id="play">
-      <div class="game-lab-heading">
+    <section class="section game-portals" id="play">
+      <div class="game-portals-heading">
         <div class="section-head">
           <p class="eyebrow">Nekomono Mini Games</p>
-          <h2>ねこ耳店主の<br />ちいさな手仕事あそび</h2>
-          <p class="game-lead">指先ひとつで、まっすぐ・ぴったりを狙う2つのゲーム。マウスでもスマホでも遊べます。</p>
+          <h2>小屋の、ちいさな遊び</h2>
+          <p class="game-portals-lead">豆腐を等分する雨の日と、割り箸を気持ちよく割るひととき。どちらも独立した一つのゲームとして、ゆっくり遊べます。</p>
         </div>
-        <div class="guide-intro">
-          <img src="./img/nekomono-catgirl-guide.webp" alt="豆腐と割り箸を手にした猫耳の工房案内役" />
-          <p><strong>いらっしゃいませ！</strong><br />力を抜いて、すーっと。今日の手仕事スコアを見てみよう。</p>
+        <div class="portal-guide">
+          <img src="./game-assets/cat-crafter-neutral.webp" alt="静かに遊びを見守る猫耳の小屋番" />
+          <p><strong>静かな小屋番です。</strong><br />うまくいく日も、少しずれる日も。となりでのんびり見守ります。</p>
         </div>
       </div>
 
-      <div class="game-tabs" role="tablist" aria-label="遊ぶゲームを選ぶ">
-        <button class="game-tab is-active" id="tab-tofu" type="button" role="tab" aria-selected="true" aria-controls="game-panel" data-game="tofu">
-          <span class="tab-number">01</span>
-          <span><strong>豆腐きり</strong><small>ぴったり半分を狙う</small></span>
-        </button>
-        <button class="game-tab" id="tab-chopsticks" type="button" role="tab" aria-selected="false" aria-controls="game-panel" data-game="chopsticks">
-          <span class="tab-number">02</span>
-          <span><strong>割り箸割り</strong><small>まっすぐ最後まで割る</small></span>
-        </button>
-      </div>
+      <div class="game-portal-grid">
+        <a class="game-portal game-portal--tofu" href="./tofu/">
+          <div class="game-portal-visual">
+            <img src="./tofu/assets/title-rainy-cafe.webp" alt="雨の日の喫茶店で豆腐を切り分けるゲーム" loading="lazy" decoding="async" />
+          </div>
+          <div class="game-portal-copy">
+            <span class="game-portal-number">01 / TOFU</span>
+            <h3>おとうふ等分帖</h3>
+            <p>形の違うお豆腐を、2等分から4等分まで。全6問の記録に挑戦します。</p>
+            <span class="game-portal-cta">雨宿りして遊ぶ <b>→</b></span>
+          </div>
+        </a>
 
-      <div class="game-shell" id="game-panel" role="tabpanel" aria-labelledby="tab-tofu">
-        <aside class="game-coach">
-          <div class="coach-portrait">
-            <img src="./img/nekomono-catgirl-guide.webp" alt="" aria-hidden="true" />
+        <a class="game-portal game-portal--pakitto" href="./pakitto/">
+          <div class="game-portal-visual">
+            <img src="./pakitto/pakitto-assets/pakitto-bg-waribashi-pile.webp" alt="ファミレスのテーブルで割り箸を割るゲーム" loading="lazy" decoding="async" />
           </div>
-          <div class="coach-bubble" id="coach-message">お豆腐の上を、端から端へすーっと引いてね。</div>
-          <div class="best-score">
-            <span>今回の最高</span>
-            <strong id="best-score">--</strong>
-            <small>/ 100点</small>
+          <div class="game-portal-copy">
+            <span class="game-portal-number">02 / WARIBASHI</span>
+            <h3>パキット。</h3>
+            <p>左右の力、同時性、角度、速さを採点。気持ちのよい一本を何度でも狙えます。</p>
+            <span class="game-portal-cta">割り箸を持つ <b>→</b></span>
           </div>
-        </aside>
-
-        <div class="game-board">
-          <div class="game-board-head">
-            <div>
-              <p class="game-kicker" id="game-kicker">TOFU CUT</p>
-              <h3 id="game-title">お豆腐を、ぴったり半分に。</h3>
-            </div>
-            <span class="difficulty" id="difficulty">やさしい</span>
-          </div>
-          <p class="game-instruction" id="game-instruction">白いお豆腐を横切るように、指かマウスで一本の線を引きます。</p>
-
-          <div class="canvas-frame">
-            <canvas id="craft-game" width="760" height="500" tabindex="0" aria-label="豆腐を半分に切るゲーム画面"></canvas>
-            <div class="start-card" id="start-card">
-              <span class="start-icon" aria-hidden="true">✦</span>
-              <strong id="start-title">一刀入魂、でものんびり。</strong>
-              <span id="start-copy">線は何度でも引き直せます。</span>
-              <button class="button primary" id="start-game" type="button">豆腐を切る</button>
-            </div>
-          </div>
-
-          <div class="game-actions">
-            <button class="button secondary" id="reset-game" type="button">やり直す</button>
-            <p class="play-status" id="play-status" aria-live="polite">スタートを押してね。</p>
-          </div>
-
-          <div class="result-strip" id="result-strip" aria-live="polite">
-            <div class="result-score"><strong id="result-score">--</strong><span>点</span></div>
-            <div>
-              <strong id="result-title">結果はここに出ます</strong>
-              <p id="result-copy">左右の大きさが近いほど高得点です。</p>
-            </div>
-            <button class="result-retry" id="result-retry" type="button">もう一回</button>
-          </div>
-        </div>
+        </a>
       </div>
     </section>
 
@@ -247,6 +213,5 @@
     <small>© ねこのモノづくり小屋</small>
   </footer>
 
-  <script src="./games.js?v=20260727-game1"></script>
 </body>
 </html>
