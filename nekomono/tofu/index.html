@@ -224,6 +224,40 @@
       .finalFooter { align-items:center; gap:8px; margin-top:10px; }
       .finalChibi { width:100px; margin:0; }
     }
+    @media (min-width:601px) and (max-width:1100px) {
+      .backLink { min-height:58px; padding:13px 22px; font-size:25px; }
+      .topHud { top:max(92px,calc(72px + env(safe-area-inset-top))); padding:18px 24px; border-radius:24px; }
+      .roundNo { font-size:24px; }
+      .roundGoal { font-size:34px; line-height:1.25; }
+      .totalScore { min-width:150px; }
+      .totalScore span,.totalScore small { font-size:22px; }
+      .totalScore b { font-size:34px; }
+      .roundDots { gap:8px; }
+      .roundDots i { width:11px; height:11px; }
+      .roundDots i.on { width:30px; }
+      .hint {
+        top:max(275px,calc(255px + env(safe-area-inset-top)));
+        padding:14px 22px; font-size:28px; line-height:1.5;
+      }
+      .panelBottom {
+        width:96vw; padding:30px 32px calc(30px + env(safe-area-inset-bottom));
+        border-radius:34px 34px 0 0;
+      }
+      .score { font-size:78px; }
+      .score small { font-size:27px; }
+      .verdict { margin-top:10px; font-size:34px; }
+      .note { min-height:30px; margin-top:10px; font-size:26px; line-height:1.55; }
+      .scoreBreakdown { max-width:660px; gap:10px; margin-top:16px; }
+      .scoreDetail { padding:13px 16px; border-radius:14px; font-size:22px; }
+      .panelActions { gap:12px; }
+      .panelActions .primary,.panelActions .secondary {
+        min-height:66px; margin-top:20px; padding:15px 30px; font-size:27px;
+      }
+      .panelMascot { width:128px; top:-76px; }
+      .chibiGuide { width:190px; }
+      .chibiGuide.judged { top:340px; width:150px; }
+      .cutBar .primary,.cutBar .secondary { min-height:66px; padding:15px 30px; font-size:27px; }
+    }
     @media (max-height:690px) {
       .titleScreen { padding-top:26px; }
       h1 { font-size:36px; margin-top:5px; }
@@ -356,7 +390,8 @@
     addEventListener("resize", resize);
 
     function tofu() {
-      const s = Math.min(W * .72, H * .43, 330);
+      const desktopPhone = W > 600 && W <= 1100;
+      const s = Math.min(W * .76, H * .46, desktopPhone ? 480 : 330);
       return { cx:W/2, cy:H*.48, s, shape:ROUNDS[roundIdx].shape, w:s, h:s*.68, rr:17 };
     }
 
@@ -490,7 +525,7 @@
         if (knifeImage.complete && knifeImage.naturalWidth) {
           ctx.translate(tip.x+46,tip.y-12); ctx.rotate(-.45); ctx.scale(-1,1); ctx.drawImage(knifeImage,-7,-18,58,28);
         } else {
-          ctx.fillStyle="#4f6f7e"; ctx.font=(TOUCH_UI?"32px":"22px")+" sans-serif"; ctx.fillText("／",tip.x,tip.y);
+          ctx.fillStyle="#4f6f7e"; ctx.font=(TOUCH_UI?(W>600?"44px":"32px"):"22px")+" sans-serif"; ctx.fillText("／",tip.x,tip.y);
         }
       }
       ctx.restore();
@@ -505,10 +540,10 @@
         ctx.fillStyle=colors[label]||"#aab"; ctx.fillRect(gi.bx0+x*gi.CELL,gi.by0+y*gi.CELL,gi.CELL+.5,gi.CELL+.5);
       }
       ctx.restore();
-      ctx.save(); ctx.textAlign="center"; ctx.font=`800 ${TOUCH_UI?28:16}px sans-serif`;
+      ctx.save(); ctx.textAlign="center"; ctx.font=`800 ${TOUCH_UI?(W>600?40:28):16}px sans-serif`;
       judged.pieces.forEach(piece=>{
         const text=(piece.area/gi.totalArea*100).toFixed(1)+"%";
-        ctx.strokeStyle="rgba(255,255,255,.9)"; ctx.lineWidth=TOUCH_UI?8:5; ctx.strokeText(text,piece.cx,piece.cy+5);
+        ctx.strokeStyle="rgba(255,255,255,.9)"; ctx.lineWidth=TOUCH_UI?(W>600?11:8):5; ctx.strokeText(text,piece.cx,piece.cy+5);
         ctx.fillStyle="#365866"; ctx.fillText(text,piece.cx,piece.cy+5);
       });
       ctx.restore();
