@@ -222,6 +222,12 @@
     .run-hud .settled-detail.show{display:block;opacity:1;transform:none}
     .previous-panel .live-power,.previous-panel .latest-metrics{display:none}
     .previous-panel .latest-type{margin-top:4px}
+    .previous-panel.available{cursor:pointer;pointer-events:auto;transition:transform .14s,background .14s}
+    .previous-panel.available:active{transform:scale(.985)}
+    .previous-panel.available:focus-visible{outline:4px solid rgba(222,113,101,.38);outline-offset:2px}
+    .history-detail-card{width:min(94vw,560px);max-height:88dvh;overflow-y:auto;padding:20px 22px 22px}
+    .history-detail-title{margin-right:54px;font-size:19px}
+    .history-detail-close{top:9px;right:10px;width:46px;height:46px;min-height:46px;margin:0;padding:0;font-size:28px}
     .cat-guide{right:0;bottom:310px;width:108px}
   }
   @media(min-width:601px) and (max-width:1100px){
@@ -247,6 +253,9 @@
     .history-chip{min-height:66px;padding:10px 5px}
     .history-chip small{font-size:19px}.history-chip b{margin-top:5px;font-size:28px}
     .history-empty{padding:13px;font-size:21px}
+    .history-detail-card{width:min(94vw,820px);padding:27px 30px 30px;border-radius:26px}
+    .history-detail-title{margin-right:72px;font-size:27px}
+    .history-detail-close{top:14px;right:16px;width:58px;height:58px;min-height:58px;font-size:36px}
     .settled-detail .latest-copy strong{font-size:28px}.settled-detail .latest-score{min-width:94px;font-size:58px}
     .settled-detail .latest-metrics{gap:9px 18px}.settled-detail .metric-mini{grid-template-columns:112px 1fr 48px;gap:9px}
     .cat-guide{bottom:530px;width:160px}
@@ -256,6 +265,7 @@
     h1{font-size:48px;letter-spacing:.04em}
     .lead{font-size:19px}
     .howto b{font-size:18px}.howto span{font-size:16px}
+    .history-detail-card .latest-metrics{grid-template-columns:1fr}
   }
   @media (min-width: 760px) {
     body::before { background-position: center 45%; }
@@ -307,7 +317,7 @@
 <img id="catGuide" class="cat-guide hidden" src="../game-assets/maneki-crafter-neutral-v3.webp" alt="割り箸割りを見守る折れ耳の招き猫">
 
 <aside id="runHud" class="run-hud hidden" aria-live="polite">
-  <section class="detail-panel previous-panel"><div class="latest-line"><div class="latest-copy"><small>ひとつ前</small><strong id="liveRank">まだ記録なし</strong><span class="latest-type" id="liveType">今回の点数と比べられます</span></div><div class="latest-score"><span id="liveScore">--</span><small>点</small></div></div><div class="live-power" id="livePower"></div><div class="latest-metrics" id="liveMetrics"></div></section>
+  <section class="detail-panel previous-panel" id="previousPanel" role="button" tabindex="-1" aria-disabled="true" aria-label="ひとつ前の記録はまだありません"><div class="latest-line"><div class="latest-copy"><small>ひとつ前・タップで詳細</small><strong id="liveRank">まだ記録なし</strong><span class="latest-type" id="liveType">今回の点数と比べられます</span></div><div class="latest-score"><span id="liveScore">--</span><small>点</small></div></div><div class="live-power" id="livePower"></div><div class="latest-metrics" id="liveMetrics"></div></section>
   <section class="history-panel"><div class="history-head">それ以前の履歴（最大8本・タップで詳細）</div><div class="history-list" id="historyList"><div class="history-empty">まだ記録なし</div></div></section>
 </aside>
 
@@ -338,6 +348,7 @@
   let best = Number(localStorage.getItem("pakitto-best") || 0);
   let plays = Number(localStorage.getItem("pakitto-plays") || 0);
   let history=[]; try{history=JSON.parse(localStorage.getItem("pakitto-history")||"[]")}catch(_){history=[]} if(!Array.isArray(history))history=[]; history=history.slice(0,10);
+  let previousDetailRecord=null;
   let totalScore=Number(localStorage.getItem("pakitto-total"));if(!Number.isFinite(totalScore)||totalScore<0)totalScore=history.reduce((sum,r)=>sum+(Number(r.score)||0),0);
   let scoreSettleTimer=0;
   let grabs = {};
@@ -637,7 +648,12 @@
     return msg[worst.key] || j.comment;
   }
   function renderHud(record){
-    const rankEl=document.getElementById("liveRank"),scoreWrap=document.getElementById("liveScore").parentElement;
+    const rankEl=document.getElementById("liveRank"),scoreWrap=document.getElementById("liveScore").parentElement,previousPanel=document.getElementById("previousPanel");
+    previousDetailRecord=record||null;
+    previousPanel.classList.toggle("available",!!record);
+    previousPanel.tabIndex=record?0:-1;
+    previousPanel.setAttribute("aria-disabled",record?"false":"true");
+    previousPanel.setAttribute("aria-label",record?`ひとつ前の記録 ${record.score}点の詳細を見る`:"ひとつ前の記録はまだありません");
     rankEl.textContent=record?record.rank:"まだ記録なし";
     const typeName=record?((record.varietyName||record.name||"")+(record.pattern?" / "+record.pattern:"")):"";
     document.getElementById("liveType").textContent=record?(typeName+" / "+(record.comment||"")):"今回の点数と比べられます";
@@ -649,11 +665,11 @@
     document.getElementById("liveMetrics").innerHTML=metrics.length?metrics.map(m=>`<div class="metric-mini"><span>${m.label}</span><i><em style="width:${m.val}%;background:${barColor(m.val)}"></em></i><b>${m.val}</b></div>`).join(""):["バランス","同時性","角度","スピード"].map(x=>`<div class="metric-mini"><span>${x}</span><i><em style="width:0%"></em></i><b>--</b></div>`).join("");
     document.getElementById("historyList").innerHTML=history.slice(2,10).length?history.slice(2,10).map((r,i)=>`<button type="button" class="history-chip" data-history-index="${i+2}" style="--chip:${r.color||'#b9aaa0'}" aria-label="${r.name||'割り箸'} ${r.score}点の詳細"><small>#${Math.max(1,plays-i-2)} ${r.name||''}</small><b>${r.score}</b></button>`).join(""):`<div class="history-empty">それ以前の記録はまだありません</div>`;
   }
-  function openHistoryDetail(record){
+  function openHistoryDetail(record,title="履歴の詳細"){
     if(!record)return;
     const metrics=record.metrics||[],powerL=record.powerL??50,powerR=record.powerR??50,pattern=record.pattern?" / "+record.pattern:"";
     const metricHtml=metrics.length?metrics.map(m=>`<div class="metric-mini"><span>${m.label}</span><i><em style="width:${m.val}%;background:${barColor(m.val)}"></em></i><b>${m.val}</b></div>`).join(""):`<div class="history-empty">この古い記録には詳細データがありません</div>`;
-    document.getElementById("historyDetailBody").innerHTML=`<div class="history-detail-title">履歴の詳細</div><div class="latest-line"><div class="latest-copy"><small>${record.rank||"記録"}</small><strong>${record.name||"割り箸"}</strong><span class="latest-type">${pattern.replace(" / ","")}${record.comment?" / "+record.comment:""}</span></div><div class="latest-score"><span>${record.score}</span><small>点</small></div></div><div class="live-power"><div class="power-values"><span>左 ${powerL}%</span><span>右 ${powerR}%</span></div><div class="power-track-mini"><span class="pl" style="width:${powerL}%"></span><i></i><span class="pr" style="width:${powerR}%"></span></div></div><div class="latest-metrics">${metricHtml}</div>`;
+    document.getElementById("historyDetailBody").innerHTML=`<div class="history-detail-title">${title}</div><div class="latest-line"><div class="latest-copy"><small>${record.rank||"記録"}</small><strong>${record.name||"割り箸"}</strong><span class="latest-type">${pattern.replace(" / ","")}${record.comment?" / "+record.comment:""}</span></div><div class="latest-score"><span>${record.score}</span><small>点</small></div></div><div class="live-power"><div class="power-values"><span>左 ${powerL}%</span><span>右 ${powerR}%</span></div><div class="power-track-mini"><span class="pl" style="width:${powerL}%"></span><i></i><span class="pr" style="width:${powerR}%"></span></div></div><div class="latest-metrics">${metricHtml}</div>`;
     document.getElementById("historyDetail").classList.remove("hidden");
   }  function renderCurrentDetail(record){
     const el=document.getElementById("settledDetail"),metrics=record.metrics||[],powerL=record.powerL??50,powerR=record.powerR??50;
@@ -686,6 +702,8 @@
     audio(); document.getElementById("title").classList.add("hidden"); document.getElementById("runHud").classList.remove("hidden"); document.getElementById("catGuide").classList.remove("hidden"); renderHud(history[0] || null); newPair();
   });
   document.getElementById("historyList").addEventListener("click",e=>{const button=e.target.closest("[data-history-index]");if(button)openHistoryDetail(history[Number(button.dataset.historyIndex)])});
+  document.getElementById("previousPanel").addEventListener("click",()=>openHistoryDetail(previousDetailRecord,"ひとつ前の詳細"));
+  document.getElementById("previousPanel").addEventListener("keydown",e=>{if(previousDetailRecord&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openHistoryDetail(previousDetailRecord,"ひとつ前の詳細")}});
   document.getElementById("historyDetail").addEventListener("click",e=>{if(e.target.id==="historyDetail"||e.target.closest("#historyDetailClose"))document.getElementById("historyDetail").classList.add("hidden")});
   addEventListener("keydown",e=>{if(e.key==="Escape")document.getElementById("historyDetail").classList.add("hidden")});  window.__game = { get state() { return state; }, get last() { return lastJudge; }, get history() { return history; } };
   loop();
