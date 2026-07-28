@@ -178,7 +178,7 @@
       filter:drop-shadow(0 8px 10px rgba(52,79,88,.18)); pointer-events:none;
     }
 
-    @media (max-width:680px) {
+    @media (max-width:1100px), (pointer:coarse), (hover:none) {
       .titleScreen {
         align-items:flex-start; padding:7vh 24px 24px;
         background:
@@ -186,37 +186,43 @@
           url("./assets/title-rainy-cafe-cat-sister-v5.webp") 64% center / cover no-repeat;
       }
       .titleCopy { width:100%; }
-      h1 { font-size:42px; }
-      .backLink { font-size:14px; }
-      .eyebrow { font-size:14px; }
-      .titleLead { max-width:330px; font-size:16px; line-height:1.75; }
-      .rules { max-width:310px; }
-      .rule { padding:9px 10px; font-size:14px; line-height:1.5; }
-      .rule b { font-size:15px; }
-      .primary,.secondary { font-size:16px; }
-      .roundNo { font-size:13px; }
-      .roundGoal { font-size:16px; }
-      .totalScore span { font-size:11px; }
-      .totalScore b { font-size:17px; }
-      .totalScore small { font-size:11px; }
-      .hint { font-size:14px; line-height:1.45; text-align:center; }
-      .note { font-size:14px; }
-      .scoreDetail { font-size:13px; }
-      .chibiGuide { left:-7px; width:118px; }
-      .chibiGuide.judged { left:4px; top:104px; bottom:auto; width:86px; }
+      h1 { font-size:50px; }
+      .backLink { min-height:48px; padding:10px 18px; font-size:18px; }
+      .eyebrow { font-size:18px; }
+      .titleLead { max-width:440px; font-size:20px; line-height:1.75; }
+      .rules { max-width:440px; }
+      .rule { padding:11px 13px; font-size:18px; line-height:1.5; }
+      .rule b { font-size:20px; }
+      .primary,.secondary { min-height:52px; font-size:20px; }
+      .topHud { top:max(72px,calc(58px + env(safe-area-inset-top))); width:94vw; max-width:none; padding:13px 18px; }
+      .roundNo { font-size:17px; }
+      .roundGoal { font-size:22px; }
+      .totalScore { min-width:104px; }
+      .totalScore span { font-size:15px; }
+      .totalScore b { font-size:22px; }
+      .totalScore small { font-size:15px; }
+      .hint { top:max(220px,calc(206px + env(safe-area-inset-top))); max-width:94vw; padding:10px 16px; font-size:19px; line-height:1.5; text-align:center; }
+      .panelBottom { width:94vw; max-width:none; padding:24px 24px calc(24px + env(safe-area-inset-bottom)); }
+      .score { font-size:58px; }
+      .score small { font-size:19px; }
+      .verdict { font-size:24px; }
+      .note { font-size:18px; }
+      .scoreDetail { padding:10px 12px; font-size:16px; }
+      .chibiGuide { left:4px; width:150px; }
+      .chibiGuide.judged { left:8px; top:274px; bottom:auto; width:112px; }
       .finalScreen { padding:14px; }
       .finalCard {
-        width:min(94vw,390px); max-height:calc(100dvh - 28px); overflow:auto;
-        padding:26px 18px 18px;
+        width:94vw; max-height:calc(100dvh - 28px); overflow:auto;
+        padding:30px 22px 22px;
       }
-      .finalCard h2 { font-size:25px; }
-      .finalScore { margin:8px 0; font-size:40px; }
-      .finalKicker { font-size:13px; }
-      .finalScore small { font-size:15px; }
+      .finalCard h2 { font-size:32px; }
+      .finalScore { margin:10px 0; font-size:52px; }
+      .finalKicker { font-size:17px; }
+      .finalScore small { font-size:19px; }
       .roundList { padding:10px 13px; }
-      .roundRow { padding:4px 0; font-size:14px; }
+      .roundRow { padding:6px 0; font-size:18px; }
       .finalFooter { align-items:center; gap:8px; margin-top:10px; }
-      .finalChibi { width:76px; margin:0; }
+      .finalChibi { width:100px; margin:0; }
     }
     @media (max-height:690px) {
       .titleScreen { padding-top:26px; }
@@ -299,6 +305,7 @@
 
     const cv = document.getElementById("cv");
     const ctx = cv.getContext("2d");
+    const TOUCH_UI = matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
     const bgImage = new Image();
     const knifeImage = new Image();
     bgImage.src = "./assets/gameplay-rainy-table.webp";
@@ -483,7 +490,7 @@
         if (knifeImage.complete && knifeImage.naturalWidth) {
           ctx.translate(tip.x+46,tip.y-12); ctx.rotate(-.45); ctx.scale(-1,1); ctx.drawImage(knifeImage,-7,-18,58,28);
         } else {
-          ctx.fillStyle="#4f6f7e"; ctx.font="22px sans-serif"; ctx.fillText("／",tip.x,tip.y);
+          ctx.fillStyle="#4f6f7e"; ctx.font=(TOUCH_UI?"32px":"22px")+" sans-serif"; ctx.fillText("／",tip.x,tip.y);
         }
       }
       ctx.restore();
@@ -498,10 +505,10 @@
         ctx.fillStyle=colors[label]||"#aab"; ctx.fillRect(gi.bx0+x*gi.CELL,gi.by0+y*gi.CELL,gi.CELL+.5,gi.CELL+.5);
       }
       ctx.restore();
-      ctx.save(); ctx.textAlign="center"; ctx.font="800 16px sans-serif";
+      ctx.save(); ctx.textAlign="center"; ctx.font=`800 ${TOUCH_UI?28:16}px sans-serif`;
       judged.pieces.forEach(piece=>{
         const text=(piece.area/gi.totalArea*100).toFixed(1)+"%";
-        ctx.strokeStyle="rgba(255,255,255,.9)"; ctx.lineWidth=5; ctx.strokeText(text,piece.cx,piece.cy+5);
+        ctx.strokeStyle="rgba(255,255,255,.9)"; ctx.lineWidth=TOUCH_UI?8:5; ctx.strokeText(text,piece.cx,piece.cy+5);
         ctx.fillStyle="#365866"; ctx.fillText(text,piece.cx,piece.cy+5);
       });
       ctx.restore();
