@@ -40,7 +40,7 @@
       position:fixed; inset:0; z-index:20;
       background:
         linear-gradient(90deg,rgba(255,253,248,.97) 0%,rgba(255,253,248,.9) 38%,rgba(255,253,248,.2) 66%,rgba(255,253,248,.03) 100%),
-        url("./assets/title-rainy-cafe-cat-v2.webp") 66% center / cover no-repeat;
+        url("./assets/title-rainy-cafe-cat-sister-v5.webp") 66% center / cover no-repeat;
       display:flex; align-items:center;
       padding:max(28px,env(safe-area-inset-top)) 7vw max(28px,env(safe-area-inset-bottom));
     }
@@ -183,7 +183,7 @@
         align-items:flex-start; padding:7vh 24px 24px;
         background:
           linear-gradient(180deg,rgba(255,253,248,.97) 0%,rgba(255,253,248,.87) 34%,rgba(255,253,248,.08) 65%),
-          url("./assets/title-rainy-cafe-cat-v2.webp") 64% center / cover no-repeat;
+          url("./assets/title-rainy-cafe-cat-sister-v5.webp") 64% center / cover no-repeat;
       }
       .titleCopy { width:100%; }
       h1 { font-size:42px; }
@@ -260,7 +260,7 @@
     </div>
   </div>
   <div class="hint hidden" id="hint"></div>
-  <img class="chibiGuide hidden" id="chibiGuide" src="../game-assets/cat-crafter-neutral.webp" alt="豆腐切りを見守る猫耳の女の子">
+  <img class="chibiGuide hidden" id="chibiGuide" src="../game-assets/tofu-cat-sister-neutral-v5.webp" alt="豆腐切りを見守る招き猫の妹">
 
   <div class="cutBar" id="cutBar">
     <button class="secondary" id="clearBtn">線を消す</button>
@@ -287,7 +287,7 @@
       <div class="finalScore" id="finalScore">500<small> / 600点</small></div>
       <div class="roundList" id="finalList"></div>
       <div class="finalFooter">
-        <img class="finalChibi" id="finalChibi" src="../game-assets/cat-crafter-neutral.webp" alt="結果を見守る猫耳の女の子">
+        <img class="finalChibi" id="finalChibi" src="../game-assets/tofu-cat-sister-neutral-v5.webp" alt="結果を見守る招き猫の妹">
         <button class="primary" id="againBtn">もう一度、のんびり</button>
       </div>
     </div>
@@ -317,10 +317,10 @@
     let scores = [];
 
     const CHIBI_ASSETS = {
-      neutral:"../game-assets/cat-crafter-neutral.webp",
-      serious:"../game-assets/cat-crafter-neutral.webp",
-      happy:"../game-assets/cat-crafter-happy.webp",
-      flustered:"../game-assets/cat-crafter-flustered.webp"
+      neutral:"../game-assets/tofu-cat-sister-neutral-v5.webp",
+      serious:"../game-assets/tofu-cat-sister-neutral-v5.webp",
+      happy:"../game-assets/tofu-cat-sister-happy-v5.webp",
+      flustered:"../game-assets/tofu-cat-sister-troubled-v5.webp"
     };
     Object.values(CHIBI_ASSETS).forEach(src=>{ const img=new Image(); img.src=src; });
     function setChibi(mood="neutral") {
