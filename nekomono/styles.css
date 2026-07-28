@@ -1290,7 +1290,12 @@ h1 {
   }
 
   .portal-guide p {
-    font-size: 11px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .portal-guide strong {
+    font-size: 16px;
   }
 
   .game-portal {
