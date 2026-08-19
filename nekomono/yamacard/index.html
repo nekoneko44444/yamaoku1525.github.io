@@ -71,6 +71,14 @@
       <input type="text" id="kanaIn" placeholder="例: にゃさ">
       <label>紹介文（下の茶色エリア・改行そのまま反映・推奨 17文字×4行）</label>
       <textarea id="bioIn" placeholder="ホームマウンテンの中津峰山や&#10;奥槍戸山の家によく出没してます🐻"></textarea>
+      <div id="bioRefWrap" style="display:none">
+        <label>取得した紹介文（参考。全文はカードに収まらないことが多いので、使う分だけ入れて整えてください）</label>
+        <textarea id="bioRef" readonly style="min-height:80px; color:#6b543c; background:#faf6ea"></textarea>
+        <div class="btns" style="margin-top:4px">
+          <button id="bioUse4" class="sub" type="button">先頭4行を紹介文へ</button>
+          <button id="bioUseAll" class="sub" type="button">全文を紹介文へ</button>
+        </div>
+      </div>
       <label>アイコン写真（表面の丸枠）</label>
       <div class="drop" id="drop">クリックして選択 / ドラッグ&ドロップ / Ctrl+V 貼り付け</div>
       <input type="file" id="fileIn" accept="image/*" style="display:none">
@@ -125,8 +133,8 @@
         <div><label>行間</label><input type="range" id="bioLine" min="120" max="200" value="150"></div>
         <div><label>上下位置</label><input type="range" id="bioY" min="-120" max="120" value="0"></div>
       </div>
-      <label style="margin-top:12px">YAMAP URL行の文言（変えたい場合だけ入力。空なら標準表記）</label>
-      <input type="text" id="urlText" placeholder="▲YAMAP　HTTPS://YAMAP.COM/" style="max-width:480px">
+      <label style="margin-top:12px">YAMAP URL行の文言</label>
+      <input type="text" id="urlText" value="▲YAMAP　HTTPS://YAMAP.COM/" style="max-width:480px">
       <div class="zctrl">
         <div><label>URL行の大きさ <span class="num" id="v_urlSize"></span></label><input type="range" id="urlSize" min="20" max="64" value="40"></div>
         <div><label>URL行の左右位置</label><input type="range" id="urlX" min="-400" max="400" value="0"></div>
@@ -2510,7 +2518,7 @@ async function init(){
   fontsReady = true;
   // 前回の作業状態を復元（写真以外）
   try {
-    const saved = localStorage.getItem("yamanoie-card-state-v2");
+    const saved = localStorage.getItem("yamanoie-card-state-v3");
     if(saved) await applySettings(JSON.parse(saved));
   } catch(e){}
   syncInputs();
@@ -2720,9 +2728,13 @@ async function autoFetch(){
     state.name = user.name; $("nameIn").value = user.name;
     res.push('<span class="ok">✔ 名前: '+user.name+'</span>');
     if(user.description){
-      state.bio = user.description; $("bioIn").value = user.description;
-      res.push('<span class="ok">✔ 紹介文</span>');
-    } else res.push('<span class="ng">－ 紹介文: 未設定のようです</span>');
+      $("bioRef").value = user.description;
+      $("bioRefWrap").style.display = "block";
+      res.push('<span class="ok">✔ 紹介文を取得（下の参考欄から使う分だけ紹介文へ入れてください）</span>');
+    } else {
+      $("bioRefWrap").style.display = "none";
+      res.push('<span class="ng">－ 紹介文: 未設定のようです</span>');
+    }
     const av = user.image && (user.image.url || user.image.base_url);
     if(av && !/no_user_icon/.test(av)){
       let got = false;
@@ -2823,7 +2835,7 @@ function syncInputs(){
   $("kanaSize").value = state.kanaSize; $("bioSize").value = state.bioSize;
   $("bioLine").value = Math.round(state.bioLine*100); $("bioY").value = state.bioY;
   $("photoZoom").value = Math.round(state.photoZoom*100);
-  $("urlText").value = (state.urlText === URL_DEFAULT) ? "" : state.urlText; $("urlSize").value = state.urlSize;
+  $("urlText").value = state.urlText; $("urlSize").value = state.urlSize;
   $("urlX").value = state.urlX; $("urlY").value = state.urlY;
   syncLabels();
 }
@@ -2833,7 +2845,7 @@ async function applySettings(o){
   syncInputs(); updateProfLink(); render();
 }
 function autosave(){
-  try { localStorage.setItem("yamanoie-card-state-v2", JSON.stringify(collectSettings(false))); } catch(e){}
+  try { localStorage.setItem("yamanoie-card-state-v3", JSON.stringify(collectSettings(false))); } catch(e){}
 }
 function updateProfLink(){
   const el = $("profLink");
@@ -2859,7 +2871,10 @@ function bind(){
     fr.readAsText(f);
     e.target.value = "";
   };
-  $("urlText").oninput = e => { state.urlText = e.target.value || URL_DEFAULT; render(); };
+  $("urlText").oninput = e => { state.urlText = e.target.value; render(); };
+  const setBio = t => { state.bio = t; $("bioIn").value = t; render(); };
+  $("bioUse4").onclick = () => setBio($("bioRef").value.split("\n").filter(l => l.trim() !== "").slice(0,4).join("\n"));
+  $("bioUseAll").onclick = () => setBio($("bioRef").value);
   $("urlSize").oninput = e => { state.urlSize = parseInt(e.target.value); syncLabels(); render(); };
   $("urlX").oninput = e => { state.urlX = parseInt(e.target.value); render(); };
   $("urlY").oninput = e => { state.urlY = parseInt(e.target.value); render(); };
