@@ -60,7 +60,7 @@
 </style>
 </head>
 <body>
-<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v3.6</small>
+<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v3.7</small>
 <span style="float:right"><button class="hbtn" onclick="refresh(true)" title="最新に更新">🔄</button><button class="hbtn" id="lockBtn" onclick="toggleAdmin()">🔒</button></span></header>
 <main id="app"><div class="card">読み込み中…</div></main>
 <nav id="nav"></nav>
@@ -311,6 +311,21 @@ function renderHome(){
   $("#app").innerHTML=`
   ${q.length?`<div class="warn">📴 未送信のオフライン記録が${q.length}件あります（通信復帰時に自動送信）</div>`:""}
   ${low.length?`<div class="warn">⚠ 補充が必要：${low.map(x=>`${pdisp(x.p)}（残${x.total}）`).join("、")}</div>`:""}
+  ${(()=>{ // 日次販売サマリー（今日／昨日）
+    const off=window._dayOff||0;
+    const dstr=jst(new Date(Date.now()-off*86400000)).slice(0,10);
+    const day=salesAgg(dstr);
+    const dq=day.reduce((a,s)=>a+s.qty,0), da=day.reduce((a,s)=>a+s.amt,0);
+    return `<div class="card"><h2>日次の販売</h2>
+      <div class="seg" style="margin-bottom:8px">
+        <button class="${off===0?'on':''}" onclick="window._dayOff=0;render()">今日</button>
+        <button class="${off===1?'on':''}" onclick="window._dayOff=1;render()">昨日</button>
+      </div>
+      <div style="font-size:24px;font-weight:bold">${yen(da)} <span class="muted" style="font-size:14px">（${dq}点・${dstr.slice(5)}）</span></div>
+      ${day.length?`<table><tr><th>商品</th><th>場所</th><th>数</th><th>金額</th></tr>
+        ${day.map(s=>`<tr><td>${pname(s.pid)}</td><td>${s.place}</td><td>${s.qty}</td><td>${yen(s.amt)}</td></tr>`).join("")}
+      </table>`:`<p class="muted">販売記録はありません</p>`}
+    </div>`;})()}
   <div class="card"><h2>今月の売上（${m}）</h2>
     <div style="font-size:28px;font-weight:bold">${yen(ta)}</div>
     <p class="muted">前月 ${yen(tp)}${ratio!=null?` ／ 前月比 ${ratio}%`:""}</p>
@@ -362,10 +377,12 @@ function renderSell(){
     <div id="varArea"></div>
     <div id="qtyArea"></div>
   </div>
-  ${(()=>{ // 今日この場所で記録した直近3件（「さっき記録したっけ?」の確認用）
+  ${(()=>{ // 今日この場所で記録した直近3件＋合計（「さっき記録したっけ?」とレジ締め用）
     const today=jst(new Date()).slice(0,10);
     const recent=movements.filter(v=>v.kind==="販売"&&v.place_from===place&&jst(v.at).slice(0,10)===today).slice(-3).reverse();
-    return recent.length?`<div class="card"><h2>今日の記録（この場所・直近${recent.length}件）</h2><table>
+    const net=salesAgg(today).filter(s=>s.place===place);
+    const nq=net.reduce((a,s)=>a+s.qty,0), na=net.reduce((a,s)=>a+s.amt,0);
+    return recent.length?`<div class="card"><h2>今日の販売：${nq}点・${yen(na)}（この場所）</h2><table>
       ${recent.map(v=>`<tr><td>${jst(v.at).slice(11,16)}</td><td>${pname(v.product_id)}</td><td>×${v.qty}</td>
         <td>${movements.some(x=>x.reverses===v.id)?"取消済":typeof v.id!=="number"?"送信待ち":`<button class="sub-btn" style="margin:0;padding:2px 8px;width:auto" onclick="undoById(${v.id})">取消</button>`}</td></tr>`).join("")}
     </table></div>`:"";})()}`;
