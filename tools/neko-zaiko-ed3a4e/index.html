@@ -60,7 +60,7 @@
 </style>
 </head>
 <body>
-<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v3.7</small>
+<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v3.8</small>
 <span style="float:right"><button class="hbtn" onclick="refresh(true)" title="最新に更新">🔄</button><button class="hbtn" id="lockBtn" onclick="toggleAdmin()">🔒</button></span></header>
 <main id="app"><div class="card">読み込み中…</div></main>
 <nav id="nav"></nav>
@@ -311,19 +311,40 @@ function renderHome(){
   $("#app").innerHTML=`
   ${q.length?`<div class="warn">📴 未送信のオフライン記録が${q.length}件あります（通信復帰時に自動送信）</div>`:""}
   ${low.length?`<div class="warn">⚠ 補充が必要：${low.map(x=>`${pdisp(x.p)}（残${x.total}）`).join("、")}</div>`:""}
-  ${(()=>{ // 日次販売サマリー（今日／昨日）
-    const off=window._dayOff||0;
-    const dstr=jst(new Date(Date.now()-off*86400000)).slice(0,10);
-    const day=salesAgg(dstr);
-    const dq=day.reduce((a,s)=>a+s.qty,0), da=day.reduce((a,s)=>a+s.amt,0);
-    return `<div class="card"><h2>日次の販売</h2>
+  ${(()=>{ // 販売サマリー（今日／昨日／日付指定／週）
+    const today=jst(new Date()).slice(0,10);
+    const mode=window._dayMode||"today";
+    const pick=window._dayDate||today;
+    let days;
+    if(mode==="today") days=[today];
+    else if(mode==="yest") days=[jst(new Date(Date.now()-86400000)).slice(0,10)];
+    else if(mode==="date") days=[pick];
+    else{ // 週（選んだ日を含む月〜日）
+      const d=new Date(pick+"T12:00:00+09:00");
+      const mon=new Date(d.getTime()-((d.getUTCDay()+6)%7)*86400000);
+      days=[...Array(7)].map((_,i)=>jst(new Date(mon.getTime()+i*86400000)).slice(0,10));
+    }
+    const merged={}, perDay=[];
+    for(const ds of days){
+      const list=salesAgg(ds);
+      perDay.push({ds, qty:list.reduce((a,s)=>a+s.qty,0), amt:list.reduce((a,s)=>a+s.amt,0)});
+      list.forEach(s=>{const k=s.place+"|"+s.pid;
+        if(!merged[k])merged[k]={...s}; else{merged[k].qty+=s.qty; merged[k].amt+=s.amt;}});
+    }
+    const rows=Object.values(merged).filter(s=>s.qty!==0);
+    const dq=rows.reduce((a,s)=>a+s.qty,0), da=rows.reduce((a,s)=>a+s.amt,0);
+    const label=mode==="week"?`${days[0].slice(5)}〜${days[6].slice(5)}`:days[0].slice(5);
+    return `<div class="card"><h2>販売サマリー</h2>
       <div class="seg" style="margin-bottom:8px">
-        <button class="${off===0?'on':''}" onclick="window._dayOff=0;render()">今日</button>
-        <button class="${off===1?'on':''}" onclick="window._dayOff=1;render()">昨日</button>
+        ${[["today","今日"],["yest","昨日"],["date","日付指定"],["week","週"]].map(([k,n])=>
+          `<button class="${mode===k?'on':''}" onclick="window._dayMode='${k}';render()">${n}</button>`).join("")}
       </div>
-      <div style="font-size:24px;font-weight:bold">${yen(da)} <span class="muted" style="font-size:14px">（${dq}点・${dstr.slice(5)}）</span></div>
-      ${day.length?`<table><tr><th>商品</th><th>場所</th><th>数</th><th>金額</th></tr>
-        ${day.map(s=>`<tr><td>${pname(s.pid)}</td><td>${s.place}</td><td>${s.qty}</td><td>${yen(s.amt)}</td></tr>`).join("")}
+      ${mode==="date"||mode==="week"?`<input type="date" value="${pick}" onchange="window._dayDate=this.value;render()" style="margin-bottom:8px">`:""}
+      <div style="font-size:24px;font-weight:bold">${yen(da)} <span class="muted" style="font-size:14px">（${dq}点・${label}）</span></div>
+      ${mode==="week"?`<table><tr><th>日</th><th>数</th><th>金額</th></tr>
+        ${perDay.map(x=>`<tr><td>${x.ds.slice(5)}</td><td>${x.qty}</td><td>${yen(x.amt)}</td></tr>`).join("")}</table><br>`:""}
+      ${rows.length?`<table><tr><th>商品</th><th>場所</th><th>数</th><th>金額</th></tr>
+        ${rows.map(s=>`<tr><td>${pname(s.pid)}</td><td>${s.place}</td><td>${s.qty}</td><td>${yen(s.amt)}</td></tr>`).join("")}
       </table>`:`<p class="muted">販売記録はありません</p>`}
     </div>`;})()}
   <div class="card"><h2>今月の売上（${m}）</h2>
