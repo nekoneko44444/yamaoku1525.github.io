@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#7a5c3e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<title>ねこのモノづくり小屋 在庫・販売記録</title>
+<style>
+  :root{
+    --main:#7a5c3e; --accent:#e8804f; --bg:#faf6f0; --card:#fff;
+    --line:#e5dcd0; --text:#3a3128; --sub:#8a7a66; --ok:#3d8b5f; --ng:#c94f3d;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{margin:0; font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif; background:var(--bg); color:var(--text); padding-bottom:70px;}
+  header{background:var(--main); color:#fff; padding:10px 14px; font-size:16px; font-weight:bold; position:sticky; top:0; z-index:10;}
+  header small{font-weight:normal; opacity:.8; margin-left:8px; font-size:11px;}
+  .hbtn{background:none; border:none; font-size:17px; padding:0 6px; cursor:pointer;}
+  main{padding:12px; max-width:640px; margin:0 auto;}
+  nav{position:fixed; bottom:0; left:0; right:0; display:flex; background:#fff; border-top:1px solid var(--line); z-index:10;}
+  nav button{flex:1; border:none; background:none; padding:10px 0 12px; font-size:12px; color:var(--sub);}
+  nav button.active{color:var(--accent); font-weight:bold;}
+  nav button .ico{display:block; font-size:18px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px;}
+  h2{font-size:14px; margin:0 0 8px; color:var(--main);}
+  label{display:block; font-size:12px; color:var(--sub); margin:8px 0 2px;}
+  input,select,textarea{width:100%; padding:10px; font-size:16px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--text);}
+  ::placeholder{color:#cdc2b0; opacity:1; font-style:italic;}
+  .row{display:flex; gap:8px;}
+  .row>*{flex:1;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .pbtn{border:1px solid var(--line); background:#fff; border-radius:12px; padding:12px 8px; text-align:left; font-size:14px;}
+  .pbtn b{display:block; margin-bottom:4px;}
+  .pbtn .price{color:var(--accent); font-weight:bold;}
+  .pbtn .stock{color:var(--sub); font-size:12px; margin-left:6px;}
+  .pbtn.sel{border:2px solid var(--accent); background:#fff4ec;}
+  .qtybar{display:flex; align-items:center; gap:10px; margin:10px 0;}
+  .qtybar button{width:52px; height:52px; font-size:24px; border-radius:12px; border:1px solid var(--line); background:#fff;}
+  .qtybar .qty{font-size:28px; font-weight:bold; min-width:48px; text-align:center;}
+  .big{width:100%; padding:14px; font-size:17px; font-weight:bold; color:#fff; background:var(--accent); border:none; border-radius:12px;}
+  .big:disabled{opacity:.4;}
+  .sub-btn{width:100%; padding:10px; font-size:14px; background:#fff; color:var(--main); border:1px solid var(--main); border-radius:10px; margin-top:8px;}
+  .seg{display:flex; gap:6px;}
+  .seg button{flex:1; padding:12px 4px; font-size:15px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--text);}
+  .seg button.on{background:var(--accent); color:#fff; border-color:var(--accent); font-weight:bold;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th,td{border-bottom:1px solid var(--line); padding:6px 4px; text-align:right; white-space:nowrap;}
+  th:first-child,td:first-child{text-align:left;}
+  th{color:var(--sub); font-weight:normal; font-size:11px;}
+  .neg{color:var(--ng); font-weight:bold;}
+  .pos{color:var(--ok);}
+  .muted{color:var(--sub); font-size:12px;}
+  #toast{position:fixed; bottom:76px; left:50%; transform:translateX(-50%); background:var(--text); color:#fff; padding:10px 16px; border-radius:20px; font-size:14px; display:none; z-index:20; max-width:90%;}
+  #toast button{margin-left:10px; background:var(--accent); border:none; color:#fff; border-radius:12px; padding:4px 10px; font-size:13px;}
+  .tag{display:inline-block; font-size:10px; border:1px solid var(--line); border-radius:8px; padding:1px 6px; color:var(--sub); margin-left:4px;}
+  .warn{background:#fdf0ee; border:1px solid #f0c4bc; color:var(--ng); border-radius:8px; padding:8px; font-size:13px; margin-bottom:8px;}
+  .section-total{font-weight:bold; background:#f6efe6;}
+</style>
+</head>
+<body>
+<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v3.6</small>
+<span style="float:right"><button class="hbtn" onclick="refresh(true)" title="最新に更新">🔄</button><button class="hbtn" id="lockBtn" onclick="toggleAdmin()">🔒</button></span></header>
+<main id="app"><div class="card">読み込み中…</div></main>
+<nav id="nav"></nav>
+<div id="toast"></div>
+
+<script>
+/* ================= 設定 =================
+   Supabase の URL と publishable キーを設定してください。
+   注意: sb_publishable_ キーは apikey ヘッダのみに載せる（Authorizationに載せると401） */
+const CONFIG = {
+  SUPABASE_URL: "https://wycktxfqtuefmfeobnmi.supabase.co",
+  API_KEY: "sb_publishable_iky74aZR5EjPfavKGoo9zg_AE-YaXR6",
+  HOME: "自宅",                                        // 自分の手元在庫の場所名
+  PLACES: ["山の家", "平の里", "イベント"],             // 委託・販売場所の候補
+  OWNER: "ねこのモノづくり小屋",                         // 自分（このツールの持ち主）の委託者名
+  DEFAULT_RATE: 0.25,                                  // 委託者マスタにない場合の手数料率
+  CUSTODIANS: {                                        // 場所別の管理責任者。委託者名と異なる場所＝委託販売
+    "自宅": "ねこのモノづくり小屋", "イベント": "ねこのモノづくり小屋",
+    "山の家": "阿波山雅", "平の里": "阿波山雅"
+  },
+  NTFY_TOPIC: "",  // 低在庫アラートのntfyトピック名（空なら通知しない）
+  ADMIN_PIN: "7025"  // 管理タブ（入出庫/月次/ホーム/商品）を開くPIN。空なら全タブ常時表示
+};
+/* ======================================== */
+
+const $ = (s)=>document.querySelector(s);
+let products=[], movements=[], settlements=[], suppliers=[];
+let tab="sell", selProduct=null, qty=1;
+
+async function api(path, opt={}){
+  const res = await fetch(CONFIG.SUPABASE_URL + "/rest/v1/" + path, {
+    ...opt,
+    headers: {
+      "apikey": CONFIG.API_KEY,           // publishableキーはapikeyのみ
+      "Content-Type": "application/json",
+      "Prefer": opt.method==="POST" ? "return=representation" : (opt.headers?.Prefer||""),
+      ...(opt.headers||{})
+    }
+  });
+  if(!res.ok){ throw new Error(await res.text()); }
+  const t = await res.text();
+  return t ? JSON.parse(t) : null;
+}
+
+/* 1000行の既定上限を超えても全件取れるようページング取得 */
+async function fetchAll(pathAndQuery){
+  const out=[]; const page=1000; let from=0;
+  while(true){
+    const r=await api(pathAndQuery, {headers:{"Range-Unit":"items","Range":`${from}-${from+page-1}`}});
+    out.push(...r);
+    if(r.length<page) break;
+    from+=page;
+  }
+  return out;
+}
+async function loadAll(){
+  [products, movements, settlements, suppliers] = await Promise.all([
+    fetchAll("neko_products?select=*&order=sort,id"),
+    fetchAll("neko_movements?select=*&order=at,id"),
+    fetchAll("neko_settlements?select=*&order=created_at"),
+    fetchAll("neko_suppliers?select=*&order=name")
+  ]);
+}
+async function refresh(manual){
+  if(CONFIG.SUPABASE_URL.includes("YOUR-PROJECT")) return;
+  try{
+    await loadAll();
+    // 入力途中の画面（入出庫・商品）は自動更新で書き換えない
+    if(manual || !["move","prod"].includes(tab)) render();
+    if(manual) toast("🔄 最新の状態に更新しました");
+  }catch(e){ if(manual) toast("⚠ 更新失敗: "+e.message); }
+}
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) refresh(false); });
+
+/* 日本時間での日付処理（UTC保存のままだと深夜の記録が前日・前月にずれるため） */
+const jst = at=>new Date(at).toLocaleString("sv-SE",{timeZone:"Asia/Tokyo"}); // "YYYY-MM-DD HH:mm:ss"
+
+/* ---- 在庫集計: place_to で＋、place_from で－ ---- */
+function stockMap(){
+  const m={};
+  for(const mv of movements){
+    if(!m[mv.product_id]) m[mv.product_id]={};
+    const s=m[mv.product_id];
+    if(mv.place_to)   s[mv.place_to]  =(s[mv.place_to]  ||0)+mv.qty;
+    if(mv.place_from) s[mv.place_from]=(s[mv.place_from]||0)-mv.qty;
+  }
+  return m;
+}
+function stockAt(pid, place){ const s=stockMap()[pid]; return s? (s[place]||0):0; }
+function allPlaces(){
+  const set=new Set([CONFIG.HOME, ...CONFIG.PLACES]);
+  movements.forEach(mv=>{ if(mv.place_to)set.add(mv.place_to); if(mv.place_from)set.add(mv.place_from); });
+  return [...set];
+}
+const yen = n=>"¥"+(n||0).toLocaleString();
+const mvById = id=>movements.find(m=>m.id===id);
+const vlabel = p=>[p.size,p.color].filter(Boolean).join("・");           // "M・黒"
+const pdisp  = p=>p.name+(vlabel(p)?`（${vlabel(p)}）`:"");             // "Tシャツ（M・黒）"
+const custodian = place=>CONFIG.CUSTODIANS[place]||CONFIG.OWNER;
+const psup = p=>(p&&p.supplier)||CONFIG.OWNER;                          // 商品の委託者
+const supOf = pid=>psup(products.find(x=>x.id===pid));
+const supRate = name=>{const s=suppliers.find(x=>x.name===name); return s? Number(s.rate): CONFIG.DEFAULT_RATE;};
+const isConsign = place=>custodian(place)!==CONFIG.OWNER;               // 委託販売の場所か（自社管理でない）
+const multiSup = ()=>new Set(products.map(psup)).size>1;
+async function ensureSupplier(name){
+  if(!name || suppliers.some(s=>s.name===name)) return;
+  await api("neko_suppliers",{method:"POST",body:JSON.stringify({name, rate:CONFIG.DEFAULT_RATE})});
+}
+const pname = id=>{const p=products.find(x=>x.id===id);return p?pdisp(p):id;};
+/* 販売集計（取消を差し引き）。prefix='YYYY-MM'または'YYYY' */
+function salesAgg(prefix){
+  const sales={};
+  for(const v of movements){
+    if(prefix && !(v.at && jst(v.at).startsWith(prefix))) continue;
+    let sign=0, place=null;
+    if(v.kind==="販売"){ sign=1; place=v.place_from; }
+    else if(v.kind==="取消"){ const org=mvById(v.reverses); if(org&&org.kind==="販売"){ sign=-1; place=v.place_to; } }
+    if(!sign) continue;
+    const key=place+"|"+v.product_id;
+    if(!sales[key]) sales[key]={place, pid:v.product_id, qty:0, amt:0};
+    sales[key].qty+=sign*v.qty; sales[key].amt+=sign*v.qty*(v.unit_price||0);
+  }
+  return Object.values(sales);
+}
+function lowStockList(){
+  const sm=stockMap();
+  return products.filter(p=>p.status==="販売中"&&(p.min_stock||0)>0)
+    .map(p=>({p, total:Object.values(sm[p.id]||{}).reduce((a,b)=>a+b,0)}))
+    .filter(x=>x.total<=x.p.min_stock);
+}
+
+/* ---- 記録（オフライン時はローカル待機列に退避し、復帰時に自動送信） ---- */
+function isNetErr(e){ return e instanceof TypeError || /Failed to fetch|NetworkError|Load failed/i.test(e.message||""); }
+let _busy=false; // 連打による二重記録防止
+async function record(row){
+  if(_busy) return null;
+  // 直近2分以内の同一内容は二重記録の可能性が高いため確認を挟む
+  if(row.kind!=="取消"){
+    const now=Date.now();
+    const dup=movements.find(v=>v.product_id===row.product_id && v.kind===row.kind && v.qty===row.qty
+      && (v.place_from||null)===(row.place_from||null) && (v.place_to||null)===(row.place_to||null)
+      && now-new Date(v.at).getTime()<120000);
+    if(dup){
+      const sec=Math.round((now-new Date(dup.at).getTime())/1000);
+      if(!confirm(`⚠ ${sec}秒前に同じ記録があります（二重記録かも）。\n別のお客様の分なら「OK」で記録します。`)) return null;
+    }
+  }
+  _busy=true; setTimeout(()=>{_busy=false;},1500);
+  try{
+    const r = await api("neko_movements", {method:"POST", body:JSON.stringify(row)});
+    await loadAll(); render();
+    return r[0];
+  }catch(e){
+    if(!isNetErr(e)) throw e;
+    const q=JSON.parse(localStorage.getItem("neko_queue")||"[]");
+    q.push(row); localStorage.setItem("neko_queue", JSON.stringify(q));
+    movements.push({...row, id:"q"+Date.now(), at:new Date().toISOString()});
+    render(); toast("📴 オフライン記録（通信復帰時に自動送信します）");
+    return row;
+  }
+}
+async function flushQueue(){
+  const q=JSON.parse(localStorage.getItem("neko_queue")||"[]");
+  if(!q.length) return;
+  try{
+    for(const row of q) await api("neko_movements",{method:"POST",body:JSON.stringify(row)});
+    localStorage.setItem("neko_queue","[]");
+    await loadAll(); render();
+    toast(`✅ オフライン分 ${q.length}件を送信しました`);
+  }catch(e){ /* まだ圏外。次の復帰時に再試行 */ }
+}
+window.addEventListener("online", flushQueue);
+async function undo(mv){
+  const r=await record({product_id:mv.product_id, kind:"取消", qty:mv.qty,
+    place_from:mv.place_to||null, place_to:mv.place_from||null,
+    unit_price:mv.unit_price, reverses:mv.id, by_name:byName(),
+    note:"取消: #"+mv.id});
+  if(r) toast("取り消しました");
+}
+function byName(){ return localStorage.getItem("neko_by")||""; }
+function curPlace(){ return localStorage.getItem("neko_place")||CONFIG.PLACES[0]; }
+function setPlace(p){ localStorage.setItem("neko_place",p); render(); }
+
+/* ---- toast ---- */
+let toastTimer=null;
+function toast(msg, undoMv){
+  const el=$("#toast");
+  el.innerHTML = msg + (undoMv?` <button id="undoBtn">取消</button>`:"");
+  el.style.display="block";
+  if(undoMv) $("#undoBtn").onclick=()=>{ el.style.display="none"; undo(undoMv); };
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.style.display="none", undoMv?8000:2500);
+}
+
+/* ================= 画面 ================= */
+const TABS=[["sell","🛒","販売"],["move","📦","入出庫"],["stock","📋","在庫"],["month","📅","月次"],["home","🏠","ホーム"],["prod","🏷","商品"]];
+const STAFF_TABS=["sell","stock"];
+function isAdmin(){ return !CONFIG.ADMIN_PIN || localStorage.getItem("neko_admin")==="1"; }
+function toggleAdmin(){
+  if(!CONFIG.ADMIN_PIN){ toast("PINが未設定です（CONFIG.ADMIN_PINで設定）"); return; }
+  if(isAdmin()){
+    localStorage.removeItem("neko_admin");
+    if(!STAFF_TABS.includes(tab)) tab="sell";
+    render(); toast("🔒 スタッフ画面に切り替えました");
+  }else{
+    if(prompt("管理PINを入力")===CONFIG.ADMIN_PIN){ localStorage.setItem("neko_admin","1"); render(); toast("🔓 管理画面を表示します"); }
+    else toast("⚠ PINが違います");
+  }
+}
+function renderNav(){
+  const tabs=TABS.filter(([id])=>isAdmin()||STAFF_TABS.includes(id));
+  $("#nav").innerHTML = tabs.map(([id,ico,name])=>
+    `<button class="${tab===id?'active':''}" onclick="switchTab('${id}')"><span class="ico">${ico}</span>${name}</button>`).join("");
+  const lb=document.getElementById("lockBtn");
+  if(lb){ lb.style.display=CONFIG.ADMIN_PIN?"":"none"; lb.textContent=isAdmin()?"🔓":"🔒"; }
+}
+function switchTab(t){
+  if(!isAdmin() && !STAFF_TABS.includes(t)) return;
+  tab=t; selProduct=null; selGroup=null; qty=1; render();
+}
+
+function render(){
+  renderNav();
+  if(CONFIG.SUPABASE_URL.includes("YOUR-PROJECT")){
+    $("#app").innerHTML=`<div class="card"><h2>初期設定が必要です</h2>
+      <p class="muted">index.html 冒頭の CONFIG に Supabase の URL と publishable キーを設定してください。手順は README を参照。</p></div>`;
+    return;
+  }
+  ({sell:renderSell, move:renderMove, stock:renderStock, month:renderMonth, home:renderHome, prod:renderProd})[tab]();
+}
+
+/* ---- ホーム（ダッシュボード・事業主用） ---- */
+function renderHome(){
+  const now=new Date(), m=ym(now);
+  const prevM=ym(new Date(now.getFullYear(), now.getMonth()-1, 15));
+  const cur=salesAgg(m), prev=salesAgg(prevM);
+  const sum=list=>list.reduce((a,s)=>a+s.amt,0);
+  const ta=sum(cur), tp=sum(prev);
+  const ratio = tp? Math.round(ta/tp*100) : null;
+  const byPlace={};
+  cur.forEach(s=>{ byPlace[s.place]=(byPlace[s.place]||0)+s.amt; });
+  // 売れ筋 top5（数量）
+  const byProd={};
+  cur.forEach(s=>{ if(!byProd[s.pid])byProd[s.pid]={qty:0,amt:0}; byProd[s.pid].qty+=s.qty; byProd[s.pid].amt+=s.amt; });
+  const top=Object.entries(byProd).sort((a,b)=>b[1].qty-a[1].qty).slice(0,5);
+  const low=lowStockList();
+  const q=JSON.parse(localStorage.getItem("neko_queue")||"[]");
+  $("#app").innerHTML=`
+  ${q.length?`<div class="warn">📴 未送信のオフライン記録が${q.length}件あります（通信復帰時に自動送信）</div>`:""}
+  ${low.length?`<div class="warn">⚠ 補充が必要：${low.map(x=>`${pdisp(x.p)}（残${x.total}）`).join("、")}</div>`:""}
+  <div class="card"><h2>今月の売上（${m}）</h2>
+    <div style="font-size:28px;font-weight:bold">${yen(ta)}</div>
+    <p class="muted">前月 ${yen(tp)}${ratio!=null?` ／ 前月比 ${ratio}%`:""}</p>
+    <table><tr><th>場所</th><th>管理</th><th>売上</th></tr>
+      ${Object.entries(byPlace).map(([pl,a])=>`<tr><td>${pl}</td><td>${custodian(pl)}</td><td>${yen(a)}</td></tr>`).join("")||`<tr><td colspan="3" class="muted">今月の販売はまだありません</td></tr>`}
+    </table></div>
+  ${multiSup()?`<div class="card"><h2>委託者別（今月）</h2><table>
+    <tr><th>委託者</th><th>売上</th><th>手数料収入(組合)</th></tr>
+    ${(()=>{const t={};cur.forEach(s=>{const k=supOf(s.pid);t[k]=(t[k]||0)+(isConsign(s.place)?s.amt:0);});
+      return Object.entries(t).map(([k,a])=>`<tr><td>${k}</td><td>${yen(a)}</td><td>${yen(Math.round(a*supRate(k)))}</td></tr>`).join("")||`<tr><td colspan="3" class="muted">－</td></tr>`;})()}
+  </table></div>`:""}
+  <div class="card"><h2>今月の売れ筋 TOP5</h2><table>
+    <tr><th>商品</th><th>数</th><th>金額</th></tr>
+    ${top.map(([pid,v])=>`<tr><td>${pname(pid)}</td><td>${v.qty}</td><td>${yen(v.amt)}</td></tr>`).join("")||`<tr><td colspan="3" class="muted">－</td></tr>`}
+  </table></div>`;
+}
+
+/* ---- 販売（レジ画面・スタッフ用） ----
+   同じ品名はまとめて1ボタンにし、タップ後にサイズ・色を選ぶ */
+let selGroup=null;
+function sellGroups(){
+  const groups={};
+  products.filter(p=>p.status==="販売中").forEach(p=>{
+    const k=p.name+"|"+psup(p); // 同名でも委託者が違えば別ボタン
+    (groups[k]=groups[k]||{key:k, name:p.name, sup:psup(p), list:[]}).list.push(p);
+  });
+  return Object.values(groups);
+}
+function renderSell(){
+  const place=curPlace(), glist=sellGroups();
+  $("#app").innerHTML=`
+  <div class="card">
+    <label>販売場所（タップで切替・この端末が記憶します）</label>
+    <div class="seg">${CONFIG.PLACES.map(p=>`<button class="${p===place?'on':''}" onclick="setPlace('${p}')">${p}</button>`).join("")}</div>
+    <label>記録者（任意）</label>
+    <input id="by" value="${byName()}" onchange="localStorage.setItem('neko_by',this.value)" placeholder="名前">
+  </div>
+  <div class="card">
+    <h2>売れた商品をタップ</h2>
+    <div class="grid">
+      ${glist.map((g,i)=>{
+        const st=g.list.reduce((a,p)=>a+stockAt(p.id,place),0);
+        const prices=[...new Set(g.list.map(p=>p.price))];
+        return `<button class="pbtn ${selGroup===g.key?'sel':''}" onclick="selectGroup(${i})">
+          <b>${g.name}</b>${multiSup()?`<span class="tag">${g.sup}</span>`:""}<span class="price">${yen(Math.min(...prices))}${prices.length>1?'〜':''}</span>
+          <span class="stock">残${st}${st<=0?'⚠':''}</span></button>`;
+      }).join("")||`<p class="muted">販売中の商品がありません（商品タブで登録）</p>`}
+    </div>
+    <div id="varArea"></div>
+    <div id="qtyArea"></div>
+  </div>
+  ${(()=>{ // 今日この場所で記録した直近3件（「さっき記録したっけ?」の確認用）
+    const today=jst(new Date()).slice(0,10);
+    const recent=movements.filter(v=>v.kind==="販売"&&v.place_from===place&&jst(v.at).slice(0,10)===today).slice(-3).reverse();
+    return recent.length?`<div class="card"><h2>今日の記録（この場所・直近${recent.length}件）</h2><table>
+      ${recent.map(v=>`<tr><td>${jst(v.at).slice(11,16)}</td><td>${pname(v.product_id)}</td><td>×${v.qty}</td>
+        <td>${movements.some(x=>x.reverses===v.id)?"取消済":typeof v.id!=="number"?"送信待ち":`<button class="sub-btn" style="margin:0;padding:2px 8px;width:auto" onclick="undoById(${v.id})">取消</button>`}</td></tr>`).join("")}
+    </table></div>`:"";})()}`;
+  if(selGroup) renderVarArea();
+  if(selProduct) renderQtyArea();
+}
+function selectGroup(i){
+  const g=sellGroups()[i];
+  if(selGroup===g.key){ selGroup=null; selProduct=null; }
+  else{
+    selGroup=g.key; qty=1; window._sellPrice=null;
+    // バリエーションが1つだけなら直接選択、複数ならサイズ・色を選ばせる
+    selProduct = (g.list.length===1 && !vlabel(g.list[0])) ? g.list[0].id : null;
+  }
+  renderSell();
+}
+function renderVarArea(){
+  const g=sellGroups().find(x=>x.key===selGroup);
+  if(!g) return;
+  const list=g.list, place=curPlace();
+  if(list.length===1 && !vlabel(list[0])){ $("#varArea").innerHTML=""; return; }
+  $("#varArea").innerHTML=`<label>サイズ・色を選ぶ</label><div class="grid">
+    ${list.map(p=>{
+      const st=stockAt(p.id,place);
+      return `<button class="pbtn ${selProduct===p.id?'sel':''}" onclick="selectVar('${p.id}')">
+        <b>${vlabel(p)||p.id}</b><span class="price">${yen(p.price)}</span>
+        <span class="stock">残${st}${st<=0?'⚠':''}</span></button>`;
+    }).join("")}</div>`;
+}
+function selectVar(id){ selProduct=(selProduct===id?null:id); qty=1; window._sellPrice=null; renderSell(); }
+function sellPrice(p){ return (window._sellPrice==null||isNaN(window._sellPrice))? p.price : window._sellPrice; }
+function renderQtyArea(){
+  const p=products.find(x=>x.id===selProduct);
+  const pr=sellPrice(p), off=pr<p.price;
+  $("#qtyArea").innerHTML=`
+    <div class="qtybar">
+      <button onclick="chQty(-1)">－</button><span class="qty">${qty}</span><button onclick="chQty(1)">＋</button>
+      <span style="flex:1;text-align:right;font-weight:bold">${yen(pr*qty)}${off?`<br><small class="neg">割引中（定価${yen(p.price)}）</small>`:""}</span>
+    </div>
+    <label>単価（割引するときはここを書き換える）</label>
+    <input id="sellPrice" type="number" value="${pr}" onchange="window._sellPrice=+this.value;renderQtyArea()">
+    <br><br><button class="big" onclick="doSell()">販売を記録する</button>`;
+}
+function chQty(d){ qty=Math.max(1,qty+d); renderQtyArea(); }
+async function doSell(){
+  const p=products.find(x=>x.id===selProduct);
+  const pr=sellPrice(p);
+  try{
+    const mv=await record({product_id:p.id, kind:"販売", qty, place_from:curPlace(),
+      unit_price:pr, note: pr!==p.price?`割引販売（定価${p.price}円）`:null, by_name:byName()});
+    if(!mv) return; // 連打の2回目以降は無視
+    selProduct=null; selGroup=null; qty=1; window._sellPrice=null; render();
+    toast(`✅ ${pdisp(p)} ×${mv.qty}（${yen(pr)}） を記録`, mv);
+    // 低在庫アラート（ntfy設定時のみ）
+    if(CONFIG.NTFY_TOPIC && (p.min_stock||0)>0){
+      const total=Object.values(stockMap()[p.id]||{}).reduce((a,b)=>a+b,0);
+      if(total<=p.min_stock)
+        fetch("https://ntfy.sh/"+CONFIG.NTFY_TOPIC,{method:"POST",
+          body:`🧶 補充してください: ${pdisp(p)} 残${total}個（基準${p.min_stock}個）`}).catch(()=>{});
+    }
+  }catch(e){ toast("⚠ 記録失敗: "+e.message); }
+}
+
+/* ---- 入出庫（管理用） ---- */
+const KINDS={
+  "制作":     {label:"制作（＋手元）",        from:null,   to:"HOME"},
+  "仕入":     {label:"仕入（＋手元）",        from:null,   to:"HOME"},
+  "委託搬入": {label:"委託搬入（手元→委託先）", from:"HOME", to:"PLACE"},
+  "戻り":     {label:"戻り（委託先→手元）",    from:"PLACE",to:"HOME"},
+  "受入":     {label:"委託品の受入（＋委託先）", from:null,   to:"PLACE"},
+  "返却":     {label:"委託品の返却（－委託先）", from:"PLACE",to:null},
+  "販売":     {label:"販売（場所を選ぶ）",     from:"PLACE",to:null},
+  "譲渡":     {label:"譲渡（－）",            from:"PLACE",to:null},
+  "廃棄":     {label:"廃棄（－）",            from:"PLACE",to:null},
+  "調整＋":   {label:"棚卸調整＋",            from:null,   to:"PLACE", store:"調整"},
+  "調整－":   {label:"棚卸調整－",            from:"PLACE",to:null,    store:"調整"}
+};
+function renderMove(){
+  const places=[CONFIG.HOME,...CONFIG.PLACES];
+  $("#app").innerHTML=`
+  <div class="card">
+    <h2>入出庫を記録</h2>
+    <div class="row">
+      <div><label>種別</label>
+      <select id="mvKind">${Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}</select></div>
+      <div><label>日付（さかのぼり可）</label><input id="mvDate" type="date" value="${jst(new Date()).slice(0,10)}"></div>
+    </div>
+    <label>商品</label>
+    <select id="mvProd">${products.filter(p=>p.status!=="廃番").map(p=>`<option value="${p.id}">${p.id} ${pdisp(p)}</option>`).join("")}</select>
+    <div class="row">
+      <div><label>数量</label><input id="mvQty" type="number" value="1" min="1"></div>
+      <div><label>場所（委託先等）</label><select id="mvPlace">${places.map(p=>`<option>${p}</option>`).join("")}</select></div>
+    </div>
+    <label>メモ（譲渡先・廃棄理由など）</label>
+    <input id="mvNote" placeholder="例: ○○様へ贈答 / 不良のため廃棄">
+    <br><br><button class="big" onclick="doMove()">記録する</button>
+    <p class="muted">※訂正は削除ではなく、月次タブの履歴から「取消」で行います。譲渡・廃棄はメモに相手先・理由を残すと確定申告の根拠になります。<br>※自分の商品は「制作・委託搬入・戻り」、他の委託者の商品は「受入・返却」（自宅を経由しない）を使います。</p>
+  </div>
+  ${variantGroups().length?`
+  <div class="card">
+    <h2>🧮 まとめて記録（サイズ×色）</h2>
+    <div class="row">
+      <div><label>商品</label><select id="bkGroup" onchange="renderMatrix()">${variantGroups().map((g,i)=>`<option value="${i}">${g.name}${multiSup()?`（${g.sup}）`:""}</option>`).join("")}</select></div>
+      <div><label>種別</label><select id="bkKind">${Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}</select></div>
+    </div>
+    <div class="row">
+      <div><label>場所（委託先等）</label><select id="bkPlace" onchange="renderMatrix()">${places.map(p=>`<option>${p}</option>`).join("")}</select></div>
+      <div><label>日付</label><input id="bkDate" type="date" value="${jst(new Date()).slice(0,10)}"></div>
+    </div>
+    <div id="matrixArea" style="overflow-x:auto"></div>
+    <br><button class="big" onclick="doBulkMove()">まとめて記録する</button>
+    <p class="muted">数を入れたマスだけ記録されます。薄い数字はその場所の現在庫。制作10枚＋委託搬入8枚のような日は、種別を変えて2回に分けて記録してください。</p>
+  </div>`:""}`;
+  if(variantGroups().length) renderMatrix();
+}
+
+/* ---- サイズ×色マトリクス一括入力 ---- */
+function variantGroups(){
+  const g={};
+  products.filter(p=>p.status!=="廃番").forEach(p=>{
+    const k=p.name+"|"+psup(p);
+    (g[k]=g[k]||{key:k, name:p.name, sup:psup(p), list:[]}).list.push(p);
+  });
+  return Object.values(g).filter(x=>x.list.length>1||vlabel(x.list[0]));
+}
+function renderMatrix(){
+  const el=document.getElementById("matrixArea"); if(!el) return;
+  const grp=variantGroups()[+$("#bkGroup").value];
+  if(!grp){ el.innerHTML=""; return; }
+  const list=grp.list.slice().sort((a,b)=>(a.sort||0)-(b.sort||0));
+  const sizes=[...new Set(list.map(p=>p.size??""))];
+  const colors=[...new Set(list.map(p=>p.color??""))];
+  const find=(s,c)=>list.find(p=>(p.size??"")===s&&(p.color??"")===c);
+  const sm=stockMap(), place=document.getElementById("bkPlace").value;
+  el.innerHTML=`<table><tr><th>${sizes.some(s=>s)?"サイズ＼色":""}</th>${colors.map(c=>`<th>${c||"（色なし）"}</th>`).join("")}</tr>
+    ${sizes.map(s=>`<tr><td>${s||"（サイズなし）"}</td>${colors.map(c=>{
+      const p=find(s,c);
+      if(!p) return `<td class="muted">－</td>`;
+      const st=(sm[p.id]||{})[place]||0;
+      return `<td><input type="number" inputmode="numeric" id="mx_${p.id}" placeholder="${st}" style="width:56px;padding:6px;text-align:center"></td>`;
+    }).join("")}</tr>`).join("")}</table>`;
+}
+async function doBulkMove(){
+  const kind=$("#bkKind").value, def=KINDS[kind], place=$("#bkPlace").value;
+  const resolve=x=> x==="HOME"?CONFIG.HOME : x==="PLACE"?place : null;
+  const grp=variantGroups()[+$("#bkGroup").value];
+  if(!grp) return;
+  const d=$("#bkDate").value, today=jst(new Date()).slice(0,10);
+  const rows=[];
+  for(const p of grp.list){
+    const el=document.getElementById("mx_"+p.id);
+    if(!el || el.value==="" || +el.value<=0) continue;
+    const row={product_id:p.id, kind:def.store||kind, qty:+el.value,
+      place_from:resolve(def.from), place_to:resolve(def.to),
+      unit_price:kind==="販売"?p.price:null, by_name:byName()};
+    if(d && d!==today) row.at=`${d}T12:00:00+09:00`;
+    rows.push(row);
+  }
+  if(!rows.length){ toast("数量が入力されていません"); return; }
+  const total=rows.reduce((a,r)=>a+r.qty,0);
+  if(!confirm(`${grp.name}：${kind} ${rows.length}種類・合計${total}個 を記録します`)) return;
+  try{
+    await api("neko_movements",{method:"POST",body:JSON.stringify(rows)}); // 1リクエストで一括登録
+    await loadAll(); render();
+    toast(`✅ ${rows.length}種類・合計${total}個を記録しました`);
+  }catch(e){ toast("⚠ 記録失敗: "+e.message); }
+}
+async function doMove(){
+  const kind=$("#mvKind").value, def=KINDS[kind];
+  const place=$("#mvPlace").value;
+  const resolve=x=> x==="HOME"?CONFIG.HOME : x==="PLACE"?place : null;
+  const p=products.find(x=>x.id===$("#mvProd").value);
+  if(!p){ toast("商品を選択してください"); return; }
+  try{
+    const d=$("#mvDate").value, today=jst(new Date()).slice(0,10);
+    const row={product_id:p.id, kind:def.store||kind, qty:+$("#mvQty").value||1,
+      place_from:resolve(def.from), place_to:resolve(def.to),
+      unit_price:kind==="販売"?p.price:null, note:$("#mvNote").value||null, by_name:byName()};
+    if(d && d!==today) row.at=`${d}T12:00:00+09:00`; // つけ忘れ分のさかのぼり記録
+    const mv=await record(row);
+    if(!mv) return;
+    toast(`✅ ${kind} ${p.name} ×${mv.qty} を記録`, mv);
+  }catch(e){ toast("⚠ 記録失敗: "+e.message); }
+}
+
+/* ---- 在庫 ---- */
+function renderStock(){
+  if(window._stocktake){ renderStocktake(); return; }
+  const sm=stockMap(), places=allPlaces();
+  const rows=products.filter(p=>p.status!=="廃番"||Object.values(sm[p.id]||{}).some(v=>v!==0));
+  let costTotal=0, warn="";
+  const custTotals={}; // 管理責任者別 {個数, 原価}
+  const body=rows.map(p=>{
+    const s=sm[p.id]||{};
+    const total=places.reduce((a,pl)=>a+(s[pl]||0),0);
+    costTotal += total*(p.cost||0);
+    places.forEach(pl=>{
+      const v=s[pl]||0; if(!v) return;
+      const c=custodian(pl);
+      if(!custTotals[c]) custTotals[c]={qty:0,cost:0};
+      custTotals[c].qty+=v; custTotals[c].cost+=v*(p.cost||0);
+    });
+    if(places.some(pl=>(s[pl]||0)<0)) warn=`<div class="warn">⚠ マイナス在庫があります。記録漏れの可能性 → 棚卸モードで実数に合わせてください。</div>`;
+    const isLow=(p.min_stock||0)>0 && total<=p.min_stock;
+    return `<tr><td>${pdisp(p)}<span class="tag">${p.id}</span>${multiSup()&&psup(p)!==CONFIG.OWNER?`<span class="tag">${psup(p)}</span>`:""}</td>
+      ${places.map(pl=>{const v=s[pl]||0; return `<td class="${v<0?'neg':''}">${v}</td>`;}).join("")}
+      <td><b>${total}</b>${isLow?' <span class="neg">⚠要補充</span>':''}</td></tr>`;
+  }).join("");
+  $("#app").innerHTML=`
+  ${warn}
+  <div class="card">
+    <h2>現在庫（場所別）</h2>
+    <div style="overflow-x:auto"><table>
+      <tr><th>商品</th>${places.map(p=>`<th>${p}</th>`).join("")}<th>合計</th></tr>
+      <tr><th class="muted">管理責任</th>${places.map(p=>`<th>${custodian(p)==="ねこのモノづくり小屋"?"自社":custodian(p)}</th>`).join("")}<th></th></tr>
+      ${body||`<tr><td colspan="9" class="muted">商品が未登録です</td></tr>`}
+      <tr class="section-total"><td>原価合計（棚卸資産の目安）</td><td colspan="${places.length+1}">${yen(costTotal)}</td></tr>
+    </table></div>
+    <p class="muted">12/31時点の原価合計を青色申告の「期末棚卸資産」へ転記（棚卸モードで実数確認してから）。</p>
+  </div>
+  <div class="card">
+    <h2>管理責任者別（預け在庫の把握）</h2>
+    <table><tr><th>管理責任者</th><th>個数</th><th>原価計</th></tr>
+      ${Object.entries(custTotals).map(([c,v])=>`<tr><td>${c}</td><td>${v.qty}</td><td>${yen(v.cost)}</td></tr>`).join("")||`<tr><td colspan="3" class="muted">－</td></tr>`}
+    </table>
+    ${multiSup()?`<table style="margin-top:8px"><tr><th>委託者別</th><th>個数</th><th>原価計</th></tr>
+      ${(()=>{const t={};rows.forEach(p=>{const s=sm[p.id]||{};const q=places.reduce((a,pl)=>a+(s[pl]||0),0);if(!q)return;const k=psup(p);if(!t[k])t[k]={qty:0,cost:0};t[k].qty+=q;t[k].cost+=q*(p.cost||0);});
+        return Object.entries(t).map(([k,v])=>`<tr><td>${k}</td><td>${v.qty}</td><td>${yen(v.cost)}</td></tr>`).join("");})()}
+    </table>`:""}
+    <p class="muted">委託搬入・戻りの記録日時が、管理責任が移った証跡になります（月次タブの履歴参照）。</p>
+    <button class="sub-btn" onclick="window._stocktake=true;render()">📝 棚卸モードを開く（実数を数えて入力）</button>
+  </div>`;
+}
+
+/* ---- 棚卸モード ---- */
+function renderStocktake(){
+  const place=window._stPlace||CONFIG.HOME;
+  const places=[CONFIG.HOME,...CONFIG.PLACES];
+  const sm=stockMap();
+  const rows=products.filter(p=>p.status!=="廃番");
+  $("#app").innerHTML=`
+  <div class="card">
+    <h2>📝 棚卸モード</h2>
+    <label>棚卸する場所</label>
+    <select onchange="window._stPlace=this.value;render()">${places.map(p=>`<option ${p===place?'selected':''}>${p}</option>`).join("")}</select>
+    <table><tr><th>商品</th><th>帳簿</th><th>実数</th></tr>
+      ${rows.map(p=>{
+        const book=(sm[p.id]||{})[place]||0;
+        return `<tr><td>${pdisp(p)}</td><td>${book}</td>
+          <td><input type="number" id="stk_${p.id}" placeholder="${book}" style="width:70px;padding:6px"></td></tr>`;
+      }).join("")}
+    </table>
+    <br><button class="big" onclick="saveStocktake('${place}')">差異を棚卸調整として記録</button>
+    <button class="sub-btn" onclick="window._stocktake=false;render()">閉じる</button>
+    <p class="muted">実数が帳簿と同じ行は空欄のままでOK。入力した行だけ差異を「調整」として記録します（12月末は全場所で実施→在庫タブの原価合計を申告へ）。</p>
+  </div>`;
+}
+async function saveStocktake(place){
+  const sm=stockMap();
+  const diffs=[];
+  for(const p of products.filter(p=>p.status!=="廃番")){
+    const el=document.getElementById("stk_"+p.id);
+    if(!el||el.value==="") continue;
+    const counted=+el.value, book=(sm[p.id]||{})[place]||0;
+    if(counted!==book) diffs.push({p, d:counted-book});
+  }
+  if(!diffs.length){ toast("差異はありません（帳簿どおり）"); return; }
+  if(!confirm(`${diffs.length}件の差異を記録します:\n`+diffs.map(x=>`${pdisp(x.p)} ${x.d>0?"+":""}${x.d}`).join("\n"))) return;
+  try{
+    for(const {p,d} of diffs)
+      await api("neko_movements",{method:"POST",body:JSON.stringify({
+        product_id:p.id, kind:"調整", qty:Math.abs(d),
+        place_from:d<0?place:null, place_to:d>0?place:null,
+        note:`実地棚卸（帳簿差異）`, by_name:byName()})});
+    await loadAll(); window._stocktake=false; render();
+    toast(`✅ 棚卸差異 ${diffs.length}件を記録しました`);
+  }catch(e){ toast("⚠ 記録失敗: "+e.message); }
+}
+
+/* ---- 月次 ---- */
+function ym(d){ return jst(d).slice(0,7); }
+function inMonth(at, m){ return at? jst(at).slice(0,7)===m : false; }
+function renderMonth(){
+  const m = window._month || ym(new Date());
+  const mvs = movements.filter(v=>inMonth(v.at,m));
+  const agg=salesAgg(m).map(s=>({...s, sup:supOf(s.pid)}));
+  const consign=agg.filter(s=>isConsign(s.place));   // 委託販売（組合管理の場所）
+  const direct =agg.filter(s=>!isConsign(s.place));  // 直販（自社管理の場所）
+  const sups=[...new Set([
+    ...consign.map(s=>s.sup),
+    ...settlements.filter(x=>x.month===m).map(x=>x.supplier||CONFIG.OWNER)  // 販売ゼロ月でも支払記録は表示
+  ])].sort();
+
+  const salesHtml = sups.map(sup=>{
+    const list=consign.filter(s=>s.sup===sup && s.qty!==0);
+    const tq=list.reduce((a,s)=>a+s.qty,0), ta=list.reduce((a,s)=>a+s.amt,0);
+    const rate=supRate(sup), fee=Math.round(ta*rate), expected=ta-fee;
+    const settled=settlements.filter(x=>x.month===m&&(x.supplier||CONFIG.OWNER)===sup).reduce((a,x)=>a+x.amount,0);
+    const diff=settled-expected;
+    return `<div class="card"><h2>委託精算：${sup}</h2><table>
+      <tr><th>商品</th><th>場所</th><th>数</th><th>金額</th></tr>
+      ${list.map(s=>`<tr><td>${pname(s.pid)}</td><td>${s.place}</td><td>${s.qty}</td><td>${yen(s.amt)}</td></tr>`).join("")}
+      <tr class="section-total"><td>販売合計</td><td></td><td>${tq}</td><td>${yen(ta)}</td></tr>
+      <tr><td>委託手数料（${Math.round(rate*100)}%）</td><td></td><td></td><td>−${yen(fee)}</td></tr>
+      <tr><td>支払予定額</td><td></td><td></td><td><b>${yen(expected)}</b></td></tr>
+      <tr><td>支払済（記録）</td><td></td><td></td><td>${yen(settled)}</td></tr>
+      <tr><td>差額（支払済−予定）</td><td></td><td></td><td class="${diff<0?'neg':'pos'}">${yen(diff)}</td></tr>
+    </table>
+    <div class="row" style="margin-top:8px">
+      <input id="st_${sup}" type="number" placeholder="支払額（ミスはマイナス額で相殺）">
+      <button class="sub-btn" style="margin:0" onclick="addSettle('${m}','${sup}')">支払を記録</button>
+    </div>
+    <button class="sub-btn" onclick="printStatement('${m}','${sup}')">🖨 精算書を作成（印刷）</button>
+    </div>`;
+  }).join("") || `<div class="card"><p class="muted">この月の委託販売はありません</p></div>`;
+
+  const directHtml = direct.length? `<div class="card"><h2>直販（手数料なし）</h2><table>
+    <tr><th>商品</th><th>場所</th><th>数</th><th>金額</th></tr>
+    ${direct.map(s=>`<tr><td>${pname(s.pid)}</td><td>${s.place}</td><td>${s.qty}</td><td>${yen(s.amt)}</td></tr>`).join("")}
+    <tr class="section-total"><td>合計</td><td></td><td>${direct.reduce((a,s)=>a+s.qty,0)}</td><td>${yen(direct.reduce((a,s)=>a+s.amt,0))}</td></tr>
+  </table></div>` : "";
+
+  const disposals=mvs.filter(v=>["譲渡","廃棄"].includes(v.kind));
+  const dispHtml = disposals.length? `<div class="card"><h2>譲渡・廃棄</h2><table>
+      <tr><th>日付</th><th>商品</th><th>種別</th><th>数</th><th>メモ</th></tr>
+      ${disposals.map(v=>`<tr><td>${jst(v.at).slice(5,10)}</td><td>${pname(v.product_id)}</td><td>${v.kind}</td><td>${v.qty}</td><td style="white-space:normal">${v.note||""}</td></tr>`).join("")}
+    </table></div>`:"";
+
+  const histHtml=`<div class="card"><h2>この月の全記録</h2><table>
+    <tr><th>日付</th><th>商品</th><th>種別</th><th>数</th><th></th></tr>
+    ${mvs.slice().reverse().map(v=>`<tr><td>${jst(v.at).slice(5,10)}</td><td>${pname(v.product_id)}</td><td>${v.kind}</td><td>${v.qty}</td>
+      <td>${v.kind!=="取消"&&typeof v.id==="number"&&!movements.some(x=>x.reverses===v.id)?`<button class="sub-btn" style="margin:0;padding:2px 8px;width:auto" onclick="undoById(${v.id})">取消</button>`:""}</td></tr>`).join("")}
+    </table>
+    <button class="sub-btn" onclick="dlCsv('${m}')">📥 入出庫CSV（記録の控え）</button>
+    <button class="sub-btn" onclick="dlMfCsv('${m}')">📥 会計用CSV（MFクラウド取込の下書き）</button></div>`;
+
+  $("#app").innerHTML=`
+  <div class="card"><label>対象月</label>
+    <input type="month" value="${m}" onchange="window._month=this.value;render()"></div>
+  ${salesHtml}${directHtml}${dispHtml}${histHtml}${yearSummaryHtml(m.slice(0,4))}${yearSuppliersHtml(m.slice(0,4))}`;
+}
+
+/* ---- 年間サマリー（自分＝OWNERの確定申告向け。他委託者の商品は含めない） ---- */
+function yearSummaryHtml(year){
+  const mine=salesAgg(year).filter(s=>supOf(s.pid)===CONFIG.OWNER);
+  const byPlace={};
+  mine.forEach(s=>{ if(!byPlace[s.place])byPlace[s.place]={qty:0,amt:0}; byPlace[s.place].qty+=s.qty; byPlace[s.place].amt+=s.amt; });
+  let feeTotal=0, salesTotal=0;
+  const ownRate=supRate(CONFIG.OWNER);
+  const rows=Object.entries(byPlace).map(([pl,v])=>{
+    const rate=isConsign(pl)?ownRate:0, fee=Math.round(v.amt*rate);
+    feeTotal+=fee; salesTotal+=v.amt;
+    return `<tr><td>${pl}${rate?`（委託${Math.round(rate*100)}%）`:"（直販）"}</td><td>${v.qty}</td><td>${yen(v.amt)}</td><td>${yen(fee)}</td></tr>`;
+  }).join("");
+  const mineP=id=>{const p=products.find(x=>x.id===id);return p&&psup(p)===CONFIG.OWNER?p:null;};
+  let gQty=0,gCost=0,gPrice=0,dQty=0,dCost=0;
+  movements.filter(v=>v.at && jst(v.at).startsWith(year)).forEach(v=>{
+    const p=mineP(v.product_id); if(!p) return;
+    if(v.kind==="譲渡"){ gQty+=v.qty; gCost+=v.qty*(p.cost||0); gPrice+=v.qty*(p.price||0); }
+    if(v.kind==="廃棄"){ dQty+=v.qty; dCost+=v.qty*(p.cost||0); }
+  });
+  const sm=stockMap();
+  const invCost=products.filter(p=>psup(p)===CONFIG.OWNER)
+    .reduce((a,p)=>a+Object.values(sm[p.id]||{}).reduce((x,y)=>x+y,0)*(p.cost||0),0);
+  return `<div class="card"><h2>📊 ${year}年 申告用サマリー（${CONFIG.OWNER}分）</h2>
+    <table><tr><th>販売場所</th><th>数</th><th>売上</th><th>委託料</th></tr>
+    ${rows||`<tr><td colspan="4" class="muted">販売なし</td></tr>`}
+    <tr class="section-total"><td>合計</td><td></td><td>${yen(salesTotal)}</td><td>${yen(feeTotal)}</td></tr></table>
+    <table style="margin-top:8px">
+      <tr><td>譲渡（贈答・自家消費）</td><td>${gQty}個</td><td>原価${yen(gCost)}／売価${yen(gPrice)}</td></tr>
+      <tr><td>廃棄</td><td>${dQty}個</td><td>原価${yen(dCost)}</td></tr>
+      <tr><td>現時点の在庫原価</td><td></td><td>${yen(invCost)}（12/31時点で期末棚卸資産に）</td></tr>
+    </table>
+    <p class="muted">譲渡・自家消費の計上方法（売価/仕入価）は税務ルールの確認を。明細は各月のCSVで出せます。</p></div>`;
+}
+
+/* ---- 年間 委託者別集計（組合の受託販売の全体像） ---- */
+function yearSuppliersHtml(year){
+  if(!multiSup()) return "";
+  const agg=salesAgg(year).map(s=>({...s,sup:supOf(s.pid)})).filter(s=>isConsign(s.place));
+  const t={};
+  agg.forEach(s=>{ if(!t[s.sup])t[s.sup]={qty:0,amt:0}; t[s.sup].qty+=s.qty; t[s.sup].amt+=s.amt; });
+  const paid={};
+  settlements.filter(x=>(x.month||"").startsWith(year)).forEach(x=>{
+    const k=x.supplier||CONFIG.OWNER; paid[k]=(paid[k]||0)+x.amount; });
+  let feeTotal=0;
+  const rows=Object.keys({...t,...paid}).sort().map(k=>{
+    const v=t[k]||{qty:0,amt:0};
+    const rate=supRate(k), fee=Math.round(v.amt*rate); feeTotal+=fee;
+    return `<tr><td>${k}</td><td>${v.qty}</td><td>${yen(v.amt)}</td><td>${yen(fee)}</td><td>${yen(v.amt-fee)}</td><td>${yen(paid[k]||0)}</td></tr>`;
+  }).join("");
+  return `<div class="card"><h2>📊 ${year}年 委託者別集計（組合の受託販売）</h2>
+    <div style="overflow-x:auto"><table>
+    <tr><th>委託者</th><th>数</th><th>売上</th><th>手数料</th><th>支払予定</th><th>支払済</th></tr>
+    ${rows||`<tr><td colspan="6" class="muted">委託販売なし</td></tr>`}
+    <tr class="section-total"><td>組合の手数料収入計</td><td colspan="5">${yen(feeTotal)}</td></tr>
+    </table></div>
+    <p class="muted">組合の月次仕訳・各委託者への年間実績連絡に使えます。委託者ごとの明細は各月の精算カードと精算書で。</p></div>`;
+}
+
+/* ---- 精算書（阿波山雅発行・各委託者宛・印刷用） ---- */
+function printStatement(m, sup){
+  const list=salesAgg(m).filter(s=>supOf(s.pid)===sup && isConsign(s.place) && s.qty!==0);
+  const ta=list.reduce((a,s)=>a+s.amt,0);
+  const rate=supRate(sup), fee=Math.round(ta*rate), pay=ta-fee;
+  const no=`AWS-S-${m.replace("-","")}-${sup}`;
+  const today=jst(new Date()).slice(0,10);
+  const w=window.open("","_blank");
+  w.document.write(`<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>${no}</title>
+  <style>body{font-family:"Yu Gothic",Meiryo,sans-serif;max-width:640px;margin:24px auto;color:#333;font-size:13px}
+  h1{font-size:20px;text-align:center;letter-spacing:8px}
+  table{width:100%;border-collapse:collapse;margin:12px 0}
+  th,td{border:1px solid #999;padding:6px 8px;text-align:right}
+  th{background:#f2ede4}th:first-child,td:first-child{text-align:left}
+  .head{display:flex;justify-content:space-between;margin-top:16px}
+  .total{font-size:16px;font-weight:bold}</style></head><body>
+  <h1>委託販売精算書</h1>
+  <div class="head"><div><b>${sup} 様</b><br>対象期間：${m}</div>
+  <div style="text-align:right">精算書番号：${no}<br>発行日：${today}<br><b>協同組合阿波山雅</b></div></div>
+  <table><tr><th>商品</th><th>販売場所</th><th>単価</th><th>数量</th><th>金額</th></tr>
+  ${list.map(s=>{const up=s.qty?Math.round(s.amt/s.qty):0;return `<tr><td>${pname(s.pid)}</td><td>${s.place}</td><td>¥${up.toLocaleString()}</td><td>${s.qty}</td><td>¥${s.amt.toLocaleString()}</td></tr>`;}).join("")}
+  <tr><td colspan="4">販売合計</td><td>¥${ta.toLocaleString()}</td></tr>
+  <tr><td colspan="4">委託販売手数料（${Math.round(rate*100)}%）</td><td>−¥${fee.toLocaleString()}</td></tr>
+  <tr class="total"><td colspan="4">お支払金額</td><td class="total">¥${pay.toLocaleString()}</td></tr></table>
+  <p>上記のとおり精算いたします。</p>
+  <script>window.print()<\/script></body></html>`);
+  w.document.close();
+}
+
+/* ---- 会計用CSV（自分＝OWNER分のみ。MFクラウドの下書き） ---- */
+function dlMfCsv(m){
+  const last=new Date(+m.slice(0,4), +m.slice(5,7), 0).getDate();
+  const d=`${m}-${String(last).padStart(2,"0")}`;
+  const rows=[["日付","勘定科目（案）","金額","摘要"]];
+  const byPlace={};
+  salesAgg(m).filter(s=>supOf(s.pid)===CONFIG.OWNER).forEach(s=>{ byPlace[s.place]=(byPlace[s.place]||0)+s.amt; });
+  const ownRate=supRate(CONFIG.OWNER);
+  for(const [pl,amt] of Object.entries(byPlace)){
+    const rate=isConsign(pl)?ownRate:0;
+    rows.push([d,"売上高",amt,`${pl} ${rate?"委託販売":"直販"}売上 ${m}`]);
+    if(rate) rows.push([d,"支払手数料",Math.round(amt*rate),`${pl} 委託販売手数料${Math.round(rate*100)}% ${m}`]);
+  }
+  const cost=id=>{const p=products.find(x=>x.id===id);return p&&psup(p)===CONFIG.OWNER?(p.cost||0):0;};
+  let gCost=0,dCost=0;
+  movements.filter(v=>inMonth(v.at,m)).forEach(v=>{
+    if(v.kind==="譲渡") gCost+=v.qty*cost(v.product_id);
+    if(v.kind==="廃棄") dCost+=v.qty*cost(v.product_id);
+  });
+  if(gCost) rows.push([d,"事業主貸（家事消費等・要確認）",gCost,`譲渡・贈答 原価計 ${m}`]);
+  if(dCost) rows.push([d,"雑損失（棚卸減耗・要確認）",dCost,`廃棄 原価計 ${m}`]);
+  const csv="﻿"+rows.map(r=>r.join(",")).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download=`neko_会計用_${m}.csv`; a.click();
+}
+async function addSettle(month,sup){
+  const v=+document.getElementById("st_"+sup).value;
+  if(!v){ toast("金額を入力してください"); return; }
+  try{
+    await api("neko_settlements",{method:"POST",body:JSON.stringify({month,supplier:sup,amount:v})});
+    await loadAll(); render(); toast("✅ 支払を記録しました");
+  }catch(e){ toast("⚠ 失敗: "+e.message); }
+}
+async function undoById(id){ const mv=mvById(id); if(mv&&confirm(`#${id} ${mv.kind} ×${mv.qty} を取り消しますか?`)) await undo(mv); }
+function dlCsv(m){
+  const pname=id=>{const p=products.find(x=>x.id===id);return p?pdisp(p):id;};
+  const rows=[["日時","品番","品名","種別","数量","出庫元","入庫先","単価","メモ","記録者"]];
+  movements.filter(v=>inMonth(v.at,m)).forEach(v=>rows.push(
+    [jst(v.at).slice(0,16),v.product_id,pname(v.product_id),v.kind,v.qty,v.place_from||"",v.place_to||"",v.unit_price||"",(v.note||"").replace(/,/g," "),v.by_name||""]));
+  const csv="﻿"+rows.map(r=>r.join(",")).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download=`neko_入出庫_${m}.csv`; a.click();
+}
+
+/* ---- 商品管理 ---- */
+function nextAutoId(){ // 空欄時の自動採番（P-001, P-002, ...）
+  let mx=0; products.forEach(p=>{const m=p.id.match(/^P-(\d{3,})(-|$)/); if(m) mx=Math.max(mx,+m[1]);});
+  return "P-"+String(mx+1).padStart(3,"0");
+}
+function supSelect(id,newId,cur){ // 委託者は選択式（表記ゆれ防止）。新規は明示的に追加
+  return `<select id="${id}" onchange="document.getElementById('${newId}').style.display=this.value==='__new'?'':'none'">
+    ${suppliers.map(s=>`<option ${s.name===cur?'selected':''}>${s.name}</option>`).join("")}
+    <option value="__new">＋ 新しい委託者を追加…</option></select>
+    <input id="${newId}" placeholder="新しい委託者名を入力" style="display:none;margin-top:4px">`;
+}
+function supValue(id,newId){
+  const v=document.getElementById(id).value;
+  return v==="__new" ? (document.getElementById(newId).value.trim()||CONFIG.OWNER) : v;
+}
+function renderProd(){
+  const editing=window._editProd;
+  const p = editing? products.find(x=>x.id===editing) : null;
+  const c = (!p && window._cloneFrom)? products.find(x=>x.id===window._cloneFrom) : null; // サイズ・色違い追加の元
+  let clonePrefix="";
+  if(c){ const tail=[c.size,c.color].filter(Boolean).join("-");
+    clonePrefix = tail&&c.id.endsWith("-"+tail)? c.id.slice(0,c.id.length-tail.length-1)+"-" : ""; }
+  const v=p||c; // 入力欄の初期値の元（編集 or 複製元）
+  $("#app").innerHTML=`
+  <div class="card">
+    <h2>${p?`商品を編集: ${p.id}`:c?`サイズ・色違いを追加: ${c.name}`:"新しい商品を登録"}</h2>
+    <div class="row">
+      <div><label>品番${p?"":"（空欄で自動採番）"}</label><input id="pId" value="${p?p.id:clonePrefix}" ${p?"disabled":""} placeholder="空欄なら ${nextAutoId()} を自動設定"></div>
+      <div><label>状態</label><select id="pStatus">${["試作","販売中","休止","廃番"].map(s=>`<option ${p?(p.status===s?"selected":""):(s==="販売中"?"selected":"")}>${s}</option>`).join("")}</select></div>
+    </div>
+    <label>品名</label><input id="pName" value="${v?v.name:""}" placeholder="例：木頭杉キーホルダー">
+    <label>委託者（出品者）</label>${supSelect("pSup","pSupNew",v?psup(v):CONFIG.OWNER)}
+    <div class="row">
+      <div><label>サイズ（任意）</label><input id="pSize" value="${p?(p.size||""):""}" placeholder="例：M"></div>
+      <div><label>色（任意）</label><input id="pColor" value="${p?(p.color||""):""}" placeholder="例：黒"></div>
+    </div>
+    <div class="row">
+      <div><label>販売価格</label><input id="pPrice" type="number" value="${v?v.price:""}"></div>
+      <div><label>原価目安</label><input id="pCost" type="number" value="${v?v.cost:""}"></div>
+    </div>
+    <div class="row">
+      <div><label>分類</label><input id="pCat" list="catList" value="${v?(v.category||""):""}" placeholder="例：Tシャツ"></div>
+      <div><label>補充基準（残n個で警告）</label><input id="pMin" type="number" value="${v?(v.min_stock||0):0}"></div>
+      <div><label>表示順</label><input id="pSort" type="number" value="${p?p.sort:(c?(c.sort||0)+1:0)}"></div>
+    </div>
+    <datalist id="catList">${[...new Set(products.map(x=>x.category).filter(Boolean))].map(x=>`<option value="${x}">`).join("")}</datalist>
+    ${c?`<p class="muted">価格などは「${c.name}」からコピー済み。サイズ・色を入れて登録してください（品番は続きを補完：例 ${clonePrefix||"…-"}M-赤。空欄なら自動採番）。</p>
+    <button class="sub-btn" onclick="window._cloneFrom=null;render()">複製をやめる</button>`:""}
+    ${p && products.filter(x=>x.name===p.name&&psup(x)===psup(p)).length>1?
+      `<label style="display:flex;gap:6px;align-items:center;margin-top:8px;font-size:13px;color:var(--text)">
+        <input type="checkbox" id="pAll" style="width:auto"> 品名・委託者・分類・価格・原価・補充基準の変更を<b>同じ商品の全サイズ・色に適用</b></label>`:""}
+    <br><button class="big" onclick="saveProd(${p?`'${p.id}'`:"null"})">${p?"更新する":"登録する"}</button>
+    ${p?`<button class="sub-btn" onclick="window._cloneFrom='${p.id}';window._editProd=null;render()">➕ この商品のサイズ・色違いを追加</button>
+    <button class="sub-btn" onclick="window._editProd=null;render()">キャンセル</button>
+    ${movements.some(v=>v.product_id===p.id)
+      ?`<p class="muted">この商品には入出庫記録があるため削除できません。使わなくなったら状態を「廃番」に。</p>`
+      :`<button class="sub-btn" style="color:var(--ng);border-color:var(--ng)" onclick="deleteProd('${p.id}')">🗑 この商品を削除（記録なしのため可能）</button>`}`:""}
+  </div>
+  <div class="card">
+    <h2>サイズ・色の一括登録（Tシャツ・帽子向け）</h2>
+    <div class="row">
+      <div><label>品番の頭（空欄で自動採番）</label><input id="bId" placeholder="空欄なら ${nextAutoId()}"></div>
+      <div><label>品名</label><input id="bName" placeholder="例：にゃさTシャツ"></div>
+    </div>
+    <label>委託者（出品者）</label>${supSelect("bSup","bSupNew",CONFIG.OWNER)}
+    <div class="row">
+      <div><label>サイズ（読点・カンマ区切り）</label><input id="bSizes" placeholder="S,M,L,XL"></div>
+      <div><label>色（読点・カンマ区切り）</label><input id="bColors" placeholder="黒,白"></div>
+    </div>
+    <div class="row">
+      <div><label>販売価格（共通）</label><input id="bPrice" type="number"></div>
+      <div><label>原価目安（共通）</label><input id="bCost" type="number"></div>
+    </div>
+    <div class="row">
+      <div><label>分類</label><input id="bCat" list="catList" placeholder="例：Tシャツ"></div>
+      <div><label>補充基準（共通）</label><input id="bMin" type="number" value="0"></div>
+    </div>
+    <br><br><button class="big" onclick="bulkProd()">組み合わせをまとめて登録</button>
+    <p class="muted">サイズ×色の全組み合わせを自動生成します（例: S,M,L,XL × 黒,白 → 8件、品番 T-001-S-黒 …）。価格がサイズで違う場合は登録後に該当行をタップして個別修正。販売画面では同じ品名が1ボタンにまとまり、タップ後にサイズ・色を選びます。</p>
+  </div>
+  <div class="card"><h2>商品一覧</h2><table>
+    <tr><th>品番</th><th>品名</th><th>委託者</th><th>ｻｲｽﾞ/色</th><th>価格</th><th>状態</th></tr>
+    ${products.map(x=>`<tr onclick="window._editProd='${x.id}';render()">
+      <td>${x.id}</td><td>${x.name}</td><td>${psup(x)===CONFIG.OWNER?"小屋":psup(x)}</td><td>${vlabel(x)||"－"}</td><td>${yen(x.price)}</td><td>${x.status}</td></tr>`).join("")}
+  </table><p class="muted">行をタップで編集。廃番にすると販売画面から消えます（削除はしない）。</p></div>
+  <div class="card"><h2>委託者と手数料率</h2><table>
+    <tr><th>委託者</th><th>手数料率%</th></tr>
+    ${suppliers.map(s=>`<tr><td>${s.name}${!products.some(p=>psup(p)===s.name)&&s.name!==CONFIG.OWNER?
+        ` <button class="sub-btn" style="margin:0;padding:2px 8px;width:auto" onclick="deleteSupplier('${s.name}')">🗑</button>`:""}</td>
+      <td><input type="number" value="${Math.round(Number(s.rate)*100)}" style="width:64px;padding:6px;text-align:center"
+        onchange="saveRate('${s.name}',this.value)"></td></tr>`).join("")}
+  </table><p class="muted">新しい委託者は商品登録時に名前を入れると自動追加されます（初期率${Math.round(CONFIG.DEFAULT_RATE*100)}%）。率を変えたらその月の精算から反映。</p></div>`;
+}
+async function deleteProd(id){
+  const p=products.find(x=>x.id===id);
+  if(!confirm(`${p.id} ${pdisp(p)} を削除します（元に戻せません）`)) return;
+  try{
+    await api(`neko_products?id=eq.${encodeURIComponent(id)}`,{method:"DELETE"});
+    window._editProd=null; await loadAll(); render(); toast("🗑 削除しました");
+  }catch(e){
+    toast(/foreign key|violates/i.test(e.message)
+      ? "⚠ 入出庫記録があるため削除できません。「廃番」にしてください"
+      : "⚠ 削除失敗: "+e.message);
+  }
+}
+async function deleteSupplier(name){
+  if(!confirm(`委託者「${name}」を削除します（商品が1つもないため可能）`)) return;
+  try{
+    await api(`neko_suppliers?name=eq.${encodeURIComponent(name)}`,{method:"DELETE"});
+    await loadAll(); render(); toast("🗑 削除しました");
+  }catch(e){ toast("⚠ 削除失敗: "+e.message); }
+}
+async function saveRate(name, pct){
+  try{
+    await api(`neko_suppliers?name=eq.${encodeURIComponent(name)}`,{method:"PATCH",body:JSON.stringify({rate:(+pct||0)/100})});
+    await loadAll(); toast(`✅ ${name} の手数料率を${+pct}%にしました`);
+  }catch(e){ toast("⚠ 失敗: "+e.message); }
+}
+async function bulkProd(){
+  const prefix=$("#bId").value.trim()||nextAutoId(), name=$("#bName").value.trim();
+  const split=v=>v.split(/[、,\s／/]+/).map(s=>s.trim()).filter(Boolean);
+  const sizes=split($("#bSizes").value), colors=split($("#bColors").value);
+  const price=+$("#bPrice").value||0, cost=+$("#bCost").value||0, cat=$("#bCat").value.trim()||null;
+  if(!name){ toast("品名は必須です"); return; }
+  const ss=sizes.length?sizes:[null], cs=colors.length?colors:[null];
+  const rows=[]; let i=0;
+  const minS=+$("#bMin").value||0, sup=supValue("bSup","bSupNew");
+  for(const s of ss) for(const c of cs)
+    rows.push({id:[prefix,s,c].filter(Boolean).join("-"), name, supplier:sup, size:s, color:c,
+      price, cost, min_stock:minS, category:cat, status:"販売中", sort:i++});
+  const dup=rows.filter(r=>products.some(p=>p.id===r.id));
+  if(dup.length){ toast(`⚠ 品番が重複: ${dup[0].id} 等${dup.length}件。品番の頭を変えてください`); return; }
+  if(!confirm(`${rows.length}件を登録します（委託者: ${sup}）\n例: ${rows[0].id} ${name}${vlabel(rows[0])?`（${vlabel(rows[0])}）`:""}`)) return;
+  try{
+    await ensureSupplier(sup);
+    await api("neko_products",{method:"POST",body:JSON.stringify(rows)});
+    await loadAll(); render(); toast(`✅ ${rows.length}件を登録しました`);
+  }catch(e){ toast("⚠ 登録失敗: "+e.message); }
+}
+async function saveProd(existingId){
+  const body={ name:$("#pName").value.trim(), status:$("#pStatus").value,
+    supplier:supValue("pSup","pSupNew"),
+    size:$("#pSize").value.trim()||null, color:$("#pColor").value.trim()||null,
+    price:+$("#pPrice").value||0, cost:+$("#pCost").value||0, min_stock:+$("#pMin").value||0,
+    category:$("#pCat").value.trim()||null, sort:+$("#pSort").value||0 };
+  try{
+    await ensureSupplier(body.supplier);
+    if(existingId){
+      const all=document.getElementById("pAll");
+      if(all && all.checked){
+        // 同じ品名・委託者の全SKUへ共通項目だけ一括適用（サイズ・色・状態・表示順は各SKUのまま）
+        const p0=products.find(x=>x.id===existingId);
+        const shared={name:body.name, supplier:body.supplier, category:body.category,
+          price:body.price, cost:body.cost, min_stock:body.min_stock};
+        await api(`neko_products?name=eq.${encodeURIComponent(p0.name)}&supplier=eq.${encodeURIComponent(psup(p0))}`,
+          {method:"PATCH",body:JSON.stringify(shared)});
+        // 編集中SKU固有の項目（サイズ・色・状態・表示順）は個別に反映
+        await api(`neko_products?id=eq.${encodeURIComponent(existingId)}`,{method:"PATCH",
+          body:JSON.stringify({size:body.size, color:body.color, status:body.status, sort:body.sort})});
+      }else{
+        await api(`neko_products?id=eq.${encodeURIComponent(existingId)}`,{method:"PATCH",body:JSON.stringify(body)});
+      }
+    }else{
+      let id=$("#pId").value.trim();
+      if(!body.name){ toast("品名は必須です"); return; }
+      if(!id || id.endsWith("-")){ // 空欄=自動採番／複製の頭だけ=サイズ・色から補完
+        id = id.endsWith("-")? id+[body.size,body.color].filter(Boolean).join("-") : nextAutoId();
+        if(!id||id.endsWith("-")){ toast("品番を入力するか、サイズ・色を入れてください"); return; }
+      }
+      if(products.some(x=>x.id===id)){ toast(`⚠ 品番 ${id} は使用済みです`); return; }
+      await api("neko_products",{method:"POST",body:JSON.stringify({id,...body})});
+    }
+    window._editProd=null; window._cloneFrom=null; await loadAll(); render(); toast("✅ 保存しました");
+  }catch(e){ toast("⚠ 保存失敗: "+e.message); }
+}
+
+/* ---- 起動 ---- */
+(async()=>{
+  renderNav();
+  if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+  if(CONFIG.SUPABASE_URL.includes("YOUR-PROJECT")){ render(); return; }
+  try{ await loadAll(); render(); await flushQueue(); }
+  catch(e){ $("#app").innerHTML=`<div class="card warn">接続エラー: ${e.message}<br>CONFIGの設定とSupabaseの稼働状態（無料枠の一時停止）を確認してください。</div>`; }
+})();
+</script>
+</body>
+</html>
