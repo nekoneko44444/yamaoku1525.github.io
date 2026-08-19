@@ -55,10 +55,11 @@
       <legend>1. YAMAPユーザー</legend>
       <label>YAMAP ID または プロフィールURL</label>
       <div class="row">
-        <input type="text" id="yamapId" placeholder="例: 1234567 / https://yamap.com/users/1234567">
+        <input type="text" id="yamapId" placeholder="例: 1470710 / https://yamap.com/users/1470710">
         <button id="fetchBtn" style="flex:0 0 auto">自動取得</button>
       </div>
       <div id="status"></div>
+      <div id="profLink" class="hint"></div>
       <div class="hint">QRコードはIDから自動生成されます（読み取るとプロフィールが開き、そのままフォローできます）。名前・紹介文・アイコンの自動取得に失敗した場合は下で手動入力してください。</div>
     </fieldset>
 
@@ -2508,10 +2509,11 @@ async function init(){
   fontsReady = true;
   // 前回の作業状態を復元（写真以外）
   try {
-    const saved = localStorage.getItem("yamanoie-card-state");
+    const saved = localStorage.getItem("yamanoie-card-state-v2");
     if(saved) await applySettings(JSON.parse(saved));
   } catch(e){}
   syncInputs();
+  updateProfLink();
   render();
 }
 
@@ -2695,6 +2697,7 @@ async function autoFetch(){
   const st = $("status");
   if(!id){ st.innerHTML = '<span class="ng">IDが読み取れません。数字のID か users/数字 のURLを入れてください。</span>'; return; }
   state.id = id;
+  updateProfLink();
   $("fetchBtn").disabled = true;
   st.textContent = "取得中…（QRはID確定済み）";
   render();
@@ -2826,10 +2829,17 @@ function syncInputs(){
 async function applySettings(o){
   for(const k of CFG_KEYS) if(k in o) state[k] = o[k];
   if(o.photoData){ try { state.photo = await loadImg(o.photoData); } catch(e){} }
-  syncInputs(); render();
+  syncInputs(); updateProfLink(); render();
 }
 function autosave(){
-  try { localStorage.setItem("yamanoie-card-state", JSON.stringify(collectSettings(false))); } catch(e){}
+  try { localStorage.setItem("yamanoie-card-state-v2", JSON.stringify(collectSettings(false))); } catch(e){}
+}
+function updateProfLink(){
+  const el = $("profLink");
+  if(state.id){
+    const u = "https://yamap.com/users/" + state.id;
+    el.innerHTML = '取得元プロフィール: <a href="' + u + '" target="_blank" rel="noopener noreferrer">' + u + '</a>';
+  } else el.innerHTML = "";
 }
 function bind(){
   $("fetchBtn").onclick = autoFetch;
@@ -2852,7 +2862,7 @@ function bind(){
   $("urlSize").oninput = e => { state.urlSize = parseInt(e.target.value); syncLabels(); render(); };
   $("urlX").oninput = e => { state.urlX = parseInt(e.target.value); render(); };
   $("urlY").oninput = e => { state.urlY = parseInt(e.target.value); render(); };
-  $("yamapId").addEventListener("change", () => { const id = parseId($("yamapId").value.trim()); if(id){ state.id = id; render(); } });
+  $("yamapId").addEventListener("change", () => { const id = parseId($("yamapId").value.trim()); if(id){ state.id = id; updateProfLink(); render(); } });
   $("nameIn").oninput = e => { state.name = e.target.value; render(); };
   $("kanaIn").oninput = e => { state.kana = e.target.value; render(); };
   $("bioIn").oninput  = e => { state.bio  = e.target.value; render(); };
