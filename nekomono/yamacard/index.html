@@ -125,8 +125,8 @@
         <div><label>行間</label><input type="range" id="bioLine" min="120" max="200" value="150"></div>
         <div><label>上下位置</label><input type="range" id="bioY" min="-120" max="120" value="0"></div>
       </div>
-      <label style="margin-top:12px">YAMAP URL行の文言</label>
-      <input type="text" id="urlText" value="▲YAMAP　HTTPS://YAMAP.COM/" style="max-width:480px">
+      <label style="margin-top:12px">YAMAP URL行の文言（変えたい場合だけ入力。空なら標準表記）</label>
+      <input type="text" id="urlText" placeholder="▲YAMAP　HTTPS://YAMAP.COM/" style="max-width:480px">
       <div class="zctrl">
         <div><label>URL行の大きさ <span class="num" id="v_urlSize"></span></label><input type="range" id="urlSize" min="20" max="64" value="40"></div>
         <div><label>URL行の左右位置</label><input type="range" id="urlX" min="-400" max="400" value="0"></div>
@@ -2489,6 +2489,7 @@ const state = {
 };
 let bioMetrics = null;
 const URL_BASE = { x:676, y:2520, color:"#e0d4c5" };
+const URL_DEFAULT = "▲YAMAP　HTTPS://YAMAP.COM/";
 let tplF=null, tplB=null, fontsReady=false;
 
 function loadImg(src){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src; }); }
@@ -2822,7 +2823,7 @@ function syncInputs(){
   $("kanaSize").value = state.kanaSize; $("bioSize").value = state.bioSize;
   $("bioLine").value = Math.round(state.bioLine*100); $("bioY").value = state.bioY;
   $("photoZoom").value = Math.round(state.photoZoom*100);
-  $("urlText").value = state.urlText; $("urlSize").value = state.urlSize;
+  $("urlText").value = (state.urlText === URL_DEFAULT) ? "" : state.urlText; $("urlSize").value = state.urlSize;
   $("urlX").value = state.urlX; $("urlY").value = state.urlY;
   syncLabels();
 }
@@ -2858,7 +2859,7 @@ function bind(){
     fr.readAsText(f);
     e.target.value = "";
   };
-  $("urlText").oninput = e => { state.urlText = e.target.value; render(); };
+  $("urlText").oninput = e => { state.urlText = e.target.value || URL_DEFAULT; render(); };
   $("urlSize").oninput = e => { state.urlSize = parseInt(e.target.value); syncLabels(); render(); };
   $("urlX").oninput = e => { state.urlX = parseInt(e.target.value); render(); };
   $("urlY").oninput = e => { state.urlY = parseInt(e.target.value); render(); };
