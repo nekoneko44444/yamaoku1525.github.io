@@ -60,7 +60,7 @@
 </style>
 </head>
 <body>
-<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v3.8</small>
+<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v4.0</small>
 <span style="float:right"><button class="hbtn" onclick="refresh(true)" title="最新に更新">🔄</button><button class="hbtn" id="lockBtn" onclick="toggleAdmin()">🔒</button></span></header>
 <main id="app"><div class="card">読み込み中…</div></main>
 <nav id="nav"></nav>
@@ -388,11 +388,13 @@ function renderSell(){
     <h2>売れた商品をタップ</h2>
     <div class="grid">
       ${glist.map((g,i)=>{
+        const sm=stockMap();
         const st=g.list.reduce((a,p)=>a+stockAt(p.id,place),0);
+        const other=g.list.reduce((a,p)=>a+Object.values(sm[p.id]||{}).reduce((x,y)=>x+y,0),0)-st;
         const prices=[...new Set(g.list.map(p=>p.price))];
         return `<button class="pbtn ${selGroup===g.key?'sel':''}" onclick="selectGroup(${i})">
           <b>${g.name}</b>${multiSup()?`<span class="tag">${g.sup}</span>`:""}<span class="price">${yen(Math.min(...prices))}${prices.length>1?'〜':''}</span>
-          <span class="stock">残${st}${st<=0?'⚠':''}</span></button>`;
+          <span class="stock">残${st}${st<=0?(other>0?`（他所${other}）`:'⚠'):''}</span></button>`;
       }).join("")||`<p class="muted">販売中の商品がありません（商品タブで登録）</p>`}
     </div>
     <div id="varArea"></div>
@@ -428,9 +430,10 @@ function renderVarArea(){
   $("#varArea").innerHTML=`<label>サイズ・色を選ぶ</label><div class="grid">
     ${list.map(p=>{
       const st=stockAt(p.id,place);
+      const other=Object.values(stockMap()[p.id]||{}).reduce((x,y)=>x+y,0)-st;
       return `<button class="pbtn ${selProduct===p.id?'sel':''}" onclick="selectVar('${p.id}')">
         <b>${vlabel(p)||p.id}</b><span class="price">${yen(p.price)}</span>
-        <span class="stock">残${st}${st<=0?'⚠':''}</span></button>`;
+        <span class="stock">残${st}${st<=0?(other>0?`（他所${other}）`:'⚠'):''}</span></button>`;
     }).join("")}</div>`;
 }
 function selectVar(id){ selProduct=(selProduct===id?null:id); qty=1; window._sellPrice=null; renderSell(); }
@@ -456,7 +459,7 @@ async function doSell(){
       unit_price:pr, note: pr!==p.price?`割引販売（定価${p.price}円）`:null, by_name:byName()});
     if(!mv) return; // 連打の2回目以降は無視
     selProduct=null; selGroup=null; qty=1; window._sellPrice=null; render();
-    toast(`✅ ${pdisp(p)} ×${mv.qty}（${yen(pr)}） を記録`, mv);
+    toast(`✅ ${pdisp(p)} ×${mv.qty}（${yen(pr)}）｜${curPlace()} 残${stockAt(p.id,curPlace())}`, mv);
     // 低在庫アラート（ntfy設定時のみ）
     if(CONFIG.NTFY_TOPIC && (p.min_stock||0)>0){
       const total=Object.values(stockMap()[p.id]||{}).reduce((a,b)=>a+b,0);
@@ -468,51 +471,57 @@ async function doSell(){
 }
 
 /* ---- 入出庫（管理用） ---- */
+/* 組合視点で整理：すべて「選んだ場所」基準。移動は場所→場所 */
 const KINDS={
-  "制作":     {label:"制作（＋手元）",        from:null,   to:"HOME"},
-  "仕入":     {label:"仕入（＋手元）",        from:null,   to:"HOME"},
-  "委託搬入": {label:"委託搬入（手元→委託先）", from:"HOME", to:"PLACE"},
-  "戻り":     {label:"戻り（委託先→手元）",    from:"PLACE",to:"HOME"},
-  "受入":     {label:"委託品の受入（＋委託先）", from:null,   to:"PLACE"},
-  "返却":     {label:"委託品の返却（－委託先）", from:"PLACE",to:null},
-  "販売":     {label:"販売（場所を選ぶ）",     from:"PLACE",to:null},
-  "譲渡":     {label:"譲渡（－）",            from:"PLACE",to:null},
-  "廃棄":     {label:"廃棄（－）",            from:"PLACE",to:null},
-  "調整＋":   {label:"棚卸調整＋",            from:null,   to:"PLACE", store:"調整"},
-  "調整－":   {label:"棚卸調整－",            from:"PLACE",to:null,    store:"調整"}
+  "受入":   {label:"受入・納品（＋選んだ場所）",   from:null,    to:"PLACE"},
+  "移動":   {label:"移動（場所 → 場所）",         from:"PLACE", to:"PLACE2"},
+  "販売":   {label:"販売（－選んだ場所）",         from:"PLACE", to:null},
+  "返却":   {label:"委託者へ返却（－選んだ場所）",  from:"PLACE", to:null},
+  "譲渡":   {label:"譲渡（－選んだ場所）",         from:"PLACE", to:null},
+  "廃棄":   {label:"廃棄（－選んだ場所）",         from:"PLACE", to:null},
+  "調整＋": {label:"棚卸調整＋（＋選んだ場所）",    from:null,    to:"PLACE", store:"調整"},
+  "調整－": {label:"棚卸調整－（－選んだ場所）",    from:"PLACE", to:null,    store:"調整"},
+  "制作":   {label:"制作（小屋用：＋選んだ場所）",  from:null,    to:"PLACE"},
+  "仕入":   {label:"仕入（小屋用：＋選んだ場所）",  from:null,    to:"PLACE"}
 };
+const movePlaces = ()=>[...CONFIG.PLACES, CONFIG.HOME]; // 店舗を先頭に、自宅は最後
+function movePlaceDefault(){ return localStorage.getItem("neko_move_place")||curPlace(); }
 function renderMove(){
-  const places=[CONFIG.HOME,...CONFIG.PLACES];
+  const places=movePlaces(), defP=movePlaceDefault();
   $("#app").innerHTML=`
   <div class="card">
     <h2>入出庫を記録</h2>
     <div class="row">
       <div><label>種別</label>
-      <select id="mvKind">${Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}</select></div>
+      <select id="mvKind" onchange="document.getElementById('mvP2w').style.display=this.value==='移動'?'':'none'">${Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}</select></div>
       <div><label>日付（さかのぼり可）</label><input id="mvDate" type="date" value="${jst(new Date()).slice(0,10)}"></div>
     </div>
     <label>商品</label>
     <select id="mvProd">${products.filter(p=>p.status!=="廃番").map(p=>`<option value="${p.id}">${p.id} ${pdisp(p)}</option>`).join("")}</select>
     <div class="row">
       <div><label>数量</label><input id="mvQty" type="number" value="1" min="1"></div>
-      <div><label>場所（委託先等）</label><select id="mvPlace">${places.map(p=>`<option>${p}</option>`).join("")}</select></div>
+      <div><label>場所</label><select id="mvPlace" onchange="localStorage.setItem('neko_move_place',this.value)">${places.map(p=>`<option ${p===defP?'selected':''}>${p}</option>`).join("")}</select></div>
     </div>
+    <div id="mvP2w" style="display:none"><label>移動先</label>
+      <select id="mvPlace2">${places.map(p=>`<option>${p}</option>`).join("")}</select></div>
     <label>メモ（譲渡先・廃棄理由など）</label>
     <input id="mvNote" placeholder="例: ○○様へ贈答 / 不良のため廃棄">
     <br><br><button class="big" onclick="doMove()">記録する</button>
-    <p class="muted">※訂正は削除ではなく、月次タブの履歴から「取消」で行います。譲渡・廃棄はメモに相手先・理由を残すと確定申告の根拠になります。<br>※自分の商品は「制作・委託搬入・戻り」、他の委託者の商品は「受入・返却」（自宅を経由しない）を使います。</p>
+    <p class="muted">※在庫は「選んだ場所」に対して増減します（記録後に場所と残数を表示）。店に商品が届いたら「受入」、店同士や自宅からの移動は「移動」。訂正は月次タブの履歴から「取消」。譲渡・廃棄はメモに相手先・理由を残すと申告の根拠になります。</p>
   </div>
   ${variantGroups().length?`
   <div class="card">
     <h2>🧮 まとめて記録（サイズ×色）</h2>
     <div class="row">
       <div><label>商品</label><select id="bkGroup" onchange="renderMatrix()">${variantGroups().map((g,i)=>`<option value="${i}">${g.name}${multiSup()?`（${g.sup}）`:""}</option>`).join("")}</select></div>
-      <div><label>種別</label><select id="bkKind">${Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}</select></div>
+      <div><label>種別</label><select id="bkKind" onchange="document.getElementById('bkP2w').style.display=this.value==='移動'?'':'none'">${Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}</select></div>
     </div>
     <div class="row">
-      <div><label>場所（委託先等）</label><select id="bkPlace" onchange="renderMatrix()">${places.map(p=>`<option>${p}</option>`).join("")}</select></div>
+      <div><label>場所</label><select id="bkPlace" onchange="localStorage.setItem('neko_move_place',this.value);renderMatrix()">${places.map(p=>`<option ${p===defP?'selected':''}>${p}</option>`).join("")}</select></div>
       <div><label>日付</label><input id="bkDate" type="date" value="${jst(new Date()).slice(0,10)}"></div>
     </div>
+    <div id="bkP2w" style="display:none"><label>移動先</label>
+      <select id="bkPlace2">${places.map(p=>`<option>${p}</option>`).join("")}</select></div>
     <div id="matrixArea" style="overflow-x:auto"></div>
     <br><button class="big" onclick="doBulkMove()">まとめて記録する</button>
     <p class="muted">数を入れたマスだけ記録されます。薄い数字はその場所の現在庫。制作10枚＋委託搬入8枚のような日は、種別を変えて2回に分けて記録してください。</p>
@@ -547,8 +556,9 @@ function renderMatrix(){
     }).join("")}</tr>`).join("")}</table>`;
 }
 async function doBulkMove(){
-  const kind=$("#bkKind").value, def=KINDS[kind], place=$("#bkPlace").value;
-  const resolve=x=> x==="HOME"?CONFIG.HOME : x==="PLACE"?place : null;
+  const kind=$("#bkKind").value, def=KINDS[kind], place=$("#bkPlace").value, place2=$("#bkPlace2").value;
+  if(kind==="移動" && place===place2){ toast("移動元と移動先が同じです"); return; }
+  const resolve=x=> x==="PLACE"?place : x==="PLACE2"?place2 : null;
   const grp=variantGroups()[+$("#bkGroup").value];
   if(!grp) return;
   const d=$("#bkDate").value, today=jst(new Date()).slice(0,10);
@@ -568,15 +578,16 @@ async function doBulkMove(){
   try{
     await api("neko_movements",{method:"POST",body:JSON.stringify(rows)}); // 1リクエストで一括登録
     await loadAll(); render();
-    toast(`✅ ${rows.length}種類・合計${total}個を記録しました`);
+    toast(`✅ ${kind} ${rows.length}種類・${total}個｜${kind==="移動"?`${place}→${place2}`:place}`);
   }catch(e){ toast("⚠ 記録失敗: "+e.message); }
 }
 async function doMove(){
   const kind=$("#mvKind").value, def=KINDS[kind];
-  const place=$("#mvPlace").value;
-  const resolve=x=> x==="HOME"?CONFIG.HOME : x==="PLACE"?place : null;
+  const place=$("#mvPlace").value, place2=$("#mvPlace2").value;
+  const resolve=x=> x==="PLACE"?place : x==="PLACE2"?place2 : null;
   const p=products.find(x=>x.id===$("#mvProd").value);
   if(!p){ toast("商品を選択してください"); return; }
+  if(kind==="移動" && place===place2){ toast("移動元と移動先が同じです"); return; }
   try{
     const d=$("#mvDate").value, today=jst(new Date()).slice(0,10);
     const row={product_id:p.id, kind:def.store||kind, qty:+$("#mvQty").value||1,
@@ -585,7 +596,12 @@ async function doMove(){
     if(d && d!==today) row.at=`${d}T12:00:00+09:00`; // つけ忘れ分のさかのぼり記録
     const mv=await record(row);
     if(!mv) return;
-    toast(`✅ ${kind} ${p.name} ×${mv.qty} を記録`, mv);
+    // どこの在庫がいくつになったかを必ず示す（記録先の取り違え防止）
+    const tgt=row.place_to||row.place_from;
+    const msg=row.place_from&&row.place_to
+      ? `${row.place_from}→${row.place_to}（${row.place_to} 残${stockAt(p.id,row.place_to)}）`
+      : `${tgt} 残${stockAt(p.id,tgt)}`;
+    toast(`✅ ${kind} ${pdisp(p)} ×${mv.qty}｜${msg}`, mv);
   }catch(e){ toast("⚠ 記録失敗: "+e.message); }
 }
 
