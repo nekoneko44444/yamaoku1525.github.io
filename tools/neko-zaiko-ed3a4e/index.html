@@ -70,7 +70,7 @@
 </style>
 </head>
 <body>
-<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v4.1</small>
+<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v4.2</small>
 <span style="float:right"><button class="hbtn" onclick="refresh(true)" title="最新に更新">🔄</button><button class="hbtn" id="lockBtn" onclick="toggleAdmin()">🔒</button></span></header>
 <main id="app"><div class="card">読み込み中…</div></main>
 <nav id="nav"></nav>
@@ -430,10 +430,11 @@ function easyOn(){ return localStorage.getItem("neko_easy")!=="0"; } // 初期�
 function setEasy(on){ localStorage.setItem("neko_easy",on?"1":"0"); window._ez=null; render(); }
 function ez(){ return window._ez||(window._ez={step:1,gi:null,pid:null,qty:1,price:null,last:null}); }
 function ezReset(){ window._ez={step:1,gi:null,pid:null,qty:1,price:null,last:null}; render(); }
-function ezPick(i){ const e=ez(), g=sellGroups()[i]; e.gi=i;
+function ezPick(i){ const e=ez(), g=sellGroups()[i];
+  e.gi=i; e.pid=null; e.qty=1; e.price=null; // 前の選択の数量・割引を持ち越さない
   if(g.list.length===1&&!vlabel(g.list[0])){ e.pid=g.list[0].id; e.step=3; } else e.step=2;
   render(); }
-function ezVar(pid){ const e=ez(); e.pid=pid; e.step=3; render(); }
+function ezVar(pid){ const e=ez(); e.pid=pid; e.qty=1; e.price=null; e.step=3; render(); }
 function ezQty(n){ const e=ez(); e.qty=n; e.step=4; render(); }
 function ezStep(s){ ez().step=s; render(); }
 async function ezRecord(){
@@ -491,12 +492,25 @@ function renderEasy(){
     <button class="ezok" onclick="ezReset()">つづけて記録する</button>
     <button class="sub-btn" onclick="ezUndo()">⚠ まちがえた（今の記録を取り消す）</button>`;
   }
+  // ①の画面にだけ「今日の販売」を表示（さっき記録したっけ？の確認と後からの取消用）
+  let recentHtml="";
+  if(e.step===1){
+    const today=jst(new Date()).slice(0,10);
+    const recent=movements.filter(v=>v.kind==="販売"&&v.place_from===place&&jst(v.at).slice(0,10)===today).slice(-3).reverse();
+    const net=salesAgg(today).filter(s=>s.place===place);
+    const nq=net.reduce((a,s)=>a+s.qty,0), na=net.reduce((a,s)=>a+s.amt,0);
+    if(recent.length) recentHtml=`<div class="card"><h2>今日の販売：${nq}点・${yen(na)}</h2><table>
+      ${recent.map(v=>`<tr><td>${jst(v.at).slice(11,16)}</td><td>${pname(v.product_id)}</td><td>×${v.qty}</td>
+        <td>${movements.some(x=>x.reverses===v.id)?"取消済":typeof v.id!=="number"?"送信待ち":`<button class="sub-btn" style="margin:0;padding:2px 8px;width:auto" onclick="undoById(${v.id})">取消</button>`}</td></tr>`).join("")}
+    </table></div>`;
+  }
   $("#app").innerHTML=`
   <div class="card">
     <label>販売場所</label>
     <div class="seg">${CONFIG.PLACES.map(pl=>`<button class="${pl===place?'on':''}" onclick="setPlace('${pl}')">${pl}</button>`).join("")}</div>
   </div>
   <div class="card">${body}</div>
+  ${recentHtml}
   <p class="muted" style="text-align:center"><button class="ezback" onclick="setEasy(false)">くわしい画面（通常モード）に切り替える</button></p>`;
 }
 function selectGroup(i){
@@ -737,7 +751,7 @@ function renderStock(){
         return Object.entries(t).map(([k,v])=>`<tr><td>${k}</td><td>${v.qty}</td><td>${yen(v.cost)}</td></tr>`).join("");})()}
     </table>`:""}
     <p class="muted">委託搬入・戻りの記録日時が、管理責任が移った証跡になります（月次タブの履歴参照）。</p>
-    <button class="sub-btn" onclick="window._stocktake=true;render()">📝 棚卸モードを開く（実数を数えて入力）</button>
+    ${isAdmin()?`<button class="sub-btn" onclick="window._stocktake=true;render()">📝 棚卸モードを開く（実数を数えて入力）</button>`:""}
   </div>`;
 }
 
@@ -997,6 +1011,14 @@ function supValue(id,newId){
   const v=document.getElementById(id).value;
   return v==="__new" ? (document.getElementById(newId).value.trim()||CONFIG.OWNER) : v;
 }
+/* 画面を壊す記号（引用符・タグ文字等）の入力を弾く */
+const BAD_CHARS=/["'<>\\`]/;
+function validText(label, ...vals){
+  for(const v of vals){
+    if(v && BAD_CHARS.test(v)){ toast(`⚠ ${label}に使えない記号（" ' < > 等）が含まれています`); return false; }
+  }
+  return true;
+}
 function renderProd(){
   const editing=window._editProd;
   const p = editing? products.find(x=>x.id===editing) : null;
@@ -1106,6 +1128,7 @@ async function bulkProd(){
   const sizes=split($("#bSizes").value), colors=split($("#bColors").value);
   const price=+$("#bPrice").value||0, cost=+$("#bCost").value||0, cat=$("#bCat").value.trim()||null;
   if(!name){ toast("品名は必須です"); return; }
+  if(!validText("品名・品番・委託者・サイズ・色", name, prefix, supValue("bSup","bSupNew"), ...sizes, ...colors)) return;
   const ss=sizes.length?sizes:[null], cs=colors.length?colors:[null];
   const rows=[]; let i=0;
   const minS=+$("#bMin").value||0, sup=supValue("bSup","bSupNew");
@@ -1127,6 +1150,7 @@ async function saveProd(existingId){
     size:$("#pSize").value.trim()||null, color:$("#pColor").value.trim()||null,
     price:+$("#pPrice").value||0, cost:+$("#pCost").value||0, min_stock:+$("#pMin").value||0,
     category:$("#pCat").value.trim()||null, sort:+$("#pSort").value||0 };
+  if(!validText("品名・品番・委託者・サイズ・色", body.name, body.supplier, body.size, body.color, $("#pId").value)) return;
   try{
     await ensureSupplier(body.supplier);
     if(existingId){
