@@ -42,6 +42,16 @@
   .big{width:100%; padding:14px; font-size:17px; font-weight:bold; color:#fff; background:var(--accent); border:none; border-radius:12px;}
   .big:disabled{opacity:.4;}
   .sub-btn{width:100%; padding:10px; font-size:14px; background:#fff; color:var(--main); border:1px solid var(--main); border-radius:10px; margin-top:8px;}
+  /* かんたんモード */
+  .ezstep{font-size:15px; color:var(--sub); margin-bottom:8px;}
+  .ezgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .ezgrid .pbtn{padding:20px 12px; font-size:17px;}
+  .eznum{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .eznum button{padding:22px 0; font-size:26px; font-weight:bold; border:1px solid var(--line); border-radius:14px; background:#fff; color:var(--text);}
+  .ezsum{font-size:21px; font-weight:bold; text-align:center; margin:14px 0; line-height:1.6;}
+  .ezok{width:100%; padding:20px; font-size:21px; font-weight:bold; color:#fff; background:var(--ok); border:none; border-radius:14px;}
+  .ezback{background:none; border:none; color:var(--main); font-size:15px; padding:8px 0; text-decoration:underline;}
+  .ezdone{text-align:center; font-size:22px; font-weight:bold; padding:20px 0; color:var(--ok);}
   .seg{display:flex; gap:6px;}
   .seg button{flex:1; padding:12px 4px; font-size:15px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--text);}
   .seg button.on{background:var(--accent); color:#fff; border-color:var(--accent); font-weight:bold;}
@@ -60,7 +70,7 @@
 </style>
 </head>
 <body>
-<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v4.0</small>
+<header>🐈 ねこのモノづくり小屋 在庫・販売記録<small id="ver">v4.1</small>
 <span style="float:right"><button class="hbtn" onclick="refresh(true)" title="最新に更新">🔄</button><button class="hbtn" id="lockBtn" onclick="toggleAdmin()">🔒</button></span></header>
 <main id="app"><div class="card">読み込み中…</div></main>
 <nav id="nav"></nav>
@@ -376,6 +386,7 @@ function sellGroups(){
   return Object.values(groups);
 }
 function renderSell(){
+  if(easyOn()){ renderEasy(); return; }
   const place=curPlace(), glist=sellGroups();
   $("#app").innerHTML=`
   <div class="card">
@@ -408,9 +419,85 @@ function renderSell(){
     return recent.length?`<div class="card"><h2>今日の販売：${nq}点・${yen(na)}（この場所）</h2><table>
       ${recent.map(v=>`<tr><td>${jst(v.at).slice(11,16)}</td><td>${pname(v.product_id)}</td><td>×${v.qty}</td>
         <td>${movements.some(x=>x.reverses===v.id)?"取消済":typeof v.id!=="number"?"送信待ち":`<button class="sub-btn" style="margin:0;padding:2px 8px;width:auto" onclick="undoById(${v.id})">取消</button>`}</td></tr>`).join("")}
-    </table></div>`:"";})()}`;
+    </table></div>`:"";})()}
+  <p class="muted" style="text-align:center"><button class="ezback" onclick="setEasy(true)">かんたんモードに切り替える</button></p>`;
   if(selGroup) renderVarArea();
   if(selProduct) renderQtyArea();
+}
+
+/* ---- かんたんモード（1画面1操作のレジ型ウィザード） ---- */
+function easyOn(){ return localStorage.getItem("neko_easy")!=="0"; } // 初期値はON
+function setEasy(on){ localStorage.setItem("neko_easy",on?"1":"0"); window._ez=null; render(); }
+function ez(){ return window._ez||(window._ez={step:1,gi:null,pid:null,qty:1,price:null,last:null}); }
+function ezReset(){ window._ez={step:1,gi:null,pid:null,qty:1,price:null,last:null}; render(); }
+function ezPick(i){ const e=ez(), g=sellGroups()[i]; e.gi=i;
+  if(g.list.length===1&&!vlabel(g.list[0])){ e.pid=g.list[0].id; e.step=3; } else e.step=2;
+  render(); }
+function ezVar(pid){ const e=ez(); e.pid=pid; e.step=3; render(); }
+function ezQty(n){ const e=ez(); e.qty=n; e.step=4; render(); }
+function ezStep(s){ ez().step=s; render(); }
+async function ezRecord(){
+  const e=ez(), p=products.find(x=>x.id===e.pid);
+  const pr=(e.price==null||isNaN(e.price))?p.price:e.price;
+  try{
+    const mv=await record({product_id:p.id, kind:"販売", qty:e.qty, place_from:curPlace(),
+      unit_price:pr, note: pr!==p.price?`割引販売（定価${p.price}円）`:null, by_name:byName()});
+    if(!mv) return;
+    e.last=mv; e.step=5; render();
+  }catch(err){ toast("⚠ 記録失敗: "+err.message); }
+}
+async function ezUndo(){ const e=ez(); if(e.last&&typeof e.last.id==="number") await undo(e.last); ezReset(); }
+function renderEasy(){
+  const place=curPlace(), e=ez(), glist=sellGroups();
+  const g=e.gi!=null? glist[e.gi]:null;
+  const p=e.pid? products.find(x=>x.id===e.pid):null;
+  let body="";
+  if(e.step===1){
+    body=`<div class="ezstep">① 売れた商品をタップしてください</div>
+    <div class="ezgrid">${glist.map((gr,i)=>{
+      const st=gr.list.reduce((a,x)=>a+stockAt(x.id,place),0);
+      const prices=[...new Set(gr.list.map(x=>x.price))];
+      return `<button class="pbtn" onclick="ezPick(${i})"><b>${gr.name}</b>
+        <span class="price">${yen(Math.min(...prices))}${prices.length>1?"〜":""}</span>
+        <span class="stock">残${st}</span></button>`;}).join("")||`<p class="muted">販売中の商品がありません</p>`}</div>`;
+  }else if(e.step===2){
+    body=`<div class="ezstep">② サイズ・色をタップしてください</div>
+    <div class="ezgrid">${g.list.map(x=>`<button class="pbtn" onclick="ezVar('${x.id}')">
+      <b>${vlabel(x)||x.id}</b><span class="price">${yen(x.price)}</span>
+      <span class="stock">残${stockAt(x.id,place)}</span></button>`).join("")}</div>
+    <button class="ezback" onclick="ezStep(1)">← もどる</button>`;
+  }else if(e.step===3){
+    body=`<div class="ezstep">③ いくつ売れましたか？</div>
+    <div class="eznum">${[1,2,3,4,5,6].map(n=>`<button onclick="ezQty(${n})">${n}</button>`).join("")}</div>
+    <div class="qtybar" style="margin-top:12px">
+      <button onclick="ez().qty=Math.max(1,ez().qty-1);render()">－</button>
+      <span class="qty">${e.qty}</span>
+      <button onclick="ez().qty++;render()">＋</button>
+      <button class="sub-btn" style="flex:1;margin:0" onclick="ezStep(4)">7個以上→次へ</button>
+    </div>
+    <button class="ezback" onclick="ezStep(${(g&&(g.list.length>1||vlabel(g.list[0])))?2:1})">← もどる</button>`;
+  }else if(e.step===4){
+    const pr=(e.price==null||isNaN(e.price))?p.price:e.price;
+    body=`<div class="ezstep">④ この内容でよければ緑のボタンを押してください</div>
+    <div class="ezsum">${pdisp(p)}<br>${e.qty}個 × ${yen(pr)} ＝ ${yen(pr*e.qty)}<br>
+      <span class="muted" style="font-size:14px;font-weight:normal">場所：${place}</span></div>
+    ${e.price==null?`<button class="sub-btn" onclick="ez().price=${p.price};render()">値引きして売った（金額を直す）</button>`
+      :`<label>実際の1個の値段</label><input type="number" value="${pr}" onchange="ez().price=+this.value;render()"><br>`}
+    <br><button class="ezok" onclick="ezRecord()">記録する</button>
+    <button class="ezback" onclick="ezStep(3)">← もどる</button>`;
+  }else{
+    body=`<div class="ezdone">✅ 記録しました</div>
+    <div class="ezsum" style="font-weight:normal;font-size:16px">${p?pdisp(p):""} ×${e.qty}<br>${place}の残り：${p?stockAt(p.id,place):"-"}個</div>
+    <button class="ezok" onclick="ezReset()">つづけて記録する</button>
+    <button class="sub-btn" onclick="ezUndo()">⚠ まちがえた（今の記録を取り消す）</button>`;
+  }
+  $("#app").innerHTML=`
+  <div class="card">
+    <label>販売場所</label>
+    <div class="seg">${CONFIG.PLACES.map(pl=>`<button class="${pl===place?'on':''}" onclick="setPlace('${pl}')">${pl}</button>`).join("")}</div>
+  </div>
+  <div class="card">${body}</div>
+  <p class="muted" style="text-align:center"><button class="ezback" onclick="setEasy(false)">くわしい画面（通常モード）に切り替える</button></p>`;
 }
 function selectGroup(i){
   const g=sellGroups()[i];
