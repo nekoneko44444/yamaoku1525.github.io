@@ -1,6 +1,6 @@
 {
   "source": "custom Blender geometry; original reference based",
-  "triangles": 76168,
+  "triangles": 79088,
   "meshes": 1,
   "primitives": 4,
   "skins": 1,
@@ -9,9 +9,9 @@
     "blinkLeft",
     "blinkRight"
   ],
-  "bytes": 3621792,
-  "sha256": "65a7c964a1a96cb86ea5a7e5134834ec794b430b3b73a56d672f39a9225ae5ec",
-  "editableParts": 290,
+  "bytes": 3736664,
+  "sha256": "a89f6cffd8effb138232a280058190f7228da73d102c601c0d24d1ea715e2ebb",
+  "editableParts": 300,
   "animations": [
     "Idle"
   ],
