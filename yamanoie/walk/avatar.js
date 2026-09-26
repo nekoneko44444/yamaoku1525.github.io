@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {FootPlanner,solveLeg} from './gait.mjs?v=60b3682816cb';
+import {FootPlanner,solveLeg} from './gait.mjs?v=a6fd3a8bdf7b';
 const V=(p)=>new THREE.Vector3(p.x,p.y,p.z),UP=new THREE.Vector3(0,1,0),X=new THREE.Vector3(1,0,0),Z=new THREE.Vector3(0,0,1);
 const deltaAngle=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
 export class Nagika {

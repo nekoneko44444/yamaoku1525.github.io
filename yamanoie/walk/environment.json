@@ -1,0 +1,16 @@
+{
+  "interior": {
+    "model": "./room.glb?v=d65c7481b3bd003f",
+    "bytes": 4343560,
+    "sha256": "d65c7481b3bd003f220af9a14edb0fa2b80c1344b778d97dc02912358a5be3c5",
+    "navigation": "./navigation.json?v=a6fd3a8bdf7b",
+    "route": "./demo-route.json?v=a6fd3a8bdf7b"
+  },
+  "exterior": {
+    "model": "../3d/exterior.glb?v=b21a04b328453c0c",
+    "bytes": 15230216,
+    "sha256": "b21a04b328453c0c733faa3b65e8e3d20a5e7eed26ca6ab2eddd527085c5ecfc",
+    "navigation": "./exterior-navigation.json?v=a6fd3a8bdf7b",
+    "route": "./exterior-route.json?v=a6fd3a8bdf7b"
+  }
+}

@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import {GLTFLoader} from '../3d/vendor/GLTFLoader.js';
-import {WalkWorld,movementVector} from './movement.mjs?v=60b3682816cb';
-import {Nagika} from './avatar.js?v=60b3682816cb';
+import {mergeGeometries} from '../3d/vendor/BufferGeometryUtils.js';
+import {WalkWorld,movementVector,turnPace,terrainPace} from './movement.mjs?v=a6fd3a8bdf7b';
+import {Nagika} from './avatar.js?v=a6fd3a8bdf7b';
 
 const $=id=>document.getElementById(id);
 const stage=$('stage'),keys=new Set(),touch={forward:0,right:0,turn:0};
@@ -9,6 +10,7 @@ let renderer,scene,camera,world,position,yaw=0,pitch=0,eye=1.48;
 let ready=false,busy=false,lost=false,dirty=true,light=matchMedia('(pointer:coarse),(max-width:700px)').matches;
 let last=0,sim=0,diagnosticTime=0,model,drag=null,padPointer=null;
 let avatar,viewMode='follow',demoRoute=[],demoIndex=0,demo=false,renderedAt=0,walkYaw=0,cameraDistance=2.6;
+let area='interior',fast=false;
 const velocity={x:0,z:0},raycaster=new THREE.Raycaster();
 const controller=new AbortController(),{signal}=controller;
 
@@ -17,7 +19,7 @@ function showError(message){ready=false;stopDemo();$('loading').hidden=true;$('e
 function dispose(){
   ready=false;clearInput();renderer?.setAnimationLoop(null);
   avatar?.dispose();avatar=null;
-  if(model){const textures=new Set(),materials=new Set();model.traverse(o=>{o.geometry?.dispose();for(const m of (Array.isArray(o.material)?o.material:[o.material])){if(!m)continue;materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v);}});textures.forEach(t=>t.dispose());materials.forEach(m=>m.dispose());}
+  if(model){const textures=new Set(),materials=new Set();model.traverse(o=>{o.geometry?.dispose();for(const m of (Array.isArray(o.material)?o.material:[o.material])){if(!m)continue;materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v);}});textures.forEach(t=>{t.source?.data?.close?.();t.dispose();});materials.forEach(m=>m.dispose());}
   renderer?.dispose();renderer?.domElement.remove();renderer=null;model=null;scene=null;
 }
 function setSpawn(id){
@@ -47,14 +49,15 @@ function updateCamera(){
     for(let d=.15;d<=distance;d+=.08){const p=target.clone().addScaledVector(direction,d);if(!world.floor(p.x,p.z)){distance=Math.max(.12,d-.10);break;}}
     cameraDistance=Math.min(distance,cameraDistance+(distance-cameraDistance)*.12);
     camera.position.copy(target).addScaledVector(direction,cameraDistance);camera.lookAt(target);
-    if(avatar){avatar.root.visible=distance>.48;avatar.shadow.visible=avatar.root.visible;}
+    if(avatar){avatar.root.visible=distance>1.10;avatar.shadow.visible=avatar.root.visible;}
   }
   const floor=world.floor(position.x,position.z);$('place-name').textContent=floor?.label??'山の家';
 }
 function resize(){if(!renderer)return;const w=stage.clientWidth,h=stage.clientHeight;renderer.setPixelRatio(light?1:Math.min(devicePixelRatio,1.5));renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<h?68:62;camera.updateProjectionMatrix();dirty=true;}
 function drawMap(){
   if($('map-content').hidden||!world)return;
-  const c=$('map').getContext('2d'),scale=32,ox=393,oy=113;
+  const floors=world.data.floors,minX=Math.min(...floors.map(f=>f.minX)),maxX=Math.max(...floors.map(f=>f.maxX)),minZ=Math.min(...floors.map(f=>f.minZ)),maxZ=Math.max(...floors.map(f=>f.maxZ));
+  const c=$('map').getContext('2d'),scale=Math.min(628/(maxX-minX),184/(maxZ-minZ)),ox=330-(minX+maxX)*scale/2,oy=108-(minZ+maxZ)*scale/2;
   c.clearRect(0,0,660,216);
   const rect=o=>[(o.minX*scale+ox),(o.minZ*scale+oy),(o.maxX-o.minX)*scale,(o.maxZ-o.minZ)*scale];
   c.fillStyle='#f4e7bd22';c.strokeStyle='#c7d3b477';c.lineWidth=1.5;
@@ -73,51 +76,65 @@ function tick(time){
     if((f||r)&&viewMode==='portrait')setView('follow');
     if((f||r)&&demo)stopDemo();
     const turn=Number(keys.has('KeyE'))-Number(keys.has('KeyQ'))+touch.turn;yaw+=turn*1.6/60;dirty ||= !!turn;
-    const speed=(keys.has('ShiftLeft')||keys.has('ShiftRight'))?.38:.58;
+    const speed=fast||keys.has('ShiftLeft')||keys.has('ShiftRight')?1.05:.58;
     const v=movementVector(f,r,yaw,speed,1/60);
     if(demo&&demoRoute.length){
       let goal=demoRoute[demoIndex],dx=goal.x-position.x,dz=goal.z-position.z,d=Math.hypot(dx,dz);
       if(d<.012){demoIndex++;if(demoIndex>=demoRoute.length){stopDemo();}else {goal=demoRoute[demoIndex];dx=goal.x-position.x;dz=goal.z-position.z;d=Math.hypot(dx,dz);}}
-      if(demo){const step=Math.min(.50/60,d);v.dx=dx/d*step;v.dz=dz/d*step;const targetYaw=Math.atan2(dx,-dz);yaw+=Math.atan2(Math.sin(targetYaw-yaw),Math.cos(targetYaw-yaw))*.10;}
+      if(demo){const step=Math.min((speed>.58?1.05:.50)/60,d);v.dx=dx/d*step;v.dz=dz/d*step;const targetYaw=Math.atan2(dx,-dz);yaw+=Math.atan2(Math.sin(targetYaw-yaw),Math.cos(targetYaw-yaw))*.10;}
       velocity.x=v.dx*60;velocity.z=v.dz*60;
     }else{const a=1-Math.exp(-12/60);velocity.x+=(v.dx*60-velocity.x)*a;velocity.z+=(v.dz*60-velocity.z)*a;if(Math.hypot(velocity.x,velocity.z)<.001)velocity.x=velocity.z=0;}
-    if(velocity.x||velocity.z){const next=world.move(position,velocity.x/60,velocity.z/60);moving ||= Math.hypot(next.x-position.x,next.z-position.z)>.0001;position=next;}
+    if(velocity.x||velocity.z){const pace=speed>.58?Math.min(turnPace(velocity.x,velocity.z,avatar.heading),terrainPace(world,position,velocity.x,velocity.z)):1;const next=world.move(position,velocity.x*pace/60,velocity.z*pace/60);moving ||= Math.hypot(next.x-position.x,next.z-position.z)>.0001;position=next;}
     // Smooth the existing 0.12 / 0.18 steps; no head bob or jumping.
     const rise=position.floor+world.data.eyeHeight-eye;dirty ||= Math.abs(rise)>.0001;eye+=rise*(1-Math.exp(-12/60));sim-=1/60;
     avatar?.update(position,1/60);
+    const portal=world.data.portal;
+    if(portal&&position.x>=portal.minX&&position.x<=portal.maxX&&position.z>=portal.minZ&&position.z<=portal.maxZ){start(portal.target);return;}
   }
-  const label=(avatar?.planner.speed??0)>.015?'歩く':'立ち止まる';if($('motion-state').textContent!==label)$('motion-state').textContent=label;
+  const label=(avatar?.planner.speed??0)>.015?(avatar.planner.speed>.75?'速足で歩く':'歩く'):'立ち止まる';if($('motion-state').textContent!==label)$('motion-state').textContent=label;
   if((dirty||moving||avatar)&&(!light||time-renderedAt>31)){updateCamera();drawMap();renderer.render(scene,camera);dirty=false;renderedAt=time;}
-  if(time-diagnosticTime>250){diagnosticTime=time;const d={x:+position.x.toFixed(3),z:+position.z.toFixed(3),yaw:+yaw.toFixed(3),floor:position.floor,canStand:world.canStand(position.x,position.z),drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,quality:light?'light':'standard',avatar:!!avatar,viewMode,steps:avatar?.planner.steps,footReachError:avatar?.error,feet:avatar?.planner.feet.map(f=>({lift:+f.lift.toFixed(3),planted:!f.swing})),demo,demoIndex};stage.dataset.position=JSON.stringify(d);$('diagnostic').textContent=JSON.stringify(d);}
+  if(time-diagnosticTime>250){diagnosticTime=time;const d={area,fast:fast||keys.has('ShiftLeft')||keys.has('ShiftRight'),speed:+(avatar?.planner.speed??0).toFixed(3),x:+position.x.toFixed(3),z:+position.z.toFixed(3),yaw:+yaw.toFixed(3),floor:position.floor,canStand:world.canStand(position.x,position.z),drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,quality:light?'light':'standard',avatar:!!avatar,viewMode,steps:avatar?.planner.steps,footReachError:avatar?.error,feet:avatar?.planner.feet.map(f=>({lift:+f.lift.toFixed(3),planted:!f.swing})),demo,demoIndex};stage.dataset.position=JSON.stringify(d);$('diagnostic').textContent=JSON.stringify(d);}
 }
-async function start(){
+function optimizeExterior(root){
+  root.updateMatrixWorld(true);const groups=new Map(),result=new THREE.Group();
+  root.traverse(o=>{if(!o.isMesh)return;const g=o.geometry.clone();g.applyMatrix4(o.matrixWorld);if(Array.isArray(o.material)){result.add(new THREE.Mesh(g,o.material));return;}const key=o.material.uuid+'|'+Object.keys(g.attributes).sort().join(',')+'|'+Boolean(g.index);const group=groups.get(key)||{material:o.material,geometries:[]};group.geometries.push(g);groups.set(key,group);});
+  for(const {material,geometries}of groups.values()){const geometry=mergeGeometries(geometries,false);if(!geometry)throw new Error('外観の描画を準備できません');result.add(new THREE.Mesh(geometry,material));geometries.forEach(g=>g.dispose());}
+  const originals=new Set();root.traverse(o=>{if(o.isMesh)originals.add(o.geometry);});originals.forEach(g=>g.dispose());return result;
+}
+async function start(destination=area,spawnId='entry'){
+  if(typeof destination!=='string')destination=area;
   if(busy)return;busy=true;ready=false;$('welcome').hidden=true;$('error').hidden=true;$('loading').hidden=false;$('hud').hidden=true;stage.dataset.state='loading';
   try{
-    dispose();lost=false;
-    const res=await fetch('./navigation.json?v=60b3682816cb');if(!res.ok)throw new Error('歩行データを取得できません');world=new WalkWorld(await res.json());
+    stopDemo();dispose();lost=false;area=destination;stage.dataset.area=area;
+    $('loading-title').textContent=area==='exterior'?'山の家の外へ出ています':'山の家の戸を開けています';$('progress').textContent='準備中';
+    const environmentResponse=await fetch('./environment.json?v=a6fd3a8bdf7b');if(!environmentResponse.ok)throw new Error('山の家の情報を取得できません');const environment=(await environmentResponse.json())[area];
+    const res=await fetch(environment.navigation);if(!res.ok)throw new Error('歩行データを取得できません');world=new WalkWorld(await res.json());
     renderer=new THREE.WebGLRenderer({antialias:!light,powerPreference:'default'});
     renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
     $('scene').append(renderer.domElement);
-    scene=new THREE.Scene();scene.background=new THREE.Color('#dfe5df');camera=new THREE.PerspectiveCamera(66,1,.035,80);
+    scene=new THREE.Scene();scene.background=new THREE.Color(area==='exterior'?'#c6d8df':'#dfe5df');camera=new THREE.PerspectiveCamera(66,1,.035,160);
     scene.add(new THREE.HemisphereLight(0xf2f2e8,0x656050,1.55));
     const sun=new THREE.DirectionalLight(0xffe8ca,1.25);sun.position.set(-10,18,8);scene.add(sun);
     const fill=new THREE.DirectionalLight(0xcce5ff,.7);fill.position.set(6,4,-2);scene.add(fill);
-    for(const [x,y,z] of [[-2.55,-.4,3.36],[.6,1.35,3.3],[3.65,.1,3.15],[-6.2,-1.2,2.11],[-9.6,-1.25,2.1]]){const l=new THREE.PointLight(0xffe7c1,14,9,2);l.position.set(x,z,-y);scene.add(l);}
+    if(area==='interior')for(const [x,y,z] of [[-2.55,-.4,3.36],[.6,1.35,3.3],[3.65,.1,3.15],[-6.2,-1.2,2.11],[-9.6,-1.25,2.1]]){const l=new THREE.PointLight(0xffe7c1,14,9,2);l.position.set(x,z,-y);scene.add(l);}
     renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();lost=true;light=true;showError('ブラウザーが描画を中断しました。復帰すれば自動で開き直します。戻らない場合は再試行できます。');});
     renderer.domElement.addEventListener('webglcontextrestored',()=>{if(lost){lost=false;light=true;start();}});
-    const gltf=await new GLTFLoader().loadAsync('../3d/yamanoie-illustrated.glb?v=87efa2f094a8322f',e=>{$('progress').textContent=`読み込み ${Math.floor(Math.min(1,e.loaded/4332664)*100)}% · 表示を準備中`;});
-    model=gltf.scene;model.traverse(o=>{if(!o.isMesh)return;for(const m of(Array.isArray(o.material)?o.material:[o.material])){m.side=THREE.DoubleSide;if('transmission'in m)m.transmission=0;if(/glass/i.test(m.name)){m.color.set('#c4d1ca');m.roughness=.8;m.metalness=0;m.emissive.set('#68766f');m.emissiveIntensity=.12;m.transparent=true;m.opacity=.25;m.depthWrite=false;}m.needsUpdate=true;}});scene.add(model);
-    const manifestResponse=await fetch('./nagika-manifest.json?v=60b3682816cb');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
+    const gltf=await new GLTFLoader().loadAsync(environment.model,e=>{$('progress').textContent=`読み込み ${Math.floor(Math.min(1,e.loaded/environment.bytes)*100)}% · 表示を準備中`;});
+    model=area==='exterior'?optimizeExterior(gltf.scene):gltf.scene;model.traverse(o=>{if(!o.isMesh)return;for(const m of(Array.isArray(o.material)?o.material:[o.material])){m.side=THREE.DoubleSide;if('transmission'in m)m.transmission=0;if(/glass/i.test(m.name)){m.color.set('#c4d1ca');m.roughness=.8;m.metalness=0;m.emissive.set('#68766f');m.emissiveIntensity=.12;m.transparent=true;m.opacity=.25;m.depthWrite=false;}m.needsUpdate=true;}});scene.add(model);
+    const manifestResponse=await fetch('./nagika-manifest.json?v=a6fd3a8bdf7b');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
     const character=await new GLTFLoader().loadAsync('./nagika.glb?v='+manifest.sha256.slice(0,12),e=>{$('progress').textContent=`なぎかちゃんを準備中 ${Math.floor(Math.min(1,e.loaded/manifest.bytes)*100)}%`;});
     avatar=new Nagika(character.scene,world);scene.add(avatar.root,avatar.shadow);
-    const routeResponse=await fetch('./demo-route.json?v=60b3682816cb');if(routeResponse.ok)demoRoute=(await routeResponse.json()).points;
+    const routeResponse=await fetch(environment.route);demoRoute=[];if(routeResponse.ok)demoRoute=(await routeResponse.json()).points;
     $('places').replaceChildren();for(const p of world.data.spawns){const b=document.createElement('button');b.textContent=p.label;b.onclick=()=>{stopDemo();setSpawn(p.id);stage.focus({preventScroll:true});};$('places').append(b);}
-    setSpawn('entry');resize();if(lost)throw new Error('読み込み中に3Dの描画が中断されました。再試行してください。');ready=true;stage.dataset.state='ready';$('loading').hidden=true;$('hud').hidden=false;stage.focus({preventScroll:true});renderer.setAnimationLoop(tick);
+    $('area').textContent=area==='interior'?'外へ出る':'中へ入る';$('home').textContent=area==='interior'?'入口に戻る':'玄関前に戻る';
+    setSpawn(spawnId);resize();if(lost)throw new Error('読み込み中に3Dの描画が中断されました。再試行してください。');ready=true;stage.dataset.state='ready';$('loading').hidden=true;$('hud').hidden=false;stage.focus({preventScroll:true});renderer.setAnimationLoop(tick);
   }catch(e){console.error(e);showError(e.message||'通信と、このブラウザーの3D対応を確認して再試行してください。');}
   finally{busy=false;}
 }
 
 $('start').onclick=start;$('retry').onclick=()=>{light=true;start();};$('home').onclick=()=>{if(ready){stopDemo();setSpawn('entry');stage.focus({preventScroll:true});}};
+$('area').onclick=()=>{if(ready)start(area==='interior'?'exterior':'interior',area==='interior'?'view':'entry');};
+$('pace').onclick=()=>{fast=!fast;$('pace').setAttribute('aria-pressed',String(fast));$('pace').textContent=fast?'速足：オン':'速足：オフ';stage.focus({preventScroll:true});};
 function stopDemo(){demo=false;$('demo').textContent='歩く様子を見る';clearInput();}
 $('demo').onclick=()=>{if(!ready)return;if(demo){stopDemo();return;}setSpawn('entry');demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';stage.focus({preventScroll:true});};
 $('view-mode').onclick=()=>{setView(viewMode==='eyes'?'follow':'eyes');stage.focus({preventScroll:true});};
@@ -145,4 +162,6 @@ window.addEventListener('pageshow',e=>{if(e.persisted)start();});
 if(new URLSearchParams(location.search).has('qa')){
   const b=document.createElement('button');b.textContent='QA: 描画の中断と復帰';b.style.cssText='position:absolute;bottom:16px;right:22px;z-index:10;padding:12px';
   b.onclick=()=>{if(!ready)return;const ext=renderer.getContext().getExtension('WEBGL_lose_context');if(!ext)throw new Error('Context-loss simulation is unavailable');ext.loseContext();setTimeout(()=>ext.restoreContext(),600);};stage.append(b);
+  const door=document.createElement('button');door.textContent='QA: 玄関を歩いて通る';door.style.cssText='position:absolute;bottom:62px;right:22px;z-index:10;padding:12px';
+  door.onclick=()=>{if(!ready)return;setSpawn('entry');demoRoute=[{x:position.x,z:area==='interior'?3.15:3.60}];demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';};stage.append(door);
 }

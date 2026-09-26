@@ -3,7 +3,14 @@
 // crossing thin walls during long frames; axes slide along obstacles.
 export class WalkWorld {
   constructor(data) { this.data=data; this.radius=data.radius; }
-  floor(x,z) { return this.data.floors.find(f=>x>=f.minX&&x<=f.maxX&&z>=f.minZ&&z<=f.maxZ); }
+  floor(x,z) {
+    const f=this.data.floors.find(f=>x>=f.minX&&x<=f.maxX&&z>=f.minZ&&z<=f.maxZ);if(!f)return;
+    const h=this.data.heightField;if(!h)return f;
+    const u=(x-h.minX)/h.unit,v=(z-h.minZ)/h.unit,i=Math.floor(u),j=Math.floor(v);
+    if(i<0||j<0||i>=h.width-1||j>=h.depth-1)return f;
+    const at=(a,b)=>h.heights[b*h.width+a],tx=u-i,tz=v-j;
+    return {...f,height:(at(i,j)*(1-tx)+at(i+1,j)*tx)*(1-tz)+(at(i,j+1)*(1-tx)+at(i+1,j+1)*tx)*tz};
+  }
   canStand(x,z) {
     const r=this.radius;
     if(!this.floor(x,z)) return false;
@@ -25,12 +32,13 @@ export class WalkWorld {
     // Only the simulation passes bounded movement, but guard external misuse.
     if(steps>10000) throw new RangeError('Unbounded movement');
     const next={...position};
+    const allowed=(x,z)=>this.canStand(x,z)&&Math.abs(this.floor(x,z).height-this.floor(next.x,next.z).height)<=(this.data.maxStep??.26);
     for(let i=0;i<steps;i++) {
       const x=next.x+dx/steps,z=next.z+dz/steps;
-      if(this.canStand(x,z)) { next.x=x;next.z=z; }
+      if(allowed(x,z)) { next.x=x;next.z=z; }
       else {
-        if(this.canStand(x,next.z)) next.x=x;
-        if(this.canStand(next.x,z)) next.z=z;
+        if(allowed(x,next.z)) next.x=x;
+        if(allowed(next.x,z)) next.z=z;
       }
     }
     next.floor=this.floor(next.x,next.z)?.height??0;
@@ -44,4 +52,17 @@ export function movementVector(forward,right,yaw,speed,dt) {
   const s=Math.min(1,length)*speed*Math.min(Math.max(dt,0),.10)/length;
   return {dx:(Math.sin(yaw)*forward+Math.cos(yaw)*right)*s,
           dz:(-Math.cos(yaw)*forward+Math.sin(yaw)*right)*s};
+}
+
+// Fast walking eases down while the character turns, as a real short stride
+// does. This keeps the support foot planted through abrupt direction changes.
+export function turnPace(dx,dz,heading){
+  const length=Math.hypot(dx,dz);if(!length)return 1;
+  const facing=(dx*Math.sin(heading)+dz*Math.cos(heading))/length;
+  return .36+.64*Math.max(0,facing)**2;
+}
+export function terrainPace(world,position,dx,dz){
+  const d=Math.hypot(dx,dz);if(!d)return 1;
+  const heights=[-.24,-.12,0,.12,.24].map(t=>world.floor(position.x+dx/d*t,position.z+dz/d*t)?.height??position.floor);
+  return Math.max(...heights)-Math.min(...heights)>.045?.50:1;
 }

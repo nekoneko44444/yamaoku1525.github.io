@@ -14,7 +14,7 @@ export class FootPlanner {
     return {...target,y:this.floorAt(target.x,target.z)};
   }
   begin(foot,root,heading,speed,turnOnly=false){
-    const duration=turnOnly?.25:clamp(.30+(.8-speed)*.10,.29,.36);
+    const duration=turnOnly?.25:clamp(.322-Math.max(0,speed-.58)*.25,.20,.36);
     const ahead=turnOnly?0:speed*duration+.070;
     foot.swing={t:0,duration,start:{...foot.plant},end:this.safeTarget(root,heading,foot.side,ahead),fromHeading:foot.heading,toHeading:heading,turnOnly};
     this.steps++;
@@ -50,8 +50,9 @@ export class FootPlanner {
         // mid-stride or dragging the planted support foot to a neutral pose.
         if(!moving&&!s.turnOnly&&s.t<.65){const stop=this.safeTarget(root,heading,foot.side,.025);const a=1-Math.exp(-12*dt);s.end.x+=(stop.x-s.end.x)*a;s.end.z+=(stop.z-s.end.z)*a;s.end.y=this.floorAt(s.end.x,s.end.z);}
         const u=smooth(s.t);base={x:s.start.x+(s.end.x-s.start.x)*u,z:s.start.z+(s.end.z-s.start.z)*u,y:s.start.y+(s.end.y-s.start.y)*u};
-        const clearance=s.turnOnly?.036:.048+Math.min(.075,Math.abs(s.end.y-s.start.y)*.5);
+        const clearance=s.turnOnly?.036:.048+Math.min(.075,Math.max(0,s.end.y-s.start.y)*.5);
         lift=clearance*Math.sin(Math.PI*s.t);roll=-.08*Math.sin(Math.PI*s.t);headingFoot=s.fromHeading+angle(s.toHeading,s.fromHeading)*u;
+        lift=Math.max(lift,this.floorAt(base.x,base.z)-base.y+.015*Math.sin(Math.PI*s.t));
         if(s.t===1){foot.plant={...s.end};foot.heading=s.toHeading;foot.swing=null;base={...foot.plant};headingFoot=foot.heading;lift=0;roll=-.12;foot.landing=.07;}
       }else{
         base={...foot.plant};

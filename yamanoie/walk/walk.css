@@ -4,3 +4,5 @@
 @media(max-width:700px){.map-wrap{top:146px;bottom:auto}.character-tools{left:21px;right:21px;bottom:76px;justify-content:flex-end}}
 @media(max-width:700px){.character-tools{gap:6px}.character-tools button{padding:11px 10px;font-size:10px}#joystick{bottom:120px}}
 #stage[data-view="portrait"] #joystick,#stage[data-view="portrait"] .touch-turn{display:none}
+#pace{position:absolute;left:51px;bottom:290px;padding:12px 18px;background:#183b32eb;color:#f1e8ce;border:1px solid #fff5;border-radius:24px;font-size:12px;min-height:44px}#pace[aria-pressed="true"]{background:#ead5a4;color:#173d35;border-color:#ead5a4}#stage[data-view="portrait"] #pace{display:none}
+@media(max-width:700px){#pace{left:32px;bottom:253px;font-size:11px;padding:11px 15px}.place{top:93px;max-width:155px}.actions{top:139px;left:21px;right:auto}.map-wrap{top:190px}#guide{top:190px;max-height:calc(100dvh - 290px);overflow:auto}.actions button{min-height:40px}#places{flex-wrap:wrap}#places button{min-height:36px}.map-wrap:has(#map-content:not([hidden])){z-index:2}}
