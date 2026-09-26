@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {FootPlanner,solveLeg} from './gait.mjs';
+import {FootPlanner,solveLeg} from './gait.mjs?v=8b496ed747b2';
 const V=(p)=>new THREE.Vector3(p.x,p.y,p.z),UP=new THREE.Vector3(0,1,0),X=new THREE.Vector3(1,0,0),Z=new THREE.Vector3(0,0,1);
 const deltaAngle=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
 export class Nagika {
@@ -42,20 +42,21 @@ export class Nagika {
       this.bones[side+'HairRoot'].quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(X,Math.sin(this.phase-.6)*.06*this.amount));
     }
     this.bones.backpack.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(X,Math.sin(this.phase*2-.4)*.015*this.amount));
-    // The apron clears the advancing thigh, then settles after the foot lands.
-    // Drive the cloth from the solved lift, so stopping cannot leave it flared.
-    const apronTarget=-.10-.08*this.amount-.34*Math.max(...feet.map(f=>f.lift/.105));
-    this.apronAngle=(this.apronAngle??apronTarget)+(apronTarget-(this.apronAngle??apronTarget))*(1-Math.exp(-20*dt));
-    this.bones.apronFront.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(X,this.apronAngle));
     this.bones.flower.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(X,Math.sin(this.phase-.8)*.10*this.amount));
-    this.root.updateMatrixWorld(true);this.error=0;
+    this.root.updateMatrixWorld(true);this.error=0;let kneeAdvance=0;
     for(const f of feet){
       const side=f.side===1?'left':'right',upper=side+'UpperLeg',lower=side+'LowerLeg',foot=side+'Foot';
       const hip=this.bones[upper].getWorldPosition(new THREE.Vector3()),[a,b]=this.lengths[side];
       const solution=solveLeg(hip,f.ankle,a,b,{x:Math.sin(this.heading),y:0,z:Math.cos(this.heading)});this.error=Math.max(this.error,solution.reachError);
+      kneeAdvance=Math.max(kneeAdvance,(solution.knee.x-hip.x)*Math.sin(this.heading)+(solution.knee.z-hip.z)*Math.cos(this.heading));
       this.direction(upper,lower,V(solution.knee));this.direction(lower,foot,V(solution.ankle));
       const footQ=new THREE.Quaternion().setFromAxisAngle(UP,f.renderHeading).multiply(new THREE.Quaternion().setFromAxisAngle(X,f.roll)).multiply(this.rest[foot].world);this.rotateWorld(foot,footQ);
     }
+    // A bent thigh still needs clearance after the foot lands. Use the actual
+    // solved knee, and settle slowly only when that clearance is no longer needed.
+    const apronTarget=-.12-.40*THREE.MathUtils.clamp((kneeAdvance-.04)/.13,0,1);
+    this.apronAngle=Math.min(apronTarget,(this.apronAngle??apronTarget)+(apronTarget-(this.apronAngle??apronTarget))*(1-Math.exp(-12*dt)));
+    this.bones.apronFront.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(X,this.apronAngle));
     const blinkPhase=this.time%4.1,blink=blinkPhase<.16?Math.sin(Math.PI*blinkPhase/.16):0;
     for(const mesh of this.meshes)if(mesh.morphTargetDictionary){for(const n of ['blinkLeft','blinkRight']){const idx=mesh.morphTargetDictionary[n];if(idx!==undefined)mesh.morphTargetInfluences[idx]=blink;}}
     this.root.updateMatrixWorld(true);this.shadow.position.set(position.x,position.floor+.012,position.z);this.shadow.scale.set(1,.76,1);

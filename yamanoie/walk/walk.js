@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from '../3d/vendor/GLTFLoader.js';
-import {WalkWorld,movementVector} from './movement.mjs';
-import {Nagika} from './avatar.js';
+import {WalkWorld,movementVector} from './movement.mjs?v=8b496ed747b2';
+import {Nagika} from './avatar.js?v=8b496ed747b2';
 
 const $=id=>document.getElementById(id);
 const stage=$('stage'),keys=new Set(),touch={forward:0,right:0,turn:0};
@@ -86,7 +86,7 @@ async function start(){
   if(busy)return;busy=true;ready=false;$('welcome').hidden=true;$('error').hidden=true;$('loading').hidden=false;$('hud').hidden=true;stage.dataset.state='loading';
   try{
     dispose();lost=false;
-    const res=await fetch('./navigation.json');if(!res.ok)throw new Error('歩行データを取得できません');world=new WalkWorld(await res.json());
+    const res=await fetch('./navigation.json?v=8b496ed747b2');if(!res.ok)throw new Error('歩行データを取得できません');world=new WalkWorld(await res.json());
     renderer=new THREE.WebGLRenderer({antialias:!light,powerPreference:'default'});
     renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
     $('scene').append(renderer.domElement);
@@ -99,10 +99,10 @@ async function start(){
     renderer.domElement.addEventListener('webglcontextrestored',()=>{if(lost){lost=false;light=true;start();}});
     const gltf=await new GLTFLoader().loadAsync('../3d/yamanoie-illustrated.glb?v=87efa2f094a8322f',e=>{$('progress').textContent=`読み込み ${Math.floor(Math.min(1,e.loaded/4332664)*100)}% · 表示を準備中`;});
     model=gltf.scene;model.traverse(o=>{if(!o.isMesh)return;for(const m of(Array.isArray(o.material)?o.material:[o.material])){m.side=THREE.DoubleSide;if('transmission'in m)m.transmission=0;if(/glass/i.test(m.name)){m.color.set('#c4d1ca');m.roughness=.8;m.metalness=0;m.emissive.set('#68766f');m.emissiveIntensity=.12;m.transparent=true;m.opacity=.25;m.depthWrite=false;}m.needsUpdate=true;}});scene.add(model);
-    const manifestResponse=await fetch('./nagika-manifest.json');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
+    const manifestResponse=await fetch('./nagika-manifest.json?v=8b496ed747b2');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
     const character=await new GLTFLoader().loadAsync('./nagika.glb?v='+manifest.sha256.slice(0,12),e=>{$('progress').textContent=`なぎかちゃんを準備中 ${Math.floor(Math.min(1,e.loaded/manifest.bytes)*100)}%`;});
     avatar=new Nagika(character.scene,world);scene.add(avatar.root,avatar.shadow);
-    const routeResponse=await fetch('./demo-route.json');if(routeResponse.ok)demoRoute=(await routeResponse.json()).points;
+    const routeResponse=await fetch('./demo-route.json?v=8b496ed747b2');if(routeResponse.ok)demoRoute=(await routeResponse.json()).points;
     $('places').replaceChildren();for(const p of world.data.spawns){const b=document.createElement('button');b.textContent=p.label;b.onclick=()=>{stopDemo();setSpawn(p.id);stage.focus({preventScroll:true});};$('places').append(b);}
     setSpawn('entry');resize();if(lost)throw new Error('読み込み中に3Dの描画が中断されました。再試行してください。');ready=true;stage.dataset.state='ready';$('loading').hidden=true;$('hud').hidden=false;stage.focus({preventScroll:true});renderer.setAnimationLoop(tick);
   }catch(e){console.error(e);showError(e.message||'通信と、このブラウザーの3D対応を確認して再試行してください。');}
