@@ -27,15 +27,23 @@ export class FootPlanner {
     let active=this.feet.find(f=>f.swing);
     if(!active){
       const candidates=this.feet.map(f=>({foot:f,behind:(root.x-f.plant.x)*Math.sin(heading)+(root.z-f.plant.z)*Math.cos(heading),offset:dist(f.plant,this.neutral(root,heading,f.side)),turn:Math.abs(angle(heading,f.heading))}));
-      candidates.sort((a,b)=>moving?b.behind-a.behind:b.turn-a.turn);
+      const need=c=>Math.max(c.behind/.075,c.offset/.19,c.turn/.7);
+      candidates.sort((a,b)=>need(b)-need(a));
       const c=candidates[0];
-      if((moving&&c.behind>.075)||(!moving&&c.turn>.38))this.begin(c.foot,root,heading,Math.max(speed,.15),!moving);
+      if((moving&&(c.behind>.075||c.offset>.19||c.turn>.7))||(!moving&&(c.turn>.38||c.offset>.21)))this.begin(c.foot,root,heading,Math.max(speed,.15),!moving);
       active=this.feet.find(f=>f.swing);
     }
     for(const foot of this.feet){
       let base,headingFoot=foot.heading,roll=0,lift=0;
       if(foot.swing){
-        const s=foot.swing;s.t=Math.min(1,s.t+dt/s.duration);
+        const s=foot.swing;
+        // A sharp corner cannot leave the support leg behind for a full
+        // straight-line stride. Land the airborne foot sooner, then pivot on
+        // it; the support foot still never slides across the floor.
+        const support=this.feet.find(f=>f!==foot&&!f.swing);
+        const supportReach=support?dist(support.plant,this.neutral(root,heading,support.side)):0;
+        const catchup=clamp(1+(supportReach-.18)*24,1,3);
+        s.t=Math.min(1,s.t+dt/s.duration*catchup);
         // Steering can adjust the landing early in flight, never a planted foot.
         if(moving&&s.t<.55){const fresh=this.safeTarget(root,heading,foot.side,speed*s.duration*(1-s.t)+.11);const a=1-Math.exp(-8*dt);s.end.x+=(fresh.x-s.end.x)*a;s.end.z+=(fresh.z-s.end.z)*a;s.end.y=this.floorAt(s.end.x,s.end.z);s.toHeading=heading;}
         // A stop finishes the airborne step near the body instead of freezing
