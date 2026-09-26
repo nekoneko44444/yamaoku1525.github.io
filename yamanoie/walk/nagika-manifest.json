@@ -1,0 +1,20 @@
+{
+  "source": "custom Blender geometry; original reference based",
+  "triangles": 76168,
+  "meshes": 1,
+  "primitives": 4,
+  "skins": 1,
+  "joints": 31,
+  "morphTargets": [
+    "blinkLeft",
+    "blinkRight"
+  ],
+  "bytes": 3621792,
+  "sha256": "65a7c964a1a96cb86ea5a7e5134834ec794b430b3b73a56d672f39a9225ae5ec",
+  "editableParts": 290,
+  "animations": [
+    "Idle"
+  ],
+  "runtimeGait": "world-space contact IK, not GLB treadmill clip",
+  "status": "reviewable character; not final likeness approval"
+}
