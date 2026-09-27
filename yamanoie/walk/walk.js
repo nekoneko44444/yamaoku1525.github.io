@@ -1,15 +1,15 @@
 import * as THREE from 'three';
 import {GLTFLoader} from '../3d/vendor/GLTFLoader.js';
 import {mergeGeometries} from '../3d/vendor/BufferGeometryUtils.js';
-import {WalkWorld,movementVector,turnPace,terrainPace} from './movement.mjs?v=a6fd3a8bdf7b';
-import {Nagika} from './avatar.js?v=a6fd3a8bdf7b';
+import {WalkWorld,movementVector,turnPace,terrainPace} from './movement.mjs?v=1db1af8a60b8';
+import {Nagika} from './avatar.js?v=1db1af8a60b8';
 
 const $=id=>document.getElementById(id);
 const stage=$('stage'),keys=new Set(),touch={forward:0,right:0,turn:0};
 let renderer,scene,camera,world,position,yaw=0,pitch=0,eye=1.48;
 let ready=false,busy=false,lost=false,dirty=true,light=matchMedia('(pointer:coarse),(max-width:700px)').matches;
 let last=0,sim=0,diagnosticTime=0,model,drag=null,padPointer=null;
-let avatar,viewMode='follow',demoRoute=[],demoIndex=0,demo=false,renderedAt=0,walkYaw=0,cameraDistance=2.6;
+let avatar,viewMode='eyes',walkView='eyes',demoRoute=[],demoIndex=0,demo=false,renderedAt=0,walkYaw=0,cameraDistance=2.6;
 let area='interior',fast=false;
 const velocity={x:0,z:0},raycaster=new THREE.Raycaster();
 const controller=new AbortController(),{signal}=controller;
@@ -25,11 +25,12 @@ function dispose(){
 function setSpawn(id){
   const s=world.data.spawns.find(p=>p.id===id);
   if(!s||!world.canStand(s.x,s.z))throw new Error('確認済みの開始位置が通れません: '+id);
-  setView('follow');clearInput();position={x:s.x,z:s.z,floor:world.floor(s.x,s.z).height};yaw=s.yaw;pitch=0;eye=position.floor+world.data.eyeHeight;sim=0;last=0;dirty=true;cameraDistance=2.6;avatar?.reset(position,yaw);updateCamera();drawMap();
+  setView(walkView);clearInput();position={x:s.x,z:s.z,floor:world.floor(s.x,s.z).height};yaw=s.yaw;pitch=0;eye=position.floor+world.data.eyeHeight;sim=0;last=0;dirty=true;cameraDistance=2.6;avatar?.reset(position,yaw);updateCamera();drawMap();
 }
 function setView(mode){
   if(viewMode==='portrait'&&mode!=='portrait')yaw=walkYaw;
   if(mode==='portrait'&&viewMode!=='portrait'){walkYaw=yaw;yaw=-avatar.heading;pitch=0;}
+  if(mode!=='portrait')walkView=mode;
   viewMode=mode;stage.dataset.view=mode;$('view-mode').textContent=mode==='eyes'?'なぎかと歩く':'自分の目線にする';$('portrait').textContent=mode==='portrait'?'さんぽに戻る':'なぎかを見る';dirty=true;
 }
 function updateCamera(){
@@ -73,7 +74,7 @@ function tick(time){
   while(sim>=1/60){
     let f=Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'))+touch.forward;
     let r=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+touch.right;
-    if((f||r)&&viewMode==='portrait')setView('follow');
+    if((f||r)&&viewMode==='portrait')setView(walkView);
     if((f||r)&&demo)stopDemo();
     const turn=Number(keys.has('KeyE'))-Number(keys.has('KeyQ'))+touch.turn;yaw+=turn*1.6/60;dirty ||= !!turn;
     const speed=fast||keys.has('ShiftLeft')||keys.has('ShiftRight')?1.05:.58;
@@ -107,7 +108,7 @@ async function start(destination=area,spawnId='entry'){
   try{
     stopDemo();dispose();lost=false;area=destination;stage.dataset.area=area;
     $('loading-title').textContent=area==='exterior'?'山の家の外へ出ています':'山の家の戸を開けています';$('progress').textContent='準備中';
-    const environmentResponse=await fetch('./environment.json?v=a6fd3a8bdf7b');if(!environmentResponse.ok)throw new Error('山の家の情報を取得できません');const environment=(await environmentResponse.json())[area];
+    const environmentResponse=await fetch('./environment.json?v=1db1af8a60b8');if(!environmentResponse.ok)throw new Error('山の家の情報を取得できません');const environment=(await environmentResponse.json())[area];
     const res=await fetch(environment.navigation);if(!res.ok)throw new Error('歩行データを取得できません');world=new WalkWorld(await res.json());
     renderer=new THREE.WebGLRenderer({antialias:!light,powerPreference:'default'});
     renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
@@ -121,7 +122,7 @@ async function start(destination=area,spawnId='entry'){
     renderer.domElement.addEventListener('webglcontextrestored',()=>{if(lost){lost=false;light=true;start();}});
     const gltf=await new GLTFLoader().loadAsync(environment.model,e=>{$('progress').textContent=`読み込み ${Math.floor(Math.min(1,e.loaded/environment.bytes)*100)}% · 表示を準備中`;});
     model=area==='exterior'?optimizeExterior(gltf.scene):gltf.scene;model.traverse(o=>{if(!o.isMesh)return;for(const m of(Array.isArray(o.material)?o.material:[o.material])){m.side=THREE.DoubleSide;if('transmission'in m)m.transmission=0;if(/glass/i.test(m.name)){m.color.set('#c4d1ca');m.roughness=.8;m.metalness=0;m.emissive.set('#68766f');m.emissiveIntensity=.12;m.transparent=true;m.opacity=.25;m.depthWrite=false;}m.needsUpdate=true;}});scene.add(model);
-    const manifestResponse=await fetch('./nagika-manifest.json?v=a6fd3a8bdf7b');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
+    const manifestResponse=await fetch('./nagika-manifest.json?v=1db1af8a60b8');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
     const character=await new GLTFLoader().loadAsync('./nagika.glb?v='+manifest.sha256.slice(0,12),e=>{$('progress').textContent=`なぎかちゃんを準備中 ${Math.floor(Math.min(1,e.loaded/manifest.bytes)*100)}%`;});
     avatar=new Nagika(character.scene,world);scene.add(avatar.root,avatar.shadow);
     const routeResponse=await fetch(environment.route);demoRoute=[];if(routeResponse.ok)demoRoute=(await routeResponse.json()).points;
@@ -138,7 +139,7 @@ $('pace').onclick=()=>{fast=!fast;$('pace').setAttribute('aria-pressed',String(f
 function stopDemo(){demo=false;$('demo').textContent='歩く様子を見る';clearInput();}
 $('demo').onclick=()=>{if(!ready)return;if(demo){stopDemo();return;}setSpawn('entry');demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';stage.focus({preventScroll:true});};
 $('view-mode').onclick=()=>{setView(viewMode==='eyes'?'follow':'eyes');stage.focus({preventScroll:true});};
-$('portrait').onclick=()=>{if(!ready)return;stopDemo();setView(viewMode==='portrait'?'follow':'portrait');stage.focus({preventScroll:true});};
+$('portrait').onclick=()=>{if(!ready)return;stopDemo();setView(viewMode==='portrait'?walkView:'portrait');stage.focus({preventScroll:true});};
 $('help-toggle').onclick=()=>{$('guide').hidden=!$('guide').hidden;$('help-toggle').setAttribute('aria-expanded',String(!$('guide').hidden));clearInput();};
 $('map-toggle').onclick=()=>{$('map-content').hidden=!$('map-content').hidden;$('map-toggle').setAttribute('aria-expanded',String(!$('map-content').hidden));$('map-toggle').lastElementChild.textContent=$('map-content').hidden?'＋':'−';drawMap();};
 $('map-toggle').click();
@@ -164,4 +165,6 @@ if(new URLSearchParams(location.search).has('qa')){
   b.onclick=()=>{if(!ready)return;const ext=renderer.getContext().getExtension('WEBGL_lose_context');if(!ext)throw new Error('Context-loss simulation is unavailable');ext.loseContext();setTimeout(()=>ext.restoreContext(),600);};stage.append(b);
   const door=document.createElement('button');door.textContent='QA: 玄関を歩いて通る';door.style.cssText='position:absolute;bottom:62px;right:22px;z-index:10;padding:12px';
   door.onclick=()=>{if(!ready)return;setSpawn('entry');demoRoute=[{x:position.x,z:area==='interior'?3.15:3.60}];demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';};stage.append(door);
+  const aisle=document.createElement('button');aisle.textContent='QA: 入口左の棚を通る';aisle.style.cssText='position:absolute;bottom:108px;right:22px;z-index:10;padding:12px';
+  aisle.onclick=()=>{if(!ready||area!=='interior')return;setSpawn('entry');demoRoute=[{x:1.6,z:2.085},{x:-3.55,z:2.085}];demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';};stage.append(aisle);
 }
