@@ -1,47 +1,61 @@
 import * as THREE from 'three';
 import {GLTFLoader} from '../3d/vendor/GLTFLoader.js';
 import {mergeGeometries} from '../3d/vendor/BufferGeometryUtils.js';
-import {WalkWorld,movementVector,turnPace,terrainPace} from './movement.mjs?v=408989f53161';
-import {Nagika} from './avatar.js?v=408989f53161';
-import {WALK_SPEED,FAST_SPEED,TOUR_SPEED,TURN_SPEED,keyboardMotion,dragView,wheelZoom} from './controls.mjs?v=408989f53161';
+import {WalkWorld,movementVector,turnPace,terrainPace} from './movement.mjs?v=7ac40a17a3a5';
+import {Nagika} from './avatar.js?v=7ac40a17a3a5';
+import {WALK_SPEED,FAST_SPEED,TOUR_SPEED,TURN_SPEED,keyboardMotion,dragView,wheelZoom} from './controls.mjs?v=7ac40a17a3a5';
 
 const $=id=>document.getElementById(id);
 const stage=$('stage'),keys=new Set(),touch={forward:0,right:0,turn:0};
 let renderer,scene,camera,world,position,yaw=0,pitch=0,eye=1.48;
 let ready=false,busy=false,lost=false,dirty=true,light=matchMedia('(pointer:coarse),(max-width:700px)').matches;
 let last=0,sim=0,diagnosticTime=0,model,drag=null,padPointer=null;
-let avatar,viewMode='eyes',walkView='eyes',demoRoute=[],demoIndex=0,demo=false,renderedAt=0,walkYaw=0,cameraDistance=2.6;
-let area='interior',fast=false,standingHeading;
+let avatar,viewMode='eyes',walkView='eyes',demoRoute=[],demoIndex=0,demo=false,renderedAt=0,portraitOrbit=0,cameraDistance=2.6;
+let area='interior',fast=false,standingHeading,photoMode=false,photoTimer;
 const velocity={x:0,z:0},raycaster=new THREE.Raycaster();
 const controller=new AbortController(),{signal}=controller;
 
 function clearInput(){keys.clear();touch.forward=touch.right=touch.turn=0;velocity.x=velocity.z=0;drag=null;padPointer=null;standingHeading=undefined;$('scene').dataset.dragging='false';$('stick').style.transform='';}
-function showError(message){ready=false;stopDemo();$('loading').hidden=true;$('error').hidden=false;$('error-text').textContent=message;stage.dataset.state='error';}
+function showError(message){setPhotoMode(false);ready=false;stopDemo();$('loading').hidden=true;$('error').hidden=false;$('error-text').textContent=message;stage.dataset.state='error';}
 function dispose(){
   ready=false;clearInput();renderer?.setAnimationLoop(null);
   avatar?.dispose();avatar=null;
   if(model){const textures=new Set(),materials=new Set();model.traverse(o=>{o.geometry?.dispose();for(const m of (Array.isArray(o.material)?o.material:[o.material])){if(!m)continue;materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v);}});textures.forEach(t=>{t.source?.data?.close?.();t.dispose();});materials.forEach(m=>m.dispose());}
   renderer?.dispose();renderer?.domElement.remove();renderer=null;model=null;scene=null;
 }
-function setSpawn(id){
+function setSpawn(id,{keepFraming=false}={}){
   const s=world.data.spawns.find(p=>p.id===id);
   if(!s||!world.canStand(s.x,s.z))throw new Error('確認済みの開始位置が通れません: '+id);
-  setView(walkView);clearInput();position={x:s.x,z:s.z,floor:world.floor(s.x,s.z).height};yaw=s.yaw;pitch=0;camera.zoom=1;camera.updateProjectionMatrix();eye=position.floor+world.data.eyeHeight;sim=0;last=0;dirty=true;cameraDistance=2.6;avatar?.reset(position,yaw);updateCamera();drawMap();
+  clearInput();position={x:s.x,z:s.z,floor:world.floor(s.x,s.z).height};yaw=s.yaw;
+  if(!keepFraming){pitch=0;portraitOrbit=0;camera.zoom=1;camera.updateProjectionMatrix();}
+  eye=position.floor+world.data.eyeHeight;sim=0;last=0;dirty=true;cameraDistance=2.6;avatar?.reset(position,yaw);setView(viewMode);updateCamera();drawMap();
 }
 function setView(mode){
-  if(viewMode==='portrait'&&mode!=='portrait')yaw=walkYaw;
-  if(mode==='portrait'&&viewMode!=='portrait'){walkYaw=yaw;yaw=-avatar.heading;pitch=0;}
+  if(mode==='portrait'&&viewMode!=='portrait'){portraitOrbit=0;pitch=0;}
   if(mode!=='portrait')walkView=mode;
-  viewMode=mode;stage.dataset.view=mode;$('view-mode').textContent=mode==='eyes'?'なぎかと歩く':'自分の目線にする';$('portrait').textContent=mode==='portrait'?'さんぽに戻る':'なぎかを見る';dirty=true;
+  viewMode=mode;stage.dataset.view=mode;
+  for(const button of document.querySelectorAll('[data-view-choice]'))button.setAttribute('aria-pressed',String(button.dataset.viewChoice===mode));
+  dirty=true;
+}
+function setPhotoMode(enabled){
+  if(enabled&&!ready)return;
+  photoMode=enabled;stage.dataset.photo=String(enabled);clearTimeout(photoTimer);clearInput();
+  for(const element of stage.querySelectorAll('header,#hud,.qa-control'))element.inert=enabled;
+  $('photo-hint').hidden=!enabled;
+  $('photo-status').textContent=enabled?'撮影モード。案内は3秒で消えます。ドラッグで構図を調整。画面をタップするか、Escapeキーでメニューに戻ります。':'メニューを表示しました。';
+  if(enabled)photoTimer=setTimeout(()=>{$('photo-hint').hidden=true;},3000);
+  stage.focus({preventScroll:true});
 }
 function updateCamera(){
-  stage.dataset.camera=JSON.stringify({yaw,pitch,zoom:camera.zoom,heading:avatar?.heading});
+  // Portrait framing follows the character's actual heading, independently of
+  // the route's steering direction. Switching views never restarts the walk.
+  const viewYaw=viewMode==='portrait'?-avatar.heading+portraitOrbit:yaw;
   if(viewMode==='eyes'){
     camera.position.set(position.x,eye,position.z);camera.rotation.order='YXZ';camera.rotation.set(pitch,-yaw,0);if(avatar){avatar.root.visible=false;avatar.shadow.visible=false;}
   }else{
     const target=new THREE.Vector3(position.x,position.floor+.92,position.z);
     const boom=viewMode==='portrait'?2.0:2.6;
-    const desired=new THREE.Vector3(position.x-Math.sin(yaw)*boom,position.floor+1.32-pitch*.75,position.z+Math.cos(yaw)*boom);
+    const desired=new THREE.Vector3(position.x-Math.sin(viewYaw)*boom,position.floor+1.32-pitch*.75,position.z+Math.cos(viewYaw)*boom);
     const offset=desired.clone().sub(target),length=offset.length(),direction=offset.clone().normalize();let distance=length;
     // Check the actual rendered walls, furniture and ceiling, with a small
     // camera margin. Keep the camera inside the modeled floor regions too.
@@ -54,6 +68,7 @@ function updateCamera(){
     camera.position.copy(target).addScaledVector(direction,cameraDistance);camera.lookAt(target);
     if(avatar){avatar.root.visible=distance>1.10;avatar.shadow.visible=avatar.root.visible;}
   }
+  stage.dataset.camera=JSON.stringify({yaw,pitch,zoom:camera.zoom,heading:avatar?.heading,viewYaw,x:camera.position.x,y:camera.position.y,z:camera.position.z,avatarVisible:avatar?.root.visible});
   const floor=world.floor(position.x,position.z);$('place-name').textContent=floor?.label??'山の家';
 }
 function resize(){if(!renderer)return;const w=stage.clientWidth,h=stage.clientHeight;renderer.setPixelRatio(light?1:Math.min(devicePixelRatio,1.5));renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<h?68:62;camera.updateProjectionMatrix();dirty=true;}
@@ -108,11 +123,11 @@ function optimizeExterior(root){
 }
 async function start(destination=area,spawnId='entry'){
   if(typeof destination!=='string')destination=area;
-  if(busy)return;busy=true;ready=false;$('welcome').hidden=true;$('error').hidden=true;$('loading').hidden=false;$('hud').hidden=true;stage.dataset.state='loading';
+  if(busy)return;setPhotoMode(false);busy=true;ready=false;$('welcome').hidden=true;$('error').hidden=true;$('loading').hidden=false;$('hud').hidden=true;stage.dataset.state='loading';
   try{
     stopDemo();dispose();lost=false;area=destination;stage.dataset.area=area;
     $('loading-title').textContent=area==='exterior'?'山の家の外へ出ています':'山の家の戸を開けています';$('progress').textContent='準備中';
-    const environmentResponse=await fetch('./environment.json?v=408989f53161');if(!environmentResponse.ok)throw new Error('山の家の情報を取得できません');const environment=(await environmentResponse.json())[area];
+    const environmentResponse=await fetch('./environment.json?v=7ac40a17a3a5');if(!environmentResponse.ok)throw new Error('山の家の情報を取得できません');const environment=(await environmentResponse.json())[area];
     const res=await fetch(environment.navigation);if(!res.ok)throw new Error('歩行データを取得できません');world=new WalkWorld(await res.json());
     renderer=new THREE.WebGLRenderer({antialias:!light,powerPreference:'default'});
     renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
@@ -126,7 +141,7 @@ async function start(destination=area,spawnId='entry'){
     renderer.domElement.addEventListener('webglcontextrestored',()=>{if(lost){lost=false;light=true;start();}});
     const gltf=await new GLTFLoader().loadAsync(environment.model,e=>{$('progress').textContent=`読み込み ${Math.floor(Math.min(1,e.loaded/environment.bytes)*100)}% · 表示を準備中`;});
     model=area==='exterior'?optimizeExterior(gltf.scene):gltf.scene;model.traverse(o=>{if(!o.isMesh)return;for(const m of(Array.isArray(o.material)?o.material:[o.material])){m.side=THREE.DoubleSide;if('transmission'in m)m.transmission=0;if(/glass/i.test(m.name)){m.color.set('#c4d1ca');m.roughness=.8;m.metalness=0;m.emissive.set('#68766f');m.emissiveIntensity=.12;m.transparent=true;m.opacity=.25;m.depthWrite=false;}m.needsUpdate=true;}});scene.add(model);
-    const manifestResponse=await fetch('./nagika-manifest.json?v=408989f53161');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
+    const manifestResponse=await fetch('./nagika-manifest.json?v=7ac40a17a3a5');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
     const character=await new GLTFLoader().loadAsync('./nagika.glb?v='+manifest.sha256.slice(0,12),e=>{$('progress').textContent=`なぎかちゃんを準備中 ${Math.floor(Math.min(1,e.loaded/manifest.bytes)*100)}%`;});
     avatar=new Nagika(character.scene,world);scene.add(avatar.root,avatar.shadow);
     const routeResponse=await fetch(environment.route);demoRoute=[];if(routeResponse.ok)demoRoute=(await routeResponse.json()).points;
@@ -140,10 +155,11 @@ async function start(destination=area,spawnId='entry'){
 $('start').onclick=start;$('retry').onclick=()=>{light=true;start();};$('home').onclick=()=>{if(ready){stopDemo();setSpawn('entry');stage.focus({preventScroll:true});}};
 $('area').onclick=()=>{if(ready)start(area==='interior'?'exterior':'interior',area==='interior'?'view':'entry');};
 $('pace').onclick=()=>{fast=!fast;$('pace').setAttribute('aria-pressed',String(fast));$('pace').textContent=fast?'速足：オン':'速足：オフ';stage.focus({preventScroll:true});};
-function stopDemo(resetInput=true){demo=false;$('demo').textContent='歩く様子を見る';if(resetInput)clearInput();}
-$('demo').onclick=()=>{if(!ready)return;if(demo){stopDemo();return;}setSpawn('entry');demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';stage.focus({preventScroll:true});};
-$('view-mode').onclick=()=>{setView(viewMode==='eyes'?'follow':'eyes');stage.focus({preventScroll:true});};
-$('portrait').onclick=()=>{if(!ready)return;stopDemo();setView(viewMode==='portrait'?walkView:'portrait');stage.focus({preventScroll:true});};
+function stopDemo(resetInput=true){demo=false;$('demo').textContent='歩く様子を見る';$('demo').setAttribute('aria-pressed','false');if(resetInput)clearInput();}
+$('demo').onclick=()=>{if(!ready)return;if(demo){stopDemo();stage.focus({preventScroll:true});return;}setSpawn('entry',{keepFraming:true});demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';$('demo').setAttribute('aria-pressed','true');stage.focus({preventScroll:true});};
+for(const button of document.querySelectorAll('[data-view-choice]'))button.onclick=()=>{if(!ready)return;setView(button.dataset.viewChoice);stage.focus({preventScroll:true});};
+$('photo').onclick=()=>setPhotoMode(true);
+stage.addEventListener('keydown',e=>{if(photoMode&&e.code==='Escape'){e.preventDefault();setPhotoMode(false);$('photo').focus({preventScroll:true});}},{signal});
 $('help-toggle').onclick=()=>{$('guide').hidden=!$('guide').hidden;$('help-toggle').setAttribute('aria-expanded',String(!$('guide').hidden));clearInput();};
 $('map-toggle').onclick=()=>{$('map-content').hidden=!$('map-content').hidden;$('map-toggle').setAttribute('aria-expanded',String(!$('map-content').hidden));$('map-toggle').lastElementChild.textContent=$('map-content').hidden?'＋':'−';drawMap();};
 $('map-toggle').click();
@@ -161,24 +177,35 @@ stage.addEventListener('keydown',e=>{
 window.addEventListener('keyup',e=>keys.delete(e.code),{signal});window.addEventListener('blur',clearInput,{signal});document.addEventListener('visibilitychange',()=>{clearInput();last=0;sim=0;},{signal});
 stage.addEventListener('focusout',e=>{if(!stage.contains(e.relatedTarget))clearInput();},{signal});
 new ResizeObserver(resize).observe(stage);
-$('scene').addEventListener('pointerdown',e=>{if(!ready||drag||e.button!==0)return;if(demo)stopDemo();drag={id:e.pointerId,x:e.clientX,y:e.clientY};e.currentTarget.dataset.dragging='true';e.currentTarget.setPointerCapture(e.pointerId);stage.focus({preventScroll:true});});
-$('scene').addEventListener('pointermove',e=>{if(drag?.id!==e.pointerId)return;({yaw,pitch}=dragView(yaw,pitch,e.clientX-drag.x,e.clientY-drag.y,stage.clientHeight,camera.getEffectiveFOV()));drag.x=e.clientX;drag.y=e.clientY;dirty=true;});
-for(const event of ['pointerup','pointercancel','lostpointercapture'])$('scene').addEventListener(event,e=>{if(drag?.id===e.pointerId){drag=null;e.currentTarget.dataset.dragging='false';}});
+$('scene').addEventListener('pointerdown',e=>{if(!ready||drag||e.button!==0)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false,photo:photoMode};e.currentTarget.dataset.dragging='true';e.currentTarget.setPointerCapture(e.pointerId);stage.focus({preventScroll:true});});
+$('scene').addEventListener('pointermove',e=>{
+  if(drag?.id!==e.pointerId)return;
+  const current=drag;
+  if(!current.moved&&Math.hypot(e.clientX-current.startX,e.clientY-current.startY)<6)return;
+  // A tap restores the UI without stopping the tour; only an actual drag
+  // takes control of the camera. clearInput in stopDemo must not lose capture.
+  if(!current.moved&&demo){stopDemo();drag=current;}
+  current.moved=true;e.currentTarget.dataset.dragging='true';
+  const next=dragView(viewMode==='portrait'?portraitOrbit:yaw,pitch,e.clientX-current.x,e.clientY-current.y,stage.clientHeight,camera.getEffectiveFOV());
+  if(viewMode==='portrait')portraitOrbit=next.yaw;else yaw=next.yaw;pitch=next.pitch;
+  current.x=e.clientX;current.y=e.clientY;dirty=true;
+});
+for(const event of ['pointerup','pointercancel','lostpointercapture'])$('scene').addEventListener(event,e=>{if(drag?.id===e.pointerId){const restore=event==='pointerup'&&drag.photo&&!drag.moved;drag=null;e.currentTarget.dataset.dragging='false';if(restore)setPhotoMode(false);}});
 $('scene').addEventListener('wheel',e=>{if(!ready)return;e.preventDefault();camera.zoom=wheelZoom(camera.zoom,e.deltaY,e.deltaMode,stage.clientHeight);camera.updateProjectionMatrix();dirty=true;},{passive:false});
 function pad(e){const b=$('joystick').getBoundingClientRect(),limit=b.width*.31;let x=e.clientX-b.left-b.width/2,y=e.clientY-b.top-b.height/2;const length=Math.hypot(x,y);if(length>limit){x*=limit/length;y*=limit/length;}touch.right=x/limit;touch.forward=-y/limit;$('stick').style.transform=`translate(${x}px,${y}px)`;}
 $('joystick').addEventListener('pointerdown',e=>{if(!ready||padPointer!==null)return;padPointer=e.pointerId;e.currentTarget.setPointerCapture(e.pointerId);stage.focus({preventScroll:true});pad(e);});
 $('joystick').addEventListener('pointermove',e=>{if(e.pointerId===padPointer)pad(e);});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])$('joystick').addEventListener(event,e=>{if(e.pointerId===padPointer){padPointer=null;touch.forward=touch.right=0;$('stick').style.transform='';}});
 for(const [id,direction] of [['turn-left',-1],['turn-right',1]]){const b=$(id);b.onpointerdown=e=>{b.setPointerCapture(e.pointerId);touch.turn=direction;};for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>touch.turn=0);b.onclick=e=>{if(e.detail===0){yaw+=direction*.25;dirty=true;}};}
-window.addEventListener('pagehide',dispose);
+window.addEventListener('pagehide',()=>{clearTimeout(photoTimer);dispose();});
 window.addEventListener('pageshow',e=>{if(e.persisted)start();});
 
 // Local QA only. Exercise the same real context-loss events that phones emit.
 if(new URLSearchParams(location.search).has('qa')){
-  const b=document.createElement('button');b.textContent='QA: 描画の中断と復帰';b.style.cssText='position:absolute;bottom:16px;right:22px;z-index:10;padding:12px';
+  const b=document.createElement('button');b.className='qa-control';b.textContent='QA: 描画の中断と復帰';b.style.cssText='position:absolute;bottom:16px;right:22px;z-index:10;padding:12px';
   b.onclick=()=>{if(!ready)return;const ext=renderer.getContext().getExtension('WEBGL_lose_context');if(!ext)throw new Error('Context-loss simulation is unavailable');ext.loseContext();setTimeout(()=>ext.restoreContext(),600);};stage.append(b);
-  const door=document.createElement('button');door.textContent='QA: 玄関を歩いて通る';door.style.cssText='position:absolute;bottom:62px;right:22px;z-index:10;padding:12px';
+  const door=document.createElement('button');door.className='qa-control';door.textContent='QA: 玄関を歩いて通る';door.style.cssText='position:absolute;bottom:62px;right:22px;z-index:10;padding:12px';
   door.onclick=()=>{if(!ready)return;setSpawn('entry');demoRoute=[{x:position.x,z:area==='interior'?3.15:3.60}];demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';};stage.append(door);
-  const aisle=document.createElement('button');aisle.textContent='QA: 入口左の棚を通る';aisle.style.cssText='position:absolute;bottom:108px;right:22px;z-index:10;padding:12px';
+  const aisle=document.createElement('button');aisle.className='qa-control';aisle.textContent='QA: 入口左の棚を通る';aisle.style.cssText='position:absolute;bottom:108px;right:22px;z-index:10;padding:12px';
   aisle.onclick=()=>{if(!ready||area!=='interior')return;setSpawn('entry');demoRoute=[{x:1.6,z:2.085},{x:-3.55,z:2.085}];demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';};stage.append(aisle);
 }

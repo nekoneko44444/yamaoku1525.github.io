@@ -7,3 +7,30 @@
 #stage[data-view="portrait"] #joystick,#stage[data-view="portrait"] .touch-turn{display:none}
 #pace{position:absolute;left:51px;bottom:290px;padding:12px 18px;background:#183b32eb;color:#f1e8ce;border:1px solid #fff5;border-radius:24px;font-size:12px;min-height:44px}#pace[aria-pressed="true"]{background:#ead5a4;color:#173d35;border-color:#ead5a4}#stage[data-view="portrait"] #pace{display:none}
 @media(max-width:700px){#pace{left:32px;bottom:253px;font-size:11px;padding:11px 15px}.place{top:93px;max-width:155px}.actions{top:139px;left:21px;right:auto}.map-wrap{top:190px}#guide{top:190px;max-height:calc(100dvh - 290px);overflow:auto}.actions button{min-height:40px}#places{flex-wrap:wrap}#places button{min-height:36px}.map-wrap:has(#map-content:not([hidden])){z-index:2}}
+
+/* Keep the two experiences and the selected viewpoint visible at a glance. */
+.experience-nav{display:flex;gap:3px;padding:4px;background:#14352de8;border:1px solid #fff4;border-radius:7px;pointer-events:auto}
+.experience-nav a,.experience-current{display:flex;align-items:center;justify-content:center;min-height:40px;padding:9px 15px;font-size:12px;border-radius:4px;white-space:nowrap}
+.experience-current{background:#ead5a4;color:#193f35}
+.experience-nav a:not([aria-current]):hover{background:#ffffff20}
+.character-tools{align-items:center;flex-wrap:wrap}
+.view-choices{display:flex;padding:3px;background:#153a31ed;border:1px solid #fff4;border-radius:6px;gap:2px}
+.view-choices button{background:transparent;border-color:transparent;min-height:42px;padding:10px 14px}
+.view-choices button[aria-pressed="true"]{background:#ead5a4;color:#193f35;border-color:#ead5a4}
+#demo{min-height:48px}#demo[aria-pressed="true"]{border-color:#ead5a4;background:#2a5749}
+#stage[data-view="portrait"] #pace{display:block}
+#stage:not([data-view="eyes"]) .reticle{display:none}
+#photo-hint{position:absolute;z-index:6;bottom:8%;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:14px 20px;margin:0;border-radius:8px;background:#163a31f2;color:#f9f5e9;font-size:13px;text-align:center;pointer-events:none}
+#photo-hint span{font-size:11px;color:#e1ddc8}
+#stage[data-photo="true"] header,#stage[data-photo="true"] #hud,#stage[data-photo="true"] .qa-control{visibility:hidden;pointer-events:none}
+@media(max-width:700px){
+  header{padding:16px 21px;align-items:flex-start}.experience-nav{padding:3px;gap:1px}.experience-nav a,.experience-current{font-size:10px;padding:8px;min-height:40px}
+  .brand small{font-size:9px}.brand .mark{display:none}h1{font-size:15px}
+  .character-tools{left:21px;right:21px;bottom:64px;gap:7px;justify-content:space-between;align-items:stretch;flex-direction:column}
+  .view-choices{justify-content:center}.view-choices button{flex:1;font-size:11px;min-height:42px;padding:8px 9px}
+  #demo{font-size:12px;min-height:42px;padding:10px}
+  #joystick{bottom:192px}.touch-turn{bottom:186px}#pace{left:auto;right:32px;bottom:254px;min-height:44px}
+  .map-wrap{width:min(260px,calc(100% - 42px))}#map{height:70px}footer{padding-bottom:16px}
+}
+@media(max-width:360px){header{padding:14px}.experience-nav a,.experience-current{padding:8px 6px;font-size:9px}.brand small{letter-spacing:.08em}h1{font-size:14px}.actions{left:14px;gap:5px}.character-tools{left:14px;right:14px}}
+@media(max-height:600px) and (min-width:701px){#stage{min-height:360px}header{padding:10px 18px}.place{top:78px;left:18px}.actions{top:78px;right:18px}.character-tools{left:120px;bottom:24px}.map-wrap{right:18px;bottom:90px;width:240px}#joystick{left:18px;width:76px;height:76px;bottom:78px}#stick{left:11px;top:11px}#pace{left:18px;bottom:166px}.pad-label,footer{display:none}#guide{top:126px;max-height:calc(100dvh - 145px);overflow:auto}}
