@@ -14,8 +14,8 @@ export class FootPlanner {
     return {...target,y:this.floorAt(target.x,target.z)};
   }
   begin(foot,root,heading,speed,turnOnly=false){
-    const duration=turnOnly?.25:clamp(.322-Math.max(0,speed-.58)*.25,.20,.36);
-    const ahead=turnOnly?0:speed*duration+.070;
+    const duration=turnOnly?.25:clamp(.322-Math.max(0,speed-.58)*.25,.14,.36);
+    const ahead=turnOnly?0:Math.min(.26,speed*duration+.070);
     foot.swing={t:0,duration,start:{...foot.plant},end:this.safeTarget(root,heading,foot.side,ahead),fromHeading:foot.heading,toHeading:heading,turnOnly};
     this.steps++;
   }
@@ -45,7 +45,7 @@ export class FootPlanner {
         const catchup=clamp(1+(supportReach-.18)*24,1,3);
         s.t=Math.min(1,s.t+dt/s.duration*catchup);
         // Steering can adjust the landing early in flight, never a planted foot.
-        if(moving&&s.t<.55){const fresh=this.safeTarget(root,heading,foot.side,speed*s.duration*(1-s.t)+.070);const a=1-Math.exp(-8*dt);s.end.x+=(fresh.x-s.end.x)*a;s.end.z+=(fresh.z-s.end.z)*a;s.end.y=this.floorAt(s.end.x,s.end.z);s.toHeading=heading;}
+        if(moving&&s.t<.55){const fresh=this.safeTarget(root,heading,foot.side,Math.min(.26,speed*s.duration*(1-s.t)+.070));const a=1-Math.exp(-8*dt);s.end.x+=(fresh.x-s.end.x)*a;s.end.z+=(fresh.z-s.end.z)*a;s.end.y=this.floorAt(s.end.x,s.end.z);s.toHeading=heading;}
         // A stop finishes the airborne step near the body instead of freezing
         // mid-stride or dragging the planted support foot to a neutral pose.
         if(!moving&&!s.turnOnly&&s.t<.65){const stop=this.safeTarget(root,heading,foot.side,.025);const a=1-Math.exp(-12*dt);s.end.x+=(stop.x-s.end.x)*a;s.end.z+=(stop.z-s.end.z)*a;s.end.y=this.floorAt(s.end.x,s.end.z);}

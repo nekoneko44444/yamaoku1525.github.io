@@ -56,13 +56,13 @@ export function movementVector(forward,right,yaw,speed,dt) {
 
 // Fast walking eases down while the character turns, as a real short stride
 // does. This keeps the support foot planted through abrupt direction changes.
-export function turnPace(dx,dz,heading){
+export function turnPace(dx,dz,heading,speed=1.05){
   const length=Math.hypot(dx,dz);if(!length)return 1;
   const facing=(dx*Math.sin(heading)+dz*Math.cos(heading))/length;
-  return .36+.64*Math.max(0,facing)**2;
+  return Math.min(1,(.378+Math.max(0,speed-.378)*Math.max(0,facing)**4)/speed);
 }
-export function terrainPace(world,position,dx,dz){
+export function terrainPace(world,position,dx,dz,speed=1.05){
   const d=Math.hypot(dx,dz);if(!d)return 1;
   const heights=[-.24,-.12,0,.12,.24].map(t=>world.floor(position.x+dx/d*t,position.z+dz/d*t)?.height??position.floor);
-  return Math.max(...heights)-Math.min(...heights)>.045?.50:1;
+  return Math.max(...heights)-Math.min(...heights)>.045?Math.min(1,.525/speed):1;
 }

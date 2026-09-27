@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {FootPlanner,solveLeg} from './gait.mjs?v=1db1af8a60b8';
+import {FootPlanner,solveLeg} from './gait.mjs?v=408989f53161';
 const V=(p)=>new THREE.Vector3(p.x,p.y,p.z),UP=new THREE.Vector3(0,1,0),X=new THREE.Vector3(1,0,0),Z=new THREE.Vector3(0,0,1);
 const deltaAngle=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
 export class Nagika {
@@ -36,9 +36,10 @@ export class Nagika {
   reset(position,yaw){this.heading=Math.PI-yaw;this.root.position.set(position.x,position.floor,position.z);this.root.rotation.set(0,this.heading,0);this.root.updateMatrixWorld(true);this.height=position.floor;this.planner.reset(position,this.heading);this.previous={...position};this.amount=0;this.phase=0;this.update(position,1/60);}
   rotateWorld(boneName,q){const bone=this.bones[boneName];const parent=bone.parent.getWorldQuaternion(new THREE.Quaternion()).invert();bone.quaternion.copy(parent.multiply(q));bone.updateMatrixWorld(true);}
   direction(boneName,childName,target){const bone=this.bones[boneName],child=this.bones[childName],p=bone.getWorldPosition(new THREE.Vector3()),v=child.getWorldPosition(new THREE.Vector3()).sub(p).normalize(),desired=target.clone().sub(p).normalize(),q=bone.getWorldQuaternion(new THREE.Quaternion());const d=new THREE.Quaternion().setFromUnitVectors(v,desired);this.rotateWorld(boneName,d.multiply(q));}
-  update(position,dt){
+  update(position,dt,standingHeading){
     this.time+=dt;const dx=position.x-this.previous.x,dz=position.z-this.previous.z,d=Math.hypot(dx,dz),speed=d/Math.max(dt,.00001);this.previous={...position};
     if(d>.00001){const target=Math.atan2(dx,dz);this.heading+=THREE.MathUtils.clamp(deltaAngle(target,this.heading),-7*dt,7*dt);}
+    else if(standingHeading!==undefined)this.heading+=THREE.MathUtils.clamp(deltaAngle(standingHeading,this.heading),-7*dt,7*dt);
     this.amount+=(Math.min(1,speed/.58)-this.amount)*(1-Math.exp(-10*dt));this.phase+=d/.57*Math.PI*2;
     this.height+=(position.floor-this.height)*(1-Math.exp(-18*dt));
     this.root.position.set(position.x,this.height,position.z);this.root.rotation.set(0,this.heading,0);

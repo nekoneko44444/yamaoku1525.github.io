@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import {GLTFLoader} from '../3d/vendor/GLTFLoader.js';
 import {mergeGeometries} from '../3d/vendor/BufferGeometryUtils.js';
-import {WalkWorld,movementVector,turnPace,terrainPace} from './movement.mjs?v=1db1af8a60b8';
-import {Nagika} from './avatar.js?v=1db1af8a60b8';
+import {WalkWorld,movementVector,turnPace,terrainPace} from './movement.mjs?v=408989f53161';
+import {Nagika} from './avatar.js?v=408989f53161';
+import {WALK_SPEED,FAST_SPEED,TOUR_SPEED,TURN_SPEED,keyboardMotion,dragView,wheelZoom} from './controls.mjs?v=408989f53161';
 
 const $=id=>document.getElementById(id);
 const stage=$('stage'),keys=new Set(),touch={forward:0,right:0,turn:0};
@@ -10,11 +11,11 @@ let renderer,scene,camera,world,position,yaw=0,pitch=0,eye=1.48;
 let ready=false,busy=false,lost=false,dirty=true,light=matchMedia('(pointer:coarse),(max-width:700px)').matches;
 let last=0,sim=0,diagnosticTime=0,model,drag=null,padPointer=null;
 let avatar,viewMode='eyes',walkView='eyes',demoRoute=[],demoIndex=0,demo=false,renderedAt=0,walkYaw=0,cameraDistance=2.6;
-let area='interior',fast=false;
+let area='interior',fast=false,standingHeading;
 const velocity={x:0,z:0},raycaster=new THREE.Raycaster();
 const controller=new AbortController(),{signal}=controller;
 
-function clearInput(){keys.clear();touch.forward=touch.right=touch.turn=0;velocity.x=velocity.z=0;drag=null;padPointer=null;$('stick').style.transform='';}
+function clearInput(){keys.clear();touch.forward=touch.right=touch.turn=0;velocity.x=velocity.z=0;drag=null;padPointer=null;standingHeading=undefined;$('scene').dataset.dragging='false';$('stick').style.transform='';}
 function showError(message){ready=false;stopDemo();$('loading').hidden=true;$('error').hidden=false;$('error-text').textContent=message;stage.dataset.state='error';}
 function dispose(){
   ready=false;clearInput();renderer?.setAnimationLoop(null);
@@ -25,7 +26,7 @@ function dispose(){
 function setSpawn(id){
   const s=world.data.spawns.find(p=>p.id===id);
   if(!s||!world.canStand(s.x,s.z))throw new Error('確認済みの開始位置が通れません: '+id);
-  setView(walkView);clearInput();position={x:s.x,z:s.z,floor:world.floor(s.x,s.z).height};yaw=s.yaw;pitch=0;eye=position.floor+world.data.eyeHeight;sim=0;last=0;dirty=true;cameraDistance=2.6;avatar?.reset(position,yaw);updateCamera();drawMap();
+  setView(walkView);clearInput();position={x:s.x,z:s.z,floor:world.floor(s.x,s.z).height};yaw=s.yaw;pitch=0;camera.zoom=1;camera.updateProjectionMatrix();eye=position.floor+world.data.eyeHeight;sim=0;last=0;dirty=true;cameraDistance=2.6;avatar?.reset(position,yaw);updateCamera();drawMap();
 }
 function setView(mode){
   if(viewMode==='portrait'&&mode!=='portrait')yaw=walkYaw;
@@ -34,6 +35,7 @@ function setView(mode){
   viewMode=mode;stage.dataset.view=mode;$('view-mode').textContent=mode==='eyes'?'なぎかと歩く':'自分の目線にする';$('portrait').textContent=mode==='portrait'?'さんぽに戻る':'なぎかを見る';dirty=true;
 }
 function updateCamera(){
+  stage.dataset.camera=JSON.stringify({yaw,pitch,zoom:camera.zoom,heading:avatar?.heading});
   if(viewMode==='eyes'){
     camera.position.set(position.x,eye,position.z);camera.rotation.order='YXZ';camera.rotation.set(pitch,-yaw,0);if(avatar){avatar.root.visible=false;avatar.shadow.visible=false;}
   }else{
@@ -72,23 +74,25 @@ function tick(time){
   const dt=Math.min((time-last)/1000,.10);last=time;sim+=dt;
   let moving=false;
   while(sim>=1/60){
-    let f=Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'))+touch.forward;
-    let r=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+touch.right;
-    if((f||r)&&viewMode==='portrait')setView(walkView);
-    if((f||r)&&demo)stopDemo();
-    const turn=Number(keys.has('KeyE'))-Number(keys.has('KeyQ'))+touch.turn;yaw+=turn*1.6/60;dirty ||= !!turn;
-    const speed=fast||keys.has('ShiftLeft')||keys.has('ShiftRight')?1.05:.58;
+    const input=keyboardMotion(keys);
+    const f=input.forward+touch.forward,r=input.right+touch.right,turn=input.turn+touch.turn;
+    if((f||r||turn)&&viewMode==='portrait')setView(walkView);
+    if((f||r||turn)&&demo)stopDemo(false);
+    yaw+=turn*TURN_SPEED/60;dirty ||= !!turn;
+    if(turn&&!f&&!r){velocity.x=velocity.z=0;standingHeading=Math.PI-yaw;}
+    if(f||r)standingHeading=undefined;
+    const speed=fast||keys.has('ShiftLeft')||keys.has('ShiftRight')?FAST_SPEED:WALK_SPEED;
     const v=movementVector(f,r,yaw,speed,1/60);
     if(demo&&demoRoute.length){
       let goal=demoRoute[demoIndex],dx=goal.x-position.x,dz=goal.z-position.z,d=Math.hypot(dx,dz);
-      if(d<.012){demoIndex++;if(demoIndex>=demoRoute.length){stopDemo();}else {goal=demoRoute[demoIndex];dx=goal.x-position.x;dz=goal.z-position.z;d=Math.hypot(dx,dz);}}
-      if(demo){const step=Math.min((speed>.58?1.05:.50)/60,d);v.dx=dx/d*step;v.dz=dz/d*step;const targetYaw=Math.atan2(dx,-dz);yaw+=Math.atan2(Math.sin(targetYaw-yaw),Math.cos(targetYaw-yaw))*.10;}
+      if(d<.002){demoIndex++;if(demoIndex>=demoRoute.length){stopDemo();}else {goal=demoRoute[demoIndex];dx=goal.x-position.x;dz=goal.z-position.z;d=Math.hypot(dx,dz);}}
+      if(demo){const step=Math.min((speed>WALK_SPEED?FAST_SPEED:TOUR_SPEED)/60,d);v.dx=dx/d*step;v.dz=dz/d*step;const targetYaw=Math.atan2(dx,-dz);yaw+=Math.atan2(Math.sin(targetYaw-yaw),Math.cos(targetYaw-yaw))*.10;}
       velocity.x=v.dx*60;velocity.z=v.dz*60;
     }else{const a=1-Math.exp(-12/60);velocity.x+=(v.dx*60-velocity.x)*a;velocity.z+=(v.dz*60-velocity.z)*a;if(Math.hypot(velocity.x,velocity.z)<.001)velocity.x=velocity.z=0;}
-    if(velocity.x||velocity.z){const pace=speed>.58?Math.min(turnPace(velocity.x,velocity.z,avatar.heading),terrainPace(world,position,velocity.x,velocity.z)):1;const next=world.move(position,velocity.x*pace/60,velocity.z*pace/60);moving ||= Math.hypot(next.x-position.x,next.z-position.z)>.0001;position=next;}
+    if(velocity.x||velocity.z){const pace=speed>WALK_SPEED?Math.min(turnPace(velocity.x,velocity.z,avatar.heading,speed),terrainPace(world,position,velocity.x,velocity.z,speed)):1;const next=world.move(position,velocity.x*pace/60,velocity.z*pace/60);moving ||= Math.hypot(next.x-position.x,next.z-position.z)>.0001;position=next;}
     // Smooth the existing 0.12 / 0.18 steps; no head bob or jumping.
     const rise=position.floor+world.data.eyeHeight-eye;dirty ||= Math.abs(rise)>.0001;eye+=rise*(1-Math.exp(-12/60));sim-=1/60;
-    avatar?.update(position,1/60);
+    avatar?.update(position,1/60,standingHeading);
     const portal=world.data.portal;
     if(portal&&position.x>=portal.minX&&position.x<=portal.maxX&&position.z>=portal.minZ&&position.z<=portal.maxZ){start(portal.target);return;}
   }
@@ -108,7 +112,7 @@ async function start(destination=area,spawnId='entry'){
   try{
     stopDemo();dispose();lost=false;area=destination;stage.dataset.area=area;
     $('loading-title').textContent=area==='exterior'?'山の家の外へ出ています':'山の家の戸を開けています';$('progress').textContent='準備中';
-    const environmentResponse=await fetch('./environment.json?v=1db1af8a60b8');if(!environmentResponse.ok)throw new Error('山の家の情報を取得できません');const environment=(await environmentResponse.json())[area];
+    const environmentResponse=await fetch('./environment.json?v=408989f53161');if(!environmentResponse.ok)throw new Error('山の家の情報を取得できません');const environment=(await environmentResponse.json())[area];
     const res=await fetch(environment.navigation);if(!res.ok)throw new Error('歩行データを取得できません');world=new WalkWorld(await res.json());
     renderer=new THREE.WebGLRenderer({antialias:!light,powerPreference:'default'});
     renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
@@ -122,7 +126,7 @@ async function start(destination=area,spawnId='entry'){
     renderer.domElement.addEventListener('webglcontextrestored',()=>{if(lost){lost=false;light=true;start();}});
     const gltf=await new GLTFLoader().loadAsync(environment.model,e=>{$('progress').textContent=`読み込み ${Math.floor(Math.min(1,e.loaded/environment.bytes)*100)}% · 表示を準備中`;});
     model=area==='exterior'?optimizeExterior(gltf.scene):gltf.scene;model.traverse(o=>{if(!o.isMesh)return;for(const m of(Array.isArray(o.material)?o.material:[o.material])){m.side=THREE.DoubleSide;if('transmission'in m)m.transmission=0;if(/glass/i.test(m.name)){m.color.set('#c4d1ca');m.roughness=.8;m.metalness=0;m.emissive.set('#68766f');m.emissiveIntensity=.12;m.transparent=true;m.opacity=.25;m.depthWrite=false;}m.needsUpdate=true;}});scene.add(model);
-    const manifestResponse=await fetch('./nagika-manifest.json?v=1db1af8a60b8');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
+    const manifestResponse=await fetch('./nagika-manifest.json?v=408989f53161');if(!manifestResponse.ok)throw new Error('なぎかのモデル情報を読み込めません');const manifest=await manifestResponse.json();
     const character=await new GLTFLoader().loadAsync('./nagika.glb?v='+manifest.sha256.slice(0,12),e=>{$('progress').textContent=`なぎかちゃんを準備中 ${Math.floor(Math.min(1,e.loaded/manifest.bytes)*100)}%`;});
     avatar=new Nagika(character.scene,world);scene.add(avatar.root,avatar.shadow);
     const routeResponse=await fetch(environment.route);demoRoute=[];if(routeResponse.ok)demoRoute=(await routeResponse.json()).points;
@@ -136,7 +140,7 @@ async function start(destination=area,spawnId='entry'){
 $('start').onclick=start;$('retry').onclick=()=>{light=true;start();};$('home').onclick=()=>{if(ready){stopDemo();setSpawn('entry');stage.focus({preventScroll:true});}};
 $('area').onclick=()=>{if(ready)start(area==='interior'?'exterior':'interior',area==='interior'?'view':'entry');};
 $('pace').onclick=()=>{fast=!fast;$('pace').setAttribute('aria-pressed',String(fast));$('pace').textContent=fast?'速足：オン':'速足：オフ';stage.focus({preventScroll:true});};
-function stopDemo(){demo=false;$('demo').textContent='歩く様子を見る';clearInput();}
+function stopDemo(resetInput=true){demo=false;$('demo').textContent='歩く様子を見る';if(resetInput)clearInput();}
 $('demo').onclick=()=>{if(!ready)return;if(demo){stopDemo();return;}setSpawn('entry');demoIndex=0;demo=true;$('demo').textContent='さんぽを止める';stage.focus({preventScroll:true});};
 $('view-mode').onclick=()=>{setView(viewMode==='eyes'?'follow':'eyes');stage.focus({preventScroll:true});};
 $('portrait').onclick=()=>{if(!ready)return;stopDemo();setView(viewMode==='portrait'?walkView:'portrait');stage.focus({preventScroll:true});};
@@ -144,13 +148,23 @@ $('help-toggle').onclick=()=>{$('guide').hidden=!$('guide').hidden;$('help-toggl
 $('map-toggle').onclick=()=>{$('map-content').hidden=!$('map-content').hidden;$('map-toggle').setAttribute('aria-expanded',String(!$('map-content').hidden));$('map-toggle').lastElementChild.textContent=$('map-content').hidden?'＋':'−';drawMap();};
 $('map-toggle').click();
 const controls=new Set(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowLeft','ArrowDown','ArrowRight','KeyQ','KeyE','ShiftLeft','ShiftRight']);
-stage.addEventListener('keydown',e=>{if(!ready||e.altKey||e.ctrlKey||e.metaKey||e.target.closest('button,a'))return;if(controls.has(e.code)){e.preventDefault();keys.add(e.code);}}, {signal});
+stage.addEventListener('keydown',e=>{
+  if(!ready||e.altKey||e.ctrlKey||e.metaKey||e.target.closest('button,a')||!controls.has(e.code))return;
+  e.preventDefault();const turn=keyboardMotion(new Set([e.code])).turn;
+  // A brief key tap may finish between frames; still give it a small turn.
+  if(turn&&!e.repeat&&!keys.has(e.code)){
+    if(viewMode==='portrait')setView(walkView);if(demo)stopDemo(false);
+    yaw+=turn*.045;standingHeading=Math.PI-yaw;dirty=true;
+  }
+  keys.add(e.code);
+}, {signal});
 window.addEventListener('keyup',e=>keys.delete(e.code),{signal});window.addEventListener('blur',clearInput,{signal});document.addEventListener('visibilitychange',()=>{clearInput();last=0;sim=0;},{signal});
 stage.addEventListener('focusout',e=>{if(!stage.contains(e.relatedTarget))clearInput();},{signal});
 new ResizeObserver(resize).observe(stage);
-$('scene').addEventListener('pointerdown',e=>{if(!ready||drag||e.button!==0)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY};e.currentTarget.setPointerCapture(e.pointerId);stage.focus({preventScroll:true});});
-$('scene').addEventListener('pointermove',e=>{if(drag?.id!==e.pointerId)return;yaw+=(e.clientX-drag.x)*.004;pitch=THREE.MathUtils.clamp(pitch-(e.clientY-drag.y)*.004,-1.15,1.15);drag.x=e.clientX;drag.y=e.clientY;dirty=true;});
-for(const event of ['pointerup','pointercancel','lostpointercapture'])$('scene').addEventListener(event,e=>{if(drag?.id===e.pointerId)drag=null;});
+$('scene').addEventListener('pointerdown',e=>{if(!ready||drag||e.button!==0)return;if(demo)stopDemo();drag={id:e.pointerId,x:e.clientX,y:e.clientY};e.currentTarget.dataset.dragging='true';e.currentTarget.setPointerCapture(e.pointerId);stage.focus({preventScroll:true});});
+$('scene').addEventListener('pointermove',e=>{if(drag?.id!==e.pointerId)return;({yaw,pitch}=dragView(yaw,pitch,e.clientX-drag.x,e.clientY-drag.y,stage.clientHeight,camera.getEffectiveFOV()));drag.x=e.clientX;drag.y=e.clientY;dirty=true;});
+for(const event of ['pointerup','pointercancel','lostpointercapture'])$('scene').addEventListener(event,e=>{if(drag?.id===e.pointerId){drag=null;e.currentTarget.dataset.dragging='false';}});
+$('scene').addEventListener('wheel',e=>{if(!ready)return;e.preventDefault();camera.zoom=wheelZoom(camera.zoom,e.deltaY,e.deltaMode,stage.clientHeight);camera.updateProjectionMatrix();dirty=true;},{passive:false});
 function pad(e){const b=$('joystick').getBoundingClientRect(),limit=b.width*.31;let x=e.clientX-b.left-b.width/2,y=e.clientY-b.top-b.height/2;const length=Math.hypot(x,y);if(length>limit){x*=limit/length;y*=limit/length;}touch.right=x/limit;touch.forward=-y/limit;$('stick').style.transform=`translate(${x}px,${y}px)`;}
 $('joystick').addEventListener('pointerdown',e=>{if(!ready||padPointer!==null)return;padPointer=e.pointerId;e.currentTarget.setPointerCapture(e.pointerId);stage.focus({preventScroll:true});pad(e);});
 $('joystick').addEventListener('pointermove',e=>{if(e.pointerId===padPointer)pad(e);});
